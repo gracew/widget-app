@@ -6,7 +6,6 @@ import {
   Popover
 } from "@blueprintjs/core";
 import * as React from "react";
-import "./Navbar.css";
 
 export class Navbar extends React.Component<{}> {
   public render() {

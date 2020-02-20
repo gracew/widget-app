@@ -1,21 +1,43 @@
+import { useMutation } from "@apollo/react-hooks";
 import { Button, InputGroup } from "@blueprintjs/core";
+import { gql } from "apollo-boost";
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-export class NameAPI extends React.Component<RouteComponentProps> {
-  public render() {
-    return (
-      <div>
-        <h2>What kind of API are you making?</h2>
-        <InputGroup placeholder="e.g. comments, posts"></InputGroup>
+const CREATE_API = gql`
+  mutation CreateAPI($name: String!) {
+    createAPI(input: { name: $name }) {
+      id
+      name
+    }
+  }
+`;
 
-        <div className="arrows">
-          <Button icon="arrow-left" />
-          <Button rightIcon="arrow-right" onClick={this.handleNext} />
-        </div>
-      </div>
-    );
+export function NameAPI() {
+  const history = useHistory();
+  const [createApi, { loading, error }] = useMutation(CREATE_API);
+  let input: HTMLInputElement | null;
+
+  function handleSubmit() {
+    // TODO(gracew): handle null case better
+    createApi({ variables: { name: input!.value } });
+    history.push("/define");
   }
 
-  private handleNext = () => this.props.history.push("/define");
+  return (
+    <div>
+      <h2>What kind of API are you making?</h2>
+      <InputGroup
+        placeholder="e.g. comments, posts"
+        inputRef={node => {
+          input = node;
+        }}
+      ></InputGroup>
+
+      <div className="arrows">
+        <Button icon="arrow-left" />
+        <Button rightIcon="arrow-right" onClick={handleSubmit} />
+      </div>
+    </div>
+  );
 }

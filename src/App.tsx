@@ -3,12 +3,12 @@ import ApolloClient from "apollo-boost";
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import { AuthAPI } from "./components/AuthAPI";
 import { DefineAPI } from "./components/DefineAPI";
+import { DeployAPI } from "./components/DeployAPI";
 import { ListAPIs } from "./components/ListAPIs";
-import { NameAPI } from "./components/NameAPI";
 import { Navbar } from "./components/Navbar";
-import { TryAPI } from "./components/TryAPI";
+import { NewAPI } from "./components/NewAPI";
+import { ALL, DEFINE, DEPLOY, NEW } from "./routes";
 
 const client = new ApolloClient({
   uri: "http://localhost:8080/query"
@@ -21,11 +21,10 @@ function App() {
         <Route path="/" component={Navbar} />
         <div className="App">
           <Switch>
-            <Route path="/new" exact={true} component={NameAPI} />
-            <Route path="/define" exact={true} component={DefineAPI} />
-            <Route path="/auth" exact={true} component={AuthAPI} />
-            <Route path="/try" exact={true} component={TryAPI} />
-            <Route path="/all" exact={true} component={ListAPIs} />
+            <Route path={NEW} exact={true} component={NewAPI} />
+            <Route path={"/:id" + DEFINE} exact={true} component={DefineAPI} />
+            <Route path={"/:id" + DEPLOY} exact={true} component={DeployAPI} />
+            <Route path={ALL} exact={true} component={ListAPIs} />
           </Switch>
         </div>
       </Router>

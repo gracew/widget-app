@@ -3,6 +3,7 @@ import { Button, InputGroup } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { DEFINE } from "../routes";
 
 const CREATE_API = gql`
   mutation CreateAPI($name: String!) {
@@ -13,15 +14,15 @@ const CREATE_API = gql`
   }
 `;
 
-export function NameAPI() {
+export function NewAPI() {
   const history = useHistory();
   const [createApi, { loading, error }] = useMutation(CREATE_API);
   let input: HTMLInputElement | null;
 
-  function handleSubmit() {
+  async function handleSubmit() {
     // TODO(gracew): handle null case better
-    createApi({ variables: { name: input!.value } });
-    history.push("/define");
+    const { data } = await createApi({ variables: { name: input!.value } });
+    history.push(`/${data.createAPI.id}${DEFINE}`);
   }
 
   return (
@@ -35,7 +36,6 @@ export function NameAPI() {
       ></InputGroup>
 
       <div className="arrows">
-        <Button icon="arrow-left" />
         <Button rightIcon="arrow-right" onClick={handleSubmit} />
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { useMutation } from "@apollo/react-hooks";
-import { Button, Collapse } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useHistory, useParams } from "react-router-dom";
+import { CreateObject } from "./objects/CreateObject";
 
 const DEPLOY_API = gql`
   mutation DeployAPI($apiID: String!, $env: String!) {
@@ -41,15 +42,7 @@ export function DeployAPI() {
       <p>Great! Let's deploy the API to a sandbox and try calling it.</p>
       <Button text="Deploy" intent="primary" onClick={handleDeploy} />
       <div>
-        <Collapse>
-          <h2>Create an object</h2>
-          <MonacoEditor
-            width="800"
-            height="30"
-            theme="vs-dark"
-            value={createText}
-          />
-        </Collapse>
+        <CreateObject />
         <h2>Read the object</h2>
         <MonacoEditor
           width="800"

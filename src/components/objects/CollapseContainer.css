@@ -1,0 +1,12 @@
+.wi-collapse {
+  margin: 10px 0;
+}
+
+.wi-collapse button {
+  justify-content: left;
+  width: 100%;
+}
+
+.wi-collapse h3 {
+  margin: 5px 0;
+}

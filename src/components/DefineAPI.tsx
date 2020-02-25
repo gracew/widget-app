@@ -1,10 +1,11 @@
 import { useMutation } from "@apollo/react-hooks";
-import { Button, FileInput } from "@blueprintjs/core";
+import { FileInput, FormGroup } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useHistory } from "react-router-dom";
 import { DEPLOY } from "../routes";
+import { Arrows } from "./Arrows";
 import "./DefineAPI.css";
 
 const DEFINE_API = gql`
@@ -15,8 +16,7 @@ const DEFINE_API = gql`
   }
 `;
 
-const EXAMPLE = `
-{
+const EXAMPLE = `{
   "name": "Game",
   "fields": [{ "name": "name", "type": "String!" }],
   "operations": []
@@ -37,21 +37,19 @@ export function DefineAPI() {
     <div>
       <h2>Define your API</h2>
       <MonacoEditor
-        width="800"
-        height="600"
+        width="700"
+        height="400"
         theme="vs-dark"
         value={EXAMPLE}
+        language="json"
         onChange={newValue => {
           text = newValue;
         }}
       />
-      <div className="upload-api">
-        <p>Upload a file instead</p>
+      <FormGroup className="upload-file" label="Upload a file instead">
         <FileInput text="Choose file..." />
-      </div>
-      <div className="arrows">
-        <Button rightIcon="arrow-right" onClick={handleNext} />
-      </div>
+      </FormGroup>
+      <Arrows next={handleNext} showBack={false} showNext={true} />
     </div>
   );
 }

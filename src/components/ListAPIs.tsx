@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/react-hooks";
-import { Icon } from "@blueprintjs/core";
+import { HTMLTable, Icon } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 
@@ -22,27 +22,30 @@ export function ListAPIs() {
     return <p>Error</p>;
   }
   return (
-    <table className="bp3-html-table">
-      <thead>
-        <tr>
-          <th>API</th>
-          <th>Sandbox</th>
-          <th>Production</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.apis.map(({ name }: { name: string }) => (
+    <div>
+      <h2>All APIs</h2>
+      <HTMLTable striped={true}>
+        <thead>
           <tr>
-            <td>{name}</td>
-            <td>
-              <Icon icon="tick-circle" intent="success" />
-            </td>
-            <td>
-              <Icon icon="tick-circle" intent="primary" />
-            </td>
+            <th>API</th>
+            <th>Sandbox</th>
+            <th>Production</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.apis.map(({ name }: { name: string }) => (
+            <tr>
+              <td>{name}</td>
+              <td>
+                <Icon icon="tick-circle" intent="success" />
+              </td>
+              <td>
+                <Icon icon="tick-circle" intent="primary" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </HTMLTable>
+    </div>
   );
 }

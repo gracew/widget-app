@@ -13,7 +13,7 @@ interface ICreateObjectState {
 }
 
 // TODO(gracew): would be nice to substitute the name of the API
-export class CreateObject extends React.Component<
+export class ReadObject extends React.Component<
   ICreateObjectProps,
   ICreateObjectState
 > {
@@ -22,22 +22,19 @@ export class CreateObject extends React.Component<
   public render() {
     const show =
       this.props.definition.operations.length === 0 ||
-      this.props.definition.operations.includes("CREATE");
+      this.props.definition.operations.includes("READ");
     if (!show) {
       return <div></div>;
     }
-
     return (
       <div>
         <Button className="expand" minimal={true} onClick={this.handleClick}>
-          <h3>Create an object</h3>
+          <h3>Read an object</h3>
         </Button>
         <Collapse isOpen={this.state.isOpen}>
-          {this.props.definition.fields.map(({ name }: { name: string }) => (
-            <FormGroup key={name} label={name}>
-              <InputGroup />
-            </FormGroup>
-          ))}
+          <FormGroup label="id">
+            <InputGroup />
+          </FormGroup>
           <Button icon="play" text="Run" intent="primary" />
           <Button icon="duplicate" text="Copy cURL" />
           <MonacoEditor

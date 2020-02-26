@@ -1,0 +1,13 @@
+.wi-form-result {
+  display: flex;
+  flex-direction: row;
+}
+
+.wi-form {
+  flex-basis: 330px;
+  margin: 10px;
+}
+
+.wi-result {
+  margin: 10px;
+}

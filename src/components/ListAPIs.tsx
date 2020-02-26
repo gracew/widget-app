@@ -1,7 +1,9 @@
 import { useQuery } from "@apollo/react-hooks";
-import { HTMLTable, Icon } from "@blueprintjs/core";
+import { Button, HTMLTable, Icon } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
+import { useHistory } from "react-router-dom";
+import { DEPLOY } from "../routes";
 
 const ALL_APIS = gql`
   {
@@ -13,6 +15,7 @@ const ALL_APIS = gql`
 `;
 
 export function ListAPIs() {
+  const history = useHistory();
   const { loading, error, data } = useQuery(ALL_APIS);
   // TODO(gracew): handle loading/error states better
   if (loading) {
@@ -21,6 +24,7 @@ export function ListAPIs() {
   if (error) {
     return <p>Error</p>;
   }
+
   return (
     <div>
       <h2>All APIs</h2>
@@ -28,14 +32,23 @@ export function ListAPIs() {
         <thead>
           <tr>
             <th>API</th>
+            <th>Actions</th>
             <th>Sandbox</th>
             <th>Production</th>
           </tr>
         </thead>
         <tbody>
-          {data.apis.map(({ name }: { name: string }) => (
+          {data.apis.map(({ id, name }: { id: string; name: string }) => (
             <tr>
               <td>{name}</td>
+              <td>
+                <Button icon="edit" minimal={true} />
+                <Button
+                  icon="play"
+                  minimal={true}
+                  onClick={() => history.push(`/${id}${DEPLOY}`)}
+                />
+              </td>
               <td>
                 <Icon icon="tick-circle" intent="success" />
               </td>

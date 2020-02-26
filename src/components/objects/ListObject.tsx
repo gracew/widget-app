@@ -1,6 +1,6 @@
 import { Button, HTMLSelect, InputGroup } from "@blueprintjs/core";
 import React from "react";
-import MonacoEditor from "react-monaco-editor";
+import { FormAndResult } from "./FormAndResult";
 
 interface IListObjectProps {
   definition: any;
@@ -12,7 +12,7 @@ export function ListObject({ definition }: IListObjectProps) {
     (el: any) => el.type === "LIST"
   );
   return (
-    <div>
+    <FormAndResult>
       {includeList.sort && includeList.sort.length > 0 && (
         <div>
           Sort by:
@@ -27,18 +27,19 @@ export function ListObject({ definition }: IListObjectProps) {
           </HTMLSelect>
         </div>
       )}
-      <div>
-        Filter by:
-        <HTMLSelect id="filter">
-          {includeList.filter.map((name: string) => (
-            <option value={name}>{name}</option>
-          ))}
-        </HTMLSelect>
-        <InputGroup />
-      </div>
+      {includeList.filter && includeList.filter.length > 0 && (
+        <div>
+          Filter by:
+          <HTMLSelect id="filter">
+            {includeList.filter.map((name: string) => (
+              <option value={name}>{name}</option>
+            ))}
+          </HTMLSelect>
+          <InputGroup />
+        </div>
+      )}
       <Button icon="play" text="Run" intent="primary" />
       <Button icon="duplicate" text="Copy cURL" />
-      <MonacoEditor width="300" height="30" theme="vs-dark" value="output" />
-    </div>
+    </FormAndResult>
   );
 }

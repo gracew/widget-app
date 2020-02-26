@@ -10,7 +10,7 @@ import { ListObject } from "./objects/ListObject";
 import { ReadObject } from "./objects/ReadObject";
 
 const DEPLOY_API = gql`
-  mutation DeployAPI($apiID: String!, $env: String!) {
+  mutation DeployAPI($apiID: ID!, $env: Environment!) {
     deployAPI(input: { apiID: $apiID, env: $env }) {
       id
       apiID
@@ -52,17 +52,17 @@ export function DeployAPI() {
 
   const includeCreate =
     data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.includes("CREATE");
+    data.api.definition.operations.find((el: any) => el.type === "CREATE");
   const includeRead =
     data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.includes("READ");
+    data.api.definition.operations.find((el: any) => el.type === "READ");
   const includeList = data.api.definition.operations.find(
     (el: any) => el.type === "LIST"
   );
 
   async function handleDeploy() {
     await deployAPI({
-      variables: { apiID: id, env: "sandbox" }
+      variables: { apiID: id, env: "SANDBOX" }
     });
   }
 

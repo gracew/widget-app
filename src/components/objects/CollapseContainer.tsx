@@ -18,7 +18,11 @@ export function CollapseContainer({
 }: ICollapseContainerProps) {
   return (
     <div className="wi-collapse">
-      <Button minimal={true} onClick={() => setOpen(!open)}>
+      <Button
+        className="wi-collapse-button"
+        minimal={true}
+        onClick={() => setOpen(!open)}
+      >
         <h3>{title}</h3>
       </Button>
       <Collapse isOpen={open}>{children}</Collapse>

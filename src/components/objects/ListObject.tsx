@@ -17,7 +17,7 @@ export function ListObject({ definition }: IListObjectProps) {
       .then(t => setOutput(t));
   return (
     <FormAndResult output={output}>
-      {includeList.sort && includeList.sort.length > 0 && (
+      {includeList && includeList.sort && includeList.sort.length > 0 && (
         <div>
           Sort by:
           <HTMLSelect id="sort">
@@ -31,7 +31,7 @@ export function ListObject({ definition }: IListObjectProps) {
           </HTMLSelect>
         </div>
       )}
-      {includeList.filter && includeList.filter.length > 0 && (
+      {includeList && includeList.filter && includeList.filter.length > 0 && (
         <div>
           Filter by:
           <HTMLSelect id="filter">

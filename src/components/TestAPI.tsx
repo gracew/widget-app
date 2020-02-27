@@ -46,9 +46,9 @@ export function TestAPI() {
   const includeRead =
     data.api.definition.operations.length === 0 ||
     data.api.definition.operations.find((el: any) => el.type === "READ");
-  const includeList = data.api.definition.operations.find(
-    (el: any) => el.type === "LIST"
-  );
+  const includeList =
+    data.api.definition.operations.length === 0 ||
+    data.api.definition.operations.find((el: any) => el.type === "LIST");
 
   return (
     <div>

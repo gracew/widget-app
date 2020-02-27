@@ -3,7 +3,7 @@ import { Button, HTMLTable, Icon } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { DEPLOY } from "../routes";
+import { TEST_API } from "../routes";
 
 const ALL_APIS = gql`
   {
@@ -32,7 +32,6 @@ export function ListAPIs() {
         <thead>
           <tr>
             <th>API</th>
-            <th>Actions</th>
             <th>Sandbox</th>
             <th>Production</th>
           </tr>
@@ -40,17 +39,17 @@ export function ListAPIs() {
         <tbody>
           {data.apis.map(({ id, name }: { id: string; name: string }) => (
             <tr>
-              <td>{name}</td>
               <td>
+                {name}
                 <Button icon="edit" minimal={true} />
-                <Button
-                  icon="play"
-                  minimal={true}
-                  onClick={() => history.push(`/${id}${DEPLOY}`)}
-                />
               </td>
               <td>
                 <Icon icon="tick-circle" intent="success" />
+                <Button
+                  icon="play"
+                  minimal={true}
+                  onClick={() => history.push(TEST_API(id, "deployId"))}
+                />
               </td>
               <td>
                 <Icon icon="tick-circle" intent="primary" />

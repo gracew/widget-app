@@ -1,7 +1,7 @@
 import { Alignment, Button, Navbar as BpNavbar } from "@blueprintjs/core";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { LIST, NEW } from "../routes";
+import { LIST_APIS, NEW_API } from "../routes";
 
 export class Navbar extends React.Component<RouteComponentProps> {
   public render() {
@@ -27,7 +27,7 @@ export class Navbar extends React.Component<RouteComponentProps> {
   }
 
   private handleAllSelection = (_: React.MouseEvent<HTMLElement>) =>
-    this.props.history.push(LIST);
+    this.props.history.push(LIST_APIS);
   private handleNewSelection = (_: React.MouseEvent<HTMLElement>) =>
-    this.props.history.push(NEW);
+    this.props.history.push(NEW_API);
 }

@@ -7,7 +7,8 @@ import { DefineAPI } from "./components/DefineAPI";
 import { DeployAPI } from "./components/DeployAPI";
 import { ListAPIs } from "./components/ListAPIs";
 import { Navbar } from "./components/Navbar";
-import { DEPLOY, LIST, NEW } from "./routes";
+import { TestAPI } from "./components/TestAPI";
+import { DEPLOY_API, EDIT_API, LIST_APIS, NEW_API, TEST_API } from "./routes";
 
 const client = new ApolloClient({
   uri: "http://localhost:8080/query"
@@ -20,9 +21,19 @@ function App() {
         <Route path="/" component={Navbar} />
         <div className="App">
           <Switch>
-            <Route path={NEW} exact={true} component={DefineAPI} />
-            <Route path={"/:id" + DEPLOY} exact={true} component={DeployAPI} />
-            <Route path={LIST} exact={true} component={ListAPIs} />
+            <Route path={NEW_API} exact={true} component={DefineAPI} />
+            <Route path={EDIT_API(":id")} exact={true} component={DefineAPI} />
+            <Route
+              path={DEPLOY_API("/:id")}
+              exact={true}
+              component={DeployAPI}
+            />
+            <Route
+              path={TEST_API("/:id", "/:deployId")}
+              exact={true}
+              component={TestAPI}
+            />
+            <Route path={LIST_APIS} exact={true} component={ListAPIs} />
           </Switch>
         </div>
       </Router>

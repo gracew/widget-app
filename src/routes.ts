@@ -1,4 +1,8 @@
-export const NEW = "/new";
-export const DEFINE = "/define";
-export const DEPLOY = "/deploy";
-export const LIST = "/list";
+export const NEW_API = "/apis/new";
+export const EDIT_API = (apiId: string) => `/apis/${apiId}/edit`;
+
+export const DEPLOY_API = (apiId: string) => `/apis/${apiId}/deploys`;
+export const TEST_API = (apiId: string, deployId: string) =>
+  `/apis/${apiId}/deploys/${deployId}`;
+
+export const LIST_APIS = "/apis/list";

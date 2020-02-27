@@ -7,11 +7,13 @@ import { useHistory } from "react-router-dom";
 import { DEPLOY_API } from "../routes";
 import { Arrows } from "./Arrows";
 import "./DefineAPI.css";
+import { ALL_APIS } from "./ListAPIs";
 
 const DEFINE_API = gql`
   mutation DefineAPI($rawDefinition: String!) {
     defineAPI(input: { rawDefinition: $rawDefinition }) {
       id
+      name
     }
   }
 `;
@@ -25,7 +27,16 @@ const EXAMPLE = `{
 
 export function DefineAPI() {
   const history = useHistory();
-  const [defineApi, _] = useMutation(DEFINE_API);
+  const [defineApi, _] = useMutation(DEFINE_API, {
+    update(cache, { data: { defineAPI } }) {
+      const cachedRes: any = cache.readQuery({ query: ALL_APIS });
+      const apis = (cachedRes && cachedRes.apis) || [];
+      cache.writeQuery({
+        query: ALL_APIS,
+        data: { apis: apis.concat([defineAPI]) }
+      });
+    }
+  });
   let text = EXAMPLE;
 
   async function handleNext() {

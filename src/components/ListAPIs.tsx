@@ -5,7 +5,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { TEST_API } from "../routes";
 
-const ALL_APIS = gql`
+export const ALL_APIS = gql`
   {
     apis {
       id

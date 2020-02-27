@@ -27,7 +27,7 @@ export function ListAPIs() {
 
   return (
     <div>
-      <h2>All APIs</h2>
+      <h2>My APIs</h2>
       <HTMLTable striped={true}>
         <thead>
           <tr>
@@ -38,7 +38,7 @@ export function ListAPIs() {
         </thead>
         <tbody>
           {data.apis.map(({ id, name }: { id: string; name: string }) => (
-            <tr>
+            <tr key={id}>
               <td>
                 {name}
                 <Button icon="edit" minimal={true} />
@@ -48,12 +48,10 @@ export function ListAPIs() {
                 <Button
                   icon="play"
                   minimal={true}
-                  onClick={() => history.push(TEST_API(id, "deployId"))}
+                  onClick={() => history.push(TEST_API(id, "STAGING"))}
                 />
               </td>
-              <td>
-                <Icon icon="tick-circle" intent="primary" />
-              </td>
+              <td></td>
             </tr>
           ))}
         </tbody>

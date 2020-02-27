@@ -7,11 +7,9 @@ interface IFormAndResultProps {
   output: string;
 }
 
-const MINIMAP_DISABLED = {
+const MONACO_OPTIONS = {
   scrollBeyondLastLine: false,
-  minimap: {
-    enabled: false
-  }
+  minimap: { enabled: false }
 };
 // TODO(gracew): would be nice to substitute the name of the API
 export function FormAndResult({ children, output }: IFormAndResultProps) {
@@ -28,7 +26,7 @@ export function FormAndResult({ children, output }: IFormAndResultProps) {
           height={boundedHeight}
           theme="vs-dark"
           value={pretty}
-          options={MINIMAP_DISABLED}
+          options={MONACO_OPTIONS}
         />
       </div>
     </div>

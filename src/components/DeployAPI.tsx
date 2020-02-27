@@ -44,7 +44,7 @@ export function DeployAPI() {
           intent="success"
         />
       )}
-      <Arrows next={() => history.push(TEST_API(id!, deployId))} />
+      <Arrows next={() => history.push(TEST_API(id!, "STAGING"))} />
     </div>
   );
 }

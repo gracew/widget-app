@@ -32,10 +32,14 @@ export function DefineAPI() {
     const { data } = await defineApi({ variables: { rawDefinition: text } });
     history.push(DEPLOY_API(data.defineAPI.id));
   }
+  const MONACO_OPTIONS = {
+    scrollBeyondLastLine: false,
+    minimap: { enabled: false }
+  };
 
   return (
     <div>
-      <h2>Define your API</h2>
+      <h2>New API</h2>
       <MonacoEditor
         width="700"
         height="400"
@@ -45,6 +49,7 @@ export function DefineAPI() {
         onChange={newValue => {
           text = newValue;
         }}
+        options={MONACO_OPTIONS}
       />
       <FormGroup className="upload-file" label="Upload a file instead">
         <FileInput text="Choose file..." />

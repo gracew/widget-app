@@ -39,6 +39,7 @@ const OBJECTS = gql`
 // TODO(gracew): would be nice to substitute the name of the API
 export function DeployAPI() {
   const { id } = useParams();
+  const [deployId, setDeployId] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [readOpen, setReadOpen] = useState(false);
   const [listOpen, setListOpen] = useState(false);
@@ -61,9 +62,10 @@ export function DeployAPI() {
   );
 
   async function handleDeploy() {
-    await deployAPI({
+    const { data } = await deployAPI({
       variables: { apiID: id, env: "SANDBOX" }
     });
+    setDeployId(data.deployAPI.id);
   }
 
   return (
@@ -78,7 +80,10 @@ export function DeployAPI() {
             open={createOpen}
             setOpen={setCreateOpen}
           >
-            <CreateObject definition={data.api.definition} />
+            <CreateObject
+              definition={data.api.definition}
+              deployId={deployId}
+            />
           </CollapseContainer>
         )}
 
@@ -88,7 +93,7 @@ export function DeployAPI() {
             open={readOpen}
             setOpen={setReadOpen}
           >
-            <ReadObject definition={data.api.definition} />
+            <ReadObject deployId={deployId} />
           </CollapseContainer>
         )}
 
@@ -98,7 +103,7 @@ export function DeployAPI() {
             open={listOpen}
             setOpen={setListOpen}
           >
-            <ListObject definition={data.api.definition} />
+            <ListObject definition={data.api.definition} deployId={deployId} />
           </CollapseContainer>
         )}
 

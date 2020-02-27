@@ -1,22 +1,41 @@
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
-import React from "react";
+import React, { useState } from "react";
 import { FormAndResult } from "./FormAndResult";
 
 interface ICreateObjectProps {
   // TODO(gracew): type/generate this
   definition: any;
+  deployId: string;
 }
 
 // TODO(gracew): would be nice to substitute the name of the API
-export function CreateObject({ definition }: ICreateObjectProps) {
+export function CreateObject({ definition, deployId }: ICreateObjectProps) {
+  const [output, setOutput] = useState("");
+  const objectData: Record<string, string> = {};
+  const onInputChange = (key: string, value: string) => {
+    objectData[key] = value;
+  };
+  const onRun = () =>
+    // TODO(gracew): don't hardcode this
+    fetch(`http://localhost:8080/apis/${deployId}`, {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(objectData)
+    })
+      .then(res => res.text())
+      .then(t => setOutput(t));
   return (
-    <FormAndResult>
+    <FormAndResult output={output}>
       {definition.fields.map(({ name }: { name: string }) => (
         <FormGroup key={name} label={name}>
-          <InputGroup />
+          <InputGroup
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onInputChange(name, e.target.value)
+            }
+          />
         </FormGroup>
       ))}
-      <Button icon="play" text="Run" intent="primary" />
+      <Button icon="play" text="Run" intent="primary" onClick={onRun} />
       <Button icon="duplicate" text="Copy cURL" />
     </FormAndResult>
   );

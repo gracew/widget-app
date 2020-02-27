@@ -1,18 +1,24 @@
 import { Button, HTMLSelect, InputGroup } from "@blueprintjs/core";
-import React from "react";
+import React, { useState } from "react";
 import { FormAndResult } from "./FormAndResult";
 
 interface IListObjectProps {
   definition: any;
+  deployId: string;
 }
 
 // TODO(gracew): would be nice to substitute the name of the API
-export function ListObject({ definition }: IListObjectProps) {
+export function ListObject({ definition, deployId }: IListObjectProps) {
   const includeList = definition.operations.find(
     (el: any) => el.type === "LIST"
   );
+  const [output, setOutput] = useState("");
+  const onClick = () =>
+    fetch(`http://localhost:8080/apis/${deployId}`)
+      .then(res => res.text())
+      .then(t => setOutput(t));
   return (
-    <FormAndResult>
+    <FormAndResult output={output}>
       {includeList.sort && includeList.sort.length > 0 && (
         <div>
           Sort by:
@@ -38,7 +44,7 @@ export function ListObject({ definition }: IListObjectProps) {
           <InputGroup />
         </div>
       )}
-      <Button icon="play" text="Run" intent="primary" />
+      <Button icon="play" text="Run" intent="primary" onClick={onClick} />
       <Button icon="duplicate" text="Copy cURL" />
     </FormAndResult>
   );

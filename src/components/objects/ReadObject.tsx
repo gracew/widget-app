@@ -1,20 +1,29 @@
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
-import React from "react";
+import React, { useState } from "react";
 import { FormAndResult } from "./FormAndResult";
 
 interface IReadObjectProps {
-  // TODO(gracew): type/generate this
-  definition: any;
+  deployId: string;
 }
 
 // TODO(gracew): would be nice to substitute the name of the API
-export function ReadObject({ definition }: IReadObjectProps) {
+export function ReadObject({ deployId }: IReadObjectProps) {
+  const [objectId, setObjectId] = useState("");
+  const [output, setOutput] = useState("");
+  const onClick = () =>
+    fetch(`http://localhost:8080/apis/${deployId}/${objectId}`)
+      .then(res => res.text())
+      .then(t => setOutput(t));
   return (
-    <FormAndResult>
+    <FormAndResult output={output}>
       <FormGroup label="id">
-        <InputGroup />
+        <InputGroup
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setObjectId(e.target.value)
+          }
+        />
       </FormGroup>
-      <Button icon="play" text="Run" intent="primary" />
+      <Button icon="play" text="Run" intent="primary" onClick={onClick} />
       <Button icon="duplicate" text="Copy cURL" />
     </FormAndResult>
   );

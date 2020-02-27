@@ -4,17 +4,15 @@ import { FormAndResult } from "./FormAndResult";
 
 interface IListObjectProps {
   definition: any;
-  deployId: string;
 }
 
-// TODO(gracew): would be nice to substitute the name of the API
-export function ListObject({ definition, deployId }: IListObjectProps) {
+export function ListObject({ definition }: IListObjectProps) {
   const includeList = definition.operations.find(
     (el: any) => el.type === "LIST"
   );
   const [output, setOutput] = useState("");
   const onClick = () =>
-    fetch(`http://localhost:8080/apis/${deployId}`)
+    fetch(`http://localhost:8080/apis/${definition.name}/STAGING`)
       .then(res => res.text())
       .then(t => setOutput(t));
   return (

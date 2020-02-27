@@ -5,11 +5,9 @@ import { FormAndResult } from "./FormAndResult";
 interface ICreateObjectProps {
   // TODO(gracew): type/generate this
   definition: any;
-  deployId: string;
 }
 
-// TODO(gracew): would be nice to substitute the name of the API
-export function CreateObject({ definition, deployId }: ICreateObjectProps) {
+export function CreateObject({ definition }: ICreateObjectProps) {
   const [output, setOutput] = useState("");
   const objectData: Record<string, string> = {};
   const onInputChange = (key: string, value: string) => {
@@ -17,7 +15,7 @@ export function CreateObject({ definition, deployId }: ICreateObjectProps) {
   };
   const onRun = () =>
     // TODO(gracew): don't hardcode this
-    fetch(`http://localhost:8080/apis/${deployId}`, {
+    fetch(`http://localhost:8080/apis/${definition.name}/STAGING`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify(objectData)

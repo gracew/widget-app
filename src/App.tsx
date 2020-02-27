@@ -24,12 +24,12 @@ function App() {
             <Route path={NEW_API} exact={true} component={DefineAPI} />
             <Route path={EDIT_API(":id")} exact={true} component={DefineAPI} />
             <Route
-              path={DEPLOY_API("/:id")}
+              path={DEPLOY_API(":id")}
               exact={true}
               component={DeployAPI}
             />
             <Route
-              path={TEST_API("/:id", "/:deployId")}
+              path={TEST_API(":id", ":deployId")}
               exact={true}
               component={TestAPI}
             />

@@ -11,7 +11,9 @@ import { ReadObject } from "./objects/ReadObject";
 const OBJECTS = gql`
   query GET_API($id: ID!) {
     api(id: $id) {
+      name
       definition {
+        name
         operations {
           type
           sort
@@ -54,34 +56,31 @@ export function TestAPI() {
       <div>
         {includeCreate && (
           <CollapseContainer
-            title="Create an object"
+            title={`Create a ${data.api.name}`}
             open={createOpen}
             setOpen={setCreateOpen}
           >
-            <CreateObject
-              definition={data.api.definition}
-              deployId={deployId!}
-            />
+            <CreateObject definition={data.api.definition} />
           </CollapseContainer>
         )}
 
         {includeRead && (
           <CollapseContainer
-            title="Read an object"
+            title={`Read a ${data.api.name}`}
             open={readOpen}
             setOpen={setReadOpen}
           >
-            <ReadObject deployId={deployId!} />
+            <ReadObject definition={data.api.definition} />
           </CollapseContainer>
         )}
 
         {includeList && (
           <CollapseContainer
-            title="List objects"
+            title={`List ${data.api.name}s`}
             open={listOpen}
             setOpen={setListOpen}
           >
-            <ListObject definition={data.api.definition} deployId={deployId!} />
+            <ListObject definition={data.api.definition} />
           </CollapseContainer>
         )}
 

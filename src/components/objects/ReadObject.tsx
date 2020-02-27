@@ -3,15 +3,14 @@ import React, { useState } from "react";
 import { FormAndResult } from "./FormAndResult";
 
 interface IReadObjectProps {
-  deployId: string;
+  definition: any;
 }
 
-// TODO(gracew): would be nice to substitute the name of the API
-export function ReadObject({ deployId }: IReadObjectProps) {
+export function ReadObject({ definition }: IReadObjectProps) {
   const [objectId, setObjectId] = useState("");
   const [output, setOutput] = useState("");
   const onClick = () =>
-    fetch(`http://localhost:8080/apis/${deployId}/${objectId}`)
+    fetch(`http://localhost:8080/apis/${definition.name}/STAGING/${objectId}`)
       .then(res => res.text())
       .then(t => setOutput(t));
   return (

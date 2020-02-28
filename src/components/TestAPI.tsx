@@ -27,7 +27,6 @@ const OBJECTS = gql`
     }
   }
 `;
-// TODO(gracew): would be nice to substitute the name of the API
 export function TestAPI() {
   const { id, deployId } = useParams();
   const [createOpen, setCreateOpen] = useState(false);

@@ -9,7 +9,6 @@ interface ICollapseContainerProps {
   setOpen: (b: boolean) => void;
 }
 
-// TODO(gracew): would be nice to substitute the name of the API
 export function CollapseContainer({
   title,
   children,

@@ -17,7 +17,6 @@ const DEPLOY_API = gql`
   }
 `;
 
-// TODO(gracew): would be nice to substitute the name of the API
 export function DeployAPI() {
   const { id } = useParams();
   const history = useHistory();

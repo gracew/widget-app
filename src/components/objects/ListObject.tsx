@@ -6,10 +6,11 @@ import {
   NumericInput
 } from "@blueprintjs/core";
 import React, { useState } from "react";
+import { ApiDefinition } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface IListObjectProps {
-  definition: any;
+  definition: ApiDefinition;
 }
 
 export function ListObject({ definition }: IListObjectProps) {
@@ -30,7 +31,7 @@ export function ListObject({ definition }: IListObjectProps) {
         <div>
           Sort by:
           <HTMLSelect id="sort">
-            {includeList.map(
+            {includeList.sort.map(
               ({ field, order }: { field: string; order: string }) => (
                 <option value={field + order}>
                   {field} {order}

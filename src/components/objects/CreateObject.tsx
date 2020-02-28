@@ -1,10 +1,10 @@
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 import React, { useState } from "react";
+import { ApiDefinition } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface ICreateObjectProps {
-  // TODO(gracew): type/generate this
-  definition: any;
+  definition: ApiDefinition;
 }
 
 export function CreateObject({ definition }: ICreateObjectProps) {

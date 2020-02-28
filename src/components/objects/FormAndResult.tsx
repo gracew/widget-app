@@ -11,7 +11,7 @@ const MONACO_OPTIONS = {
   scrollBeyondLastLine: false,
   minimap: { enabled: false }
 };
-// TODO(gracew): would be nice to substitute the name of the API
+
 export function FormAndResult({ children, output }: IFormAndResultProps) {
   const pretty = output && JSON.stringify(JSON.parse(output), null, 2);
   const numLines = pretty.split("\n").length;

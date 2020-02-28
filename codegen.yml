@@ -1,0 +1,17 @@
+schema: "http://localhost:8080/query"
+# documents:
+#   - "./graphql/**/*.{tsx,ts}"
+#   - "!./graphql/client/**/*.{tsx,ts}"
+# overwrite: true
+generates:
+  graphql/types.ts:
+    plugins:
+      - typescript
+    # The combined options of all provided plug-ins
+    # More information about the options below:
+    # graphql-code-generator.com/docs/plugins/typescript-react-apollo#configuration
+    # config:
+    #   withHOC: false
+    #   withHooks: true
+    #   withComponent: false
+    #   # withMutationOptionsType: true

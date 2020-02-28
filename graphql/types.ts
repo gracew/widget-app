@@ -50,7 +50,7 @@ export enum Environment {
 export type FieldDefinition = {
    __typename?: 'FieldDefinition',
   name: Scalars['String'],
-  type: Scalars['String'],
+  type: Type,
   customType?: Maybe<Scalars['String']>,
   constraints: Array<Constraint>,
 };
@@ -86,7 +86,7 @@ export type MutationDeployApiArgs = {
 export type OperationDefinition = {
    __typename?: 'OperationDefinition',
   type: OperationType,
-  sort?: Maybe<SortOrder>,
+  sort?: Maybe<Array<SortDefinition>>,
   filter?: Maybe<Array<Scalars['String']>>,
 };
 
@@ -124,3 +124,9 @@ export type StringLengthConstraint = {
   min?: Maybe<Scalars['Int']>,
   max?: Maybe<Scalars['Int']>,
 };
+
+export enum Type {
+  Float = 'FLOAT',
+  Int = 'INT',
+  String = 'STRING'
+}

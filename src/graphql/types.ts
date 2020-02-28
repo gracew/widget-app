@@ -23,7 +23,16 @@ export type ApiDefinition = {
   operations: Array<OperationDefinition>,
 };
 
-export type Constraint = IntConstraint | FloatConstraint | StringLengthConstraint;
+export type Constraint = {
+   __typename?: 'Constraint',
+  minInt?: Maybe<Scalars['Int']>,
+  maxInt?: Maybe<Scalars['Int']>,
+  minFloat?: Maybe<Scalars['Float']>,
+  maxFloat?: Maybe<Scalars['Float']>,
+  regex?: Maybe<Scalars['String']>,
+  minLength?: Maybe<Scalars['Int']>,
+  maxLength?: Maybe<Scalars['Int']>,
+};
 
 export type DefineApi = {
   rawDefinition: Scalars['String'],
@@ -52,19 +61,7 @@ export type FieldDefinition = {
   name: Scalars['String'],
   type: Type,
   customType?: Maybe<Scalars['String']>,
-  constraints: Array<Constraint>,
-};
-
-export type FloatConstraint = {
-   __typename?: 'FloatConstraint',
-  min?: Maybe<Scalars['Float']>,
-  max?: Maybe<Scalars['Float']>,
-};
-
-export type IntConstraint = {
-   __typename?: 'IntConstraint',
-  min?: Maybe<Scalars['Int']>,
-  max?: Maybe<Scalars['Int']>,
+  constraints: Constraint,
 };
 
 export type Mutation = {
@@ -118,12 +115,6 @@ export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
-
-export type StringLengthConstraint = {
-   __typename?: 'StringLengthConstraint',
-  min?: Maybe<Scalars['Int']>,
-  max?: Maybe<Scalars['Int']>,
-};
 
 export enum Type {
   Float = 'FLOAT',

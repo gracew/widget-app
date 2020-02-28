@@ -4,7 +4,7 @@ schema: "http://localhost:8080/query"
 #   - "!./graphql/client/**/*.{tsx,ts}"
 # overwrite: true
 generates:
-  graphql/types.ts:
+  src/graphql/types.ts:
     plugins:
       - typescript
     # The combined options of all provided plug-ins

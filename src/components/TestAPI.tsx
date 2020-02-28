@@ -16,12 +16,23 @@ const OBJECTS = gql`
         name
         operations {
           type
-          sort
+          sort {
+            field
+            order
+          }
           filter
         }
         fields {
           name
           type
+          constraints {
+            minInt
+            maxInt
+            minFloat
+            maxFloat
+            minLength
+            maxLength
+          }
         }
       }
     }

@@ -19,8 +19,25 @@ const DEFINE_API = gql`
 `;
 
 const EXAMPLE = `{
-  "name": "Game",
-  "fields": [{ "name": "name", "type": "String!" }],
+  "name": "GameScore",
+  "fields": [
+    {
+      "name": "name",
+      "type": "STRING",
+      "constraints": {
+        "minLength": 2,
+        "maxLength": 100
+      }
+    },
+    {
+      "name": "score",
+      "type": "FLOAT",
+      "constraints": {
+        "minFloat": 0,
+        "maxFloat": 100
+      }
+    }
+  ],
   "operations": []
 }
 `;
@@ -55,7 +72,7 @@ export function DefineAPI() {
         width="700"
         height="400"
         theme="vs-dark"
-        value={EXAMPLE}
+        value={text}
         language="json"
         onChange={newValue => {
           text = newValue;

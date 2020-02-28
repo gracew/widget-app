@@ -1,6 +1,6 @@
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition } from "../../../graphql/types";
+import { ApiDefinition } from "../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface IReadObjectProps {

@@ -1,6 +1,7 @@
-import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition } from "../../../graphql/types";
+import { ApiDefinition } from "../../graphql/types";
+import { FieldInput } from "./FieldInput";
 import { FormAndResult } from "./FormAndResult";
 
 interface ICreateObjectProps {
@@ -24,14 +25,12 @@ export function CreateObject({ definition }: ICreateObjectProps) {
       .then(t => setOutput(t));
   return (
     <FormAndResult output={output}>
-      {definition.fields.map(({ name }: { name: string }) => (
-        <FormGroup key={name} label={name}>
-          <InputGroup
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onInputChange(name, e.target.value)
-            }
-          />
-        </FormGroup>
+      {definition.fields.map(fieldDef => (
+        <FieldInput
+          key={fieldDef.name}
+          definition={fieldDef}
+          setOutput={(val: any) => onInputChange(fieldDef.name, val)}
+        />
       ))}
       <Button icon="play" text="Run" intent="primary" onClick={onRun} />
       <Button icon="duplicate" text="Copy cURL" />

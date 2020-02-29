@@ -4,7 +4,8 @@ import { FieldDefinition, Type } from "../../graphql/types";
 
 interface IFieldInputProps {
   definition: FieldDefinition;
-  setOutput: (val: any) => void;
+  value: any;
+  setValue: (val: any) => void;
 }
 
 function helperText(definition: FieldDefinition) {
@@ -64,22 +65,22 @@ function helperText(definition: FieldDefinition) {
   }
 }
 
-export function FieldInput({ definition, setOutput }: IFieldInputProps) {
+export function FieldInput({ definition, value, setValue }: IFieldInputProps) {
   const [valid, setValid] = useState(true);
-  function validate(value: any) {
+  function validate(v: any) {
     if (!definition.constraints) {
       return;
     }
     switch (definition.type) {
       case Type.Float:
         if (definition.constraints.minFloat) {
-          if (value < definition.constraints.minFloat) {
+          if (v < definition.constraints.minFloat) {
             setValid(false);
             return;
           }
         }
         if (definition.constraints.maxFloat) {
-          if (value > definition.constraints.maxFloat) {
+          if (v > definition.constraints.maxFloat) {
             setValid(false);
             return;
           }
@@ -87,13 +88,13 @@ export function FieldInput({ definition, setOutput }: IFieldInputProps) {
         break;
       case Type.Int:
         if (definition.constraints.minInt) {
-          if (value < definition.constraints.minInt) {
+          if (v < definition.constraints.minInt) {
             setValid(false);
             return;
           }
         }
         if (definition.constraints.maxInt) {
-          if (value > definition.constraints.maxInt) {
+          if (v > definition.constraints.maxInt) {
             setValid(false);
             return;
           }
@@ -101,32 +102,34 @@ export function FieldInput({ definition, setOutput }: IFieldInputProps) {
         break;
       case Type.String:
         if (definition.constraints.minLength) {
-          if (value.length < definition.constraints.minLength) {
+          if (v.length < definition.constraints.minLength) {
             setValid(false);
             return;
           }
         }
         if (definition.constraints.maxLength) {
-          if (value.length > definition.constraints.maxLength) {
+          if (v.length > definition.constraints.maxLength) {
             setValid(false);
             return;
           }
         }
         break;
     }
-    setOutput(value);
     setValid(true);
+    setValue(v);
   }
   const intent = valid ? "none" : "danger";
   const input =
     definition.type === Type.Float || definition.type === Type.Int ? (
       <NumericInput
         intent={intent}
+        value={value}
         onValueChange={(num: number) => validate(num)}
       />
     ) : (
       <InputGroup
         intent={intent}
+        value={value}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           validate(e.target.value)
         }

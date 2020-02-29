@@ -3,7 +3,7 @@ import { Button, HTMLTable, Icon } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { TEST_API } from "../routes";
+import { AUTH_API, TEST_API } from "../routes";
 
 export const ALL_APIS = gql`
   {
@@ -42,6 +42,11 @@ export function ListAPIs() {
               <td>
                 {name}
                 <Button icon="edit" minimal={true} />
+                <Button
+                  icon="lock"
+                  minimal={true}
+                  onClick={() => history.push(AUTH_API(id))}
+                />
               </td>
               <td>
                 <Icon icon="tick-circle" intent="success" />

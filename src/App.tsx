@@ -3,7 +3,7 @@ import ApolloClient from "apollo-boost";
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import { AuthAPI } from "./components/AuthAPI";
+import { AuthAPI } from "./components/apis/AuthAPI";
 import { DefineAPI } from "./components/DefineAPI";
 import { DeployAPI } from "./components/DeployAPI";
 import { ListAPIs } from "./components/ListAPIs";

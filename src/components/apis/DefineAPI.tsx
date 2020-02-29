@@ -4,7 +4,7 @@ import { gql } from "apollo-boost";
 import React from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useHistory } from "react-router-dom";
-import { DEPLOY_API } from "../routes";
+import { AUTH_API } from "../routes";
 import { Arrows } from "./Arrows";
 import "./DefineAPI.css";
 import { ALL_APIS } from "./ListAPIs";
@@ -58,7 +58,7 @@ export function DefineAPI() {
 
   async function handleNext() {
     const { data } = await defineApi({ variables: { rawDefinition: text } });
-    history.push(DEPLOY_API(data.defineAPI.id));
+    history.push(AUTH_API(data.defineAPI.id));
   }
   const MONACO_OPTIONS = {
     scrollBeyondLastLine: false,

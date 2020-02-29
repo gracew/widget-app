@@ -23,6 +23,31 @@ export type ApiDefinition = {
   operations: Array<OperationDefinition>,
 };
 
+export type AuthApi = {
+  apiID: Scalars['ID'],
+  readPolicy: AuthPolicyInput,
+  writePolicy: AuthPolicyInput,
+};
+
+export type AuthPolicy = {
+   __typename?: 'AuthPolicy',
+  type: AuthPolicyType,
+  userAttribute?: Maybe<Scalars['String']>,
+  objectAttribute?: Maybe<Scalars['String']>,
+};
+
+export type AuthPolicyInput = {
+  type: AuthPolicyType,
+  userAttribute?: Maybe<Scalars['String']>,
+  objectAttribute?: Maybe<Scalars['String']>,
+};
+
+export enum AuthPolicyType {
+  CreatedBy = 'CREATED_BY',
+  AttributeMatch = 'ATTRIBUTE_MATCH',
+  Custom = 'CUSTOM'
+}
+
 export type Constraint = {
    __typename?: 'Constraint',
   minInt?: Maybe<Scalars['Int']>,
@@ -61,18 +86,26 @@ export type FieldDefinition = {
   name: Scalars['String'],
   type: Type,
   customType?: Maybe<Scalars['String']>,
+  optional?: Maybe<Scalars['Boolean']>,
+  list?: Maybe<Scalars['Boolean']>,
   constraints: Constraint,
 };
 
 export type Mutation = {
    __typename?: 'Mutation',
   defineAPI: Api,
+  authAPI: Scalars['Boolean'],
   deployAPI: Deploy,
 };
 
 
 export type MutationDefineApiArgs = {
   input: DefineApi
+};
+
+
+export type MutationAuthApiArgs = {
+  input: AuthApi
 };
 
 
@@ -119,5 +152,6 @@ export enum SortOrder {
 export enum Type {
   Float = 'FLOAT',
   Int = 'INT',
+  Boolean = 'BOOLEAN',
   String = 'STRING'
 }

@@ -1,33 +1,26 @@
 import { Alignment, Button, Navbar as BpNavbar } from "@blueprintjs/core";
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { LIST_APIS, NEW_API } from "../routes";
+import { useHistory } from "react-router-dom";
+import { LIST_APIS, TESTS } from "../routes";
 
-export class Navbar extends React.Component<RouteComponentProps> {
-  public render() {
-    return (
-      <BpNavbar className="bp3-dark">
-        <BpNavbar.Group align={Alignment.LEFT}>
-          <BpNavbar.Heading>Widget</BpNavbar.Heading>
-          <BpNavbar.Divider />
-          <Button
-            onClick={this.handleAllSelection}
-            text="My APIs"
-            minimal={true}
-          />
-          <Button
-            onClick={this.handleNewSelection}
-            icon="add"
-            text="New API"
-            minimal={true}
-          />
-        </BpNavbar.Group>
-      </BpNavbar>
-    );
-  }
-
-  private handleAllSelection = (_: React.MouseEvent<HTMLElement>) =>
-    this.props.history.push(LIST_APIS);
-  private handleNewSelection = (_: React.MouseEvent<HTMLElement>) =>
-    this.props.history.push(NEW_API);
+export function Navbar() {
+  const history = useHistory();
+  return (
+    <BpNavbar className="bp3-dark">
+      <BpNavbar.Group align={Alignment.LEFT}>
+        <BpNavbar.Heading>Widget</BpNavbar.Heading>
+        <BpNavbar.Divider />
+        <Button
+          onClick={() => history.push(LIST_APIS)}
+          text="APIs"
+          minimal={true}
+        />
+        <Button
+          onClick={() => history.push(TESTS)}
+          text="Tests"
+          minimal={true}
+        />
+      </BpNavbar.Group>
+    </BpNavbar>
+  );
 }

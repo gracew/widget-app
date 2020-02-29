@@ -1,21 +1,26 @@
-import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
+import { FormGroup, InputGroup } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition } from "../../graphql/types";
+import { ApiDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface IReadObjectProps {
   definition: ApiDefinition;
+  testTokens: TestToken[];
 }
 
-export function ReadObject({ definition }: IReadObjectProps) {
+export function ReadObject({ definition, testTokens }: IReadObjectProps) {
   const [objectId, setObjectId] = useState("");
   const [output, setOutput] = useState("");
-  const onClick = () =>
-    fetch(`http://localhost:8080/apis/${definition.name}/STAGING/${objectId}`)
+  const onSubmit = (token: string) =>
+    fetch(`http://localhost:8080/apis/${definition.name}/STAGING/${objectId}`, {
+      headers: {
+        "X-Parse-Session-Token": token
+      }
+    })
       .then(res => res.text())
       .then(t => setOutput(t));
   return (
-    <FormAndResult output={output}>
+    <FormAndResult testTokens={testTokens} output={output} onSubmit={onSubmit}>
       <FormGroup label="id">
         <InputGroup
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -23,8 +28,6 @@ export function ReadObject({ definition }: IReadObjectProps) {
           }
         />
       </FormGroup>
-      <Button icon="play" text="Run" intent="primary" onClick={onClick} />
-      <Button icon="duplicate" text="Copy cURL" />
     </FormAndResult>
   );
 }

@@ -2,7 +2,8 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Arrows } from "./Arrows";
+import { TEST_TOKENS } from "../../queries";
+import { Arrows } from "../Arrows";
 import { CollapseContainer } from "./objects/CollapseContainer";
 import { CreateObject } from "./objects/CreateObject";
 import { ListObject } from "./objects/ListObject";
@@ -45,8 +46,11 @@ export function TestAPI() {
   const [listOpen, setListOpen] = useState(false);
 
   const { data, loading } = useQuery(OBJECTS, { variables: { id } });
+  const { data: testTokensData, loading: testTokenLoading } = useQuery(
+    TEST_TOKENS
+  );
 
-  if (loading) {
+  if (loading || testTokenLoading) {
     return <p>Loading</p>;
   }
 
@@ -70,7 +74,10 @@ export function TestAPI() {
             open={createOpen}
             setOpen={setCreateOpen}
           >
-            <CreateObject definition={data.api.definition} />
+            <CreateObject
+              definition={data.api.definition}
+              testTokens={testTokensData.testTokens.testTokens}
+            />
           </CollapseContainer>
         )}
 
@@ -80,7 +87,10 @@ export function TestAPI() {
             open={readOpen}
             setOpen={setReadOpen}
           >
-            <ReadObject definition={data.api.definition} />
+            <ReadObject
+              definition={data.api.definition}
+              testTokens={testTokensData.testTokens.testTokens}
+            />
           </CollapseContainer>
         )}
 
@@ -90,7 +100,10 @@ export function TestAPI() {
             open={listOpen}
             setOpen={setListOpen}
           >
-            <ListObject definition={data.api.definition} />
+            <ListObject
+              definition={data.api.definition}
+              testTokens={testTokensData.testTokens.testTokens}
+            />
           </CollapseContainer>
         )}
 

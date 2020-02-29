@@ -4,8 +4,8 @@ import { gql } from "apollo-boost";
 import React from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useHistory } from "react-router-dom";
-import { AUTH_API } from "../routes";
-import { Arrows } from "./Arrows";
+import { AUTH_API } from "../../routes";
+import { Arrows } from "../Arrows";
 import "./DefineAPI.css";
 import { ALL_APIS } from "./ListAPIs";
 

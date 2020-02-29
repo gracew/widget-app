@@ -4,17 +4,19 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { AuthAPI } from "./components/apis/AuthAPI";
-import { DefineAPI } from "./components/DefineAPI";
-import { DeployAPI } from "./components/DeployAPI";
-import { ListAPIs } from "./components/ListAPIs";
+import { DefineAPI } from "./components/apis/DefineAPI";
+import { DeployAPI } from "./components/apis/DeployAPI";
+import { ListAPIs } from "./components/apis/ListAPIs";
+import { TestAPI } from "./components/apis/TestAPI";
 import { Navbar } from "./components/Navbar";
-import { TestAPI } from "./components/TestAPI";
+import { Tests } from "./components/Tests";
 import {
   AUTH_API,
   DEPLOY_API,
   EDIT_API,
   LIST_APIS,
   NEW_API,
+  TESTS,
   TEST_API
 } from "./routes";
 
@@ -43,6 +45,8 @@ function App() {
               component={TestAPI}
             />
             <Route path={LIST_APIS} exact={true} component={ListAPIs} />
+
+            <Route path={TESTS} exact={true} component={Tests} />
           </Switch>
         </div>
       </Router>

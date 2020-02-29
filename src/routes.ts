@@ -7,3 +7,5 @@ export const TEST_API = (apiId: string, deployId: string) =>
   `/apis/${apiId}/deploys/${deployId}`;
 
 export const LIST_APIS = "/apis/list";
+
+export const TESTS = "/tests";

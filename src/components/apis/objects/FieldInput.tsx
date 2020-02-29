@@ -1,6 +1,6 @@
 import { FormGroup, InputGroup, NumericInput } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { FieldDefinition, Type } from "../../graphql/types";
+import { FieldDefinition, Type } from "../../../graphql/types";
 
 interface IFieldInputProps {
   definition: FieldDefinition;

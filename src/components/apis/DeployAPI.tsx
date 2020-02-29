@@ -3,8 +3,8 @@ import { Button, Icon } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { TEST_API } from "../routes";
-import { Arrows } from "./Arrows";
+import { TEST_API } from "../../routes";
+import { Arrows } from "../Arrows";
 import "./DeployAPI.css";
 
 const DEPLOY_API = gql`

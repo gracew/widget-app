@@ -23,11 +23,23 @@ export type ApiDefinition = {
   operations: Array<OperationDefinition>,
 };
 
-export type AuthApi = {
+export type Auth = {
+   __typename?: 'Auth',
+  authenticationType: AuthenticationType,
+  readPolicy: AuthPolicy,
+  writePolicy: AuthPolicy,
+};
+
+export type AuthApiInput = {
   apiID: Scalars['ID'],
+  authenticationType: AuthenticationType,
   readPolicy: AuthPolicyInput,
   writePolicy: AuthPolicyInput,
 };
+
+export enum AuthenticationType {
+  BuiltIn = 'BUILT_IN'
+}
 
 export type AuthPolicy = {
    __typename?: 'AuthPolicy',
@@ -59,7 +71,7 @@ export type Constraint = {
   maxLength?: Maybe<Scalars['Int']>,
 };
 
-export type DefineApi = {
+export type DefineApiInput = {
   rawDefinition: Scalars['String'],
 };
 
@@ -70,7 +82,7 @@ export type Deploy = {
   env: Environment,
 };
 
-export type DeployApi = {
+export type DeployApiInput = {
   apiID: Scalars['ID'],
   env: Environment,
 };
@@ -94,23 +106,35 @@ export type FieldDefinition = {
 export type Mutation = {
    __typename?: 'Mutation',
   defineAPI: Api,
+  updateAPI: Api,
   authAPI: Scalars['Boolean'],
   deployAPI: Deploy,
+  addTestToken: TestToken,
 };
 
 
 export type MutationDefineApiArgs = {
-  input: DefineApi
+  input: DefineApiInput
+};
+
+
+export type MutationUpdateApiArgs = {
+  input: UpdateApiInput
 };
 
 
 export type MutationAuthApiArgs = {
-  input: AuthApi
+  input: AuthApiInput
 };
 
 
 export type MutationDeployApiArgs = {
-  input: DeployApi
+  input: DeployApiInput
+};
+
+
+export type MutationAddTestTokenArgs = {
+  input: TestTokenInput
 };
 
 export type OperationDefinition = {
@@ -131,11 +155,18 @@ export type Query = {
    __typename?: 'Query',
   api?: Maybe<Api>,
   apis: Array<Api>,
+  auth?: Maybe<Auth>,
+  testTokens: TestTokenResponse,
 };
 
 
 export type QueryApiArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryAuthArgs = {
+  apiID: Scalars['ID']
 };
 
 export type SortDefinition = {
@@ -149,9 +180,30 @@ export enum SortOrder {
   Desc = 'DESC'
 }
 
+export type TestToken = {
+   __typename?: 'TestToken',
+  label: Scalars['String'],
+  token: Scalars['String'],
+};
+
+export type TestTokenInput = {
+  label: Scalars['String'],
+  token: Scalars['String'],
+};
+
+export type TestTokenResponse = {
+   __typename?: 'TestTokenResponse',
+  testTokens: Array<TestToken>,
+};
+
 export enum Type {
   Float = 'FLOAT',
   Int = 'INT',
   Boolean = 'BOOLEAN',
   String = 'STRING'
 }
+
+export type UpdateApiInput = {
+  apiID: Scalars['ID'],
+  rawDefinition: Scalars['String'],
+};

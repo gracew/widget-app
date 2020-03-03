@@ -1,21 +1,40 @@
-import { useMutation } from "@apollo/react-hooks";
-import { HTMLSelect } from "@blueprintjs/core";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { AuthPolicyType } from "../../graphql/types";
+import { AuthenticationType, AuthPolicyType } from "../../graphql/types";
 import { DEPLOY_API } from "../../routes";
 import { Arrows } from "../Arrows";
+import { AuthPolicy } from "./AuthPolicy";
 
-const AUTH_API = gql`
+const AUTH = gql`
+  query AUTH($apiID: ID!) {
+    auth(apiID: $apiID) {
+      readPolicy {
+        type
+        userAttribute
+        objectAttribute
+      }
+      writePolicy {
+        type
+        userAttribute
+        objectAttribute
+      }
+    }
+  }
+`;
+
+const SET_AUTH = gql`
   mutation AuthAPI(
     $apiID: ID!
+    $authenticationType: AuthenticationType!
     $readPolicyType: AuthPolicyType!
     $writePolicyType: AuthPolicyType!
   ) {
     authAPI(
       input: {
         apiID: $apiID
+        authenticationType: $authenticationType
         readPolicy: { type: $readPolicyType }
         writePolicy: { type: $writePolicyType }
       }
@@ -26,17 +45,30 @@ const AUTH_API = gql`
 export function AuthAPI() {
   const { id } = useParams();
   const history = useHistory();
-  const [authApi, _] = useMutation(AUTH_API);
+  const { loading, error, data } = useQuery(AUTH, { variables: { apiID: id } });
+  const [authApi, _] = useMutation(SET_AUTH);
   const [readPolicyType, setReadPolicyType] = useState(
-    AuthPolicyType.CreatedBy
+    (data && data.auth && data.auth.readPolicy.type) || AuthPolicyType.CreatedBy
   );
-  const writePolicyType = AuthPolicyType.CreatedBy;
+  const [writePolicyType, setWritePolicyType] = useState(
+    (data && data.auth && data.auth.writePolicy.type) ||
+      AuthPolicyType.CreatedBy
+  );
 
   async function handleNext() {
     const { data } = await authApi({
-      variables: { apiID: id, readPolicyType, writePolicyType }
+      variables: {
+        apiID: id,
+        authenticationType: AuthenticationType.BuiltIn,
+        readPolicyType,
+        writePolicyType
+      }
     });
-    history.push(DEPLOY_API(data.defineAPI.id));
+    history.push(DEPLOY_API(id!));
+  }
+
+  if (loading) {
+    return <p>Loading</p>;
   }
 
   return (
@@ -44,24 +76,11 @@ export function AuthAPI() {
       <h2>Auth API</h2>
       <div>
         <h3>Read Policy</h3>
-        <HTMLSelect
-          value={readPolicyType}
-          onChange={(e: any) => setReadPolicyType(e.currentTarget.value)}
-        >
-          <option value={AuthPolicyType.CreatedBy}>
-            Allow for objects created by the user
-          </option>
-          <option value={AuthPolicyType.AttributeMatch}>
-            Allow when object attribute matches user attribute
-          </option>
-          <option value={AuthPolicyType.Custom}>Custom</option>
-        </HTMLSelect>
+        <AuthPolicy value={readPolicyType} setValue={setReadPolicyType} />
 
         <h3>Write Policy</h3>
-        <HTMLSelect>
-          <option value="read-policy">Use read policy</option>
-          <option value="custom">Custom</option>
-        </HTMLSelect>
+        <AuthPolicy value={writePolicyType} setValue={setWritePolicyType} />
+
         <Arrows next={handleNext} />
       </div>
     </div>

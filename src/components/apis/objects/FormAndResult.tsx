@@ -40,7 +40,6 @@ export function FormAndResult({
             intent="primary"
             onClick={() => onSubmit(token)}
           />
-          as
           <HTMLSelect
             required
             value={token}

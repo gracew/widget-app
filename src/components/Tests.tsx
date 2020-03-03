@@ -83,6 +83,7 @@ export function Tests() {
       </FormGroup>
       <FormGroup label="Token">
         <InputGroup
+          type="password"
           value={token}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setToken(e.target.value)

@@ -4,15 +4,20 @@ import { ApiDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface IReadObjectProps {
+  apiId: string;
   definition: ApiDefinition;
   testTokens: TestToken[];
 }
 
-export function ReadObject({ definition, testTokens }: IReadObjectProps) {
+export function ReadObject({
+  apiId,
+  definition,
+  testTokens
+}: IReadObjectProps) {
   const [objectId, setObjectId] = useState("");
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) =>
-    fetch(`http://localhost:8080/apis/${definition.name}/STAGING/${objectId}`, {
+    fetch(`http://localhost:8080/apis/${apiId}/STAGING/${objectId}`, {
       headers: {
         "X-Parse-Session-Token": token
       }

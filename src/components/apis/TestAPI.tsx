@@ -75,6 +75,7 @@ export function TestAPI() {
             setOpen={setCreateOpen}
           >
             <CreateObject
+              apiId={id!}
               definition={data.api.definition}
               testTokens={testTokensData.testTokens.testTokens}
             />
@@ -88,6 +89,7 @@ export function TestAPI() {
             setOpen={setReadOpen}
           >
             <ReadObject
+              apiId={id!}
               definition={data.api.definition}
               testTokens={testTokensData.testTokens.testTokens}
             />
@@ -101,6 +103,7 @@ export function TestAPI() {
             setOpen={setListOpen}
           >
             <ListObject
+              apiId={id!}
               definition={data.api.definition}
               testTokens={testTokensData.testTokens.testTokens}
             />

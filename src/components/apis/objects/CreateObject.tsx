@@ -4,17 +4,22 @@ import { FieldInput } from "./FieldInput";
 import { FormAndResult } from "./FormAndResult";
 
 interface ICreateObjectProps {
+  apiId: string;
   definition: ApiDefinition;
   testTokens: TestToken[];
 }
 
-export function CreateObject({ definition, testTokens }: ICreateObjectProps) {
+export function CreateObject({
+  apiId,
+  definition,
+  testTokens
+}: ICreateObjectProps) {
   const [output, setOutput] = useState("");
   const initialInput: Record<string, any> = {};
   const [input, setInput] = useState(initialInput);
   const onSubmit = (token: string) =>
     // TODO(gracew): don't hardcode this
-    fetch(`http://localhost:8080/apis/${definition.name}/STAGING`, {
+    fetch(`http://localhost:8080/apis/${apiId}/STAGING`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

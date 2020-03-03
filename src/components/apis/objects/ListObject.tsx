@@ -9,11 +9,16 @@ import { ApiDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface IListObjectProps {
+  apiId: string;
   definition: ApiDefinition;
   testTokens: TestToken[];
 }
 
-export function ListObject({ definition, testTokens }: IListObjectProps) {
+export function ListObject({
+  apiId,
+  definition,
+  testTokens
+}: IListObjectProps) {
   const includeList = definition.operations.find(
     (el: any) => el.type === "LIST"
   );
@@ -21,7 +26,7 @@ export function ListObject({ definition, testTokens }: IListObjectProps) {
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) => {
     const query = pageSize ? `?pageSize=${pageSize}` : "";
-    fetch(`http://localhost:8080/apis/${definition.name}/STAGING${query}`, {
+    fetch(`http://localhost:8080/apis/${apiId}/STAGING${query}`, {
       headers: {
         "X-Parse-Session-Token": token
       }

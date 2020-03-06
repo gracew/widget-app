@@ -2,9 +2,14 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import {
+  CustomLogic,
+  OperationDefinition,
+  OperationType
+} from "../../graphql/types";
 import { DEPLOY_API } from "../../routes";
 import { Arrows } from "../Arrows";
-import { CustomLogic } from "./CustomLogic";
+import { CustomLogicEditor } from "./CustomLogicEditor";
 import { CollapseContainer } from "./objects/CollapseContainer";
 
 const OBJECTS = gql`
@@ -37,6 +42,17 @@ const OBJECTS = gql`
     }
   }
 `;
+
+const CUSTOM_LOGIC = gql`
+  query CUSTOM_LOGIC($apiID: ID!) {
+    customLogic(apiID: $apiID) {
+      apiID
+      operationType
+      beforeSave
+      afterSave
+    }
+  }
+`;
 export function CustomizeAPI() {
   const { id } = useParams();
   const history = useHistory();
@@ -45,20 +61,40 @@ export function CustomizeAPI() {
   const [listOpen, setListOpen] = useState(false);
 
   const { data, loading } = useQuery(OBJECTS, { variables: { id } });
+  const {
+    data: customLogicData,
+    loading: customLogicLoading
+  } = useQuery(CUSTOM_LOGIC, { variables: { apiID: id } });
 
-  if (loading) {
+  if (loading || customLogicLoading) {
     return <p>Loading</p>;
   }
 
   const includeCreate =
     data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find((el: any) => el.type === "CREATE");
+    data.api.definition.operations.find(
+      (el: OperationDefinition) => el.type === OperationType.Create
+    );
   const includeRead =
     data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find((el: any) => el.type === "READ");
+    data.api.definition.operations.find(
+      (el: OperationDefinition) => el.type === OperationType.Read
+    );
   const includeList =
     data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find((el: any) => el.type === "LIST");
+    data.api.definition.operations.find(
+      (el: OperationDefinition) => el.type === OperationType.Update
+    );
+
+  const createCustomLogic: CustomLogic = customLogicData.customLogic.find(
+    (el: CustomLogic) => el.operationType === OperationType.Create
+  );
+  const readCustomLogic: CustomLogic = customLogicData.customLogic.find(
+    (el: CustomLogic) => el.operationType === OperationType.Read
+  );
+  const listCustomLogic = customLogicData.customLogic.find(
+    (el: CustomLogic) => el.operationType === OperationType.List
+  );
 
   return (
     <div>
@@ -71,7 +107,12 @@ export function CustomizeAPI() {
             open={createOpen}
             setOpen={setCreateOpen}
           >
-            <CustomLogic />
+            <CustomLogicEditor
+              apiID={id!}
+              operationType={OperationType.Create}
+              currBeforeSave={createCustomLogic && createCustomLogic.beforeSave}
+              currAfterSave={createCustomLogic && createCustomLogic.afterSave}
+            />
           </CollapseContainer>
         )}
 
@@ -81,7 +122,12 @@ export function CustomizeAPI() {
             open={readOpen}
             setOpen={setReadOpen}
           >
-            <CustomLogic />
+            <CustomLogicEditor
+              apiID={id!}
+              operationType={OperationType.Read}
+              currBeforeSave={readCustomLogic && readCustomLogic.beforeSave}
+              currAfterSave={readCustomLogic && readCustomLogic.afterSave}
+            />
           </CollapseContainer>
         )}
 
@@ -91,7 +137,12 @@ export function CustomizeAPI() {
             open={listOpen}
             setOpen={setListOpen}
           >
-            <CustomLogic />
+            <CustomLogicEditor
+              apiID={id!}
+              operationType={OperationType.List}
+              currBeforeSave={listCustomLogic && listCustomLogic.beforeSave}
+              currAfterSave={listCustomLogic && listCustomLogic.afterSave}
+            />
           </CollapseContainer>
         )}
 

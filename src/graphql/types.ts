@@ -25,6 +25,8 @@ export type ApiDefinition = {
 
 export type Auth = {
    __typename?: 'Auth',
+  id: Scalars['ID'],
+  apiID: Scalars['ID'],
   authenticationType: AuthenticationType,
   readPolicy: AuthPolicy,
   writePolicy: AuthPolicy,
@@ -71,6 +73,14 @@ export type Constraint = {
   maxLength?: Maybe<Scalars['Int']>,
 };
 
+export type CustomLogic = {
+   __typename?: 'CustomLogic',
+  apiID: Scalars['ID'],
+  operationType: OperationType,
+  beforeSave?: Maybe<Scalars['String']>,
+  afterSave?: Maybe<Scalars['String']>,
+};
+
 export type DefineApiInput = {
   rawDefinition: Scalars['String'],
 };
@@ -109,6 +119,7 @@ export type Mutation = {
   updateAPI: Api,
   authAPI: Scalars['Boolean'],
   deployAPI: Deploy,
+  saveCustomLogic: Scalars['Boolean'],
   addTestToken: TestToken,
 };
 
@@ -130,6 +141,11 @@ export type MutationAuthApiArgs = {
 
 export type MutationDeployApiArgs = {
   input: DeployApiInput
+};
+
+
+export type MutationSaveCustomLogicArgs = {
+  input: SaveCustomLogicInput
 };
 
 
@@ -156,6 +172,7 @@ export type Query = {
   api?: Maybe<Api>,
   apis: Array<Api>,
   auth?: Maybe<Auth>,
+  customLogic: Array<CustomLogic>,
   testTokens: TestTokenResponse,
 };
 
@@ -167,6 +184,18 @@ export type QueryApiArgs = {
 
 export type QueryAuthArgs = {
   apiID: Scalars['ID']
+};
+
+
+export type QueryCustomLogicArgs = {
+  apiID: Scalars['ID']
+};
+
+export type SaveCustomLogicInput = {
+  apiID: Scalars['ID'],
+  operationType: OperationType,
+  beforeSave?: Maybe<Scalars['String']>,
+  afterSave?: Maybe<Scalars['String']>,
 };
 
 export type SortDefinition = {

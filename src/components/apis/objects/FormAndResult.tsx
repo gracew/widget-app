@@ -2,26 +2,22 @@ import { Button, ControlGroup, HTMLSelect } from "@blueprintjs/core";
 import React, { useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { TestToken } from "../../../graphql/types";
+import { MONACO_OPTIONS } from "../../../monaco";
 import "./FormAndResult.css";
 
-interface IFormAndResultProps {
+interface FormAndResultProps {
   testTokens: TestToken[];
   children: any;
   output: string;
   onSubmit: (token: string) => void;
 }
 
-const MONACO_OPTIONS = {
-  scrollBeyondLastLine: false,
-  minimap: { enabled: false }
-};
-
 export function FormAndResult({
   testTokens,
   children,
   output,
   onSubmit
-}: IFormAndResultProps) {
+}: FormAndResultProps) {
   const [token, setToken] = useState("");
 
   const pretty = output && JSON.stringify(JSON.parse(output), null, 2);

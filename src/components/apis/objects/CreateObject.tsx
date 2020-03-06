@@ -3,7 +3,7 @@ import { ApiDefinition, TestToken } from "../../../graphql/types";
 import { FieldInput } from "./FieldInput";
 import { FormAndResult } from "./FormAndResult";
 
-interface ICreateObjectProps {
+interface CreateObjectProps {
   apiId: string;
   definition: ApiDefinition;
   testTokens: TestToken[];
@@ -13,7 +13,7 @@ export function CreateObject({
   apiId,
   definition,
   testTokens
-}: ICreateObjectProps) {
+}: CreateObjectProps) {
   const [output, setOutput] = useState("");
   const initialInput: Record<string, any> = {};
   const [input, setInput] = useState(initialInput);

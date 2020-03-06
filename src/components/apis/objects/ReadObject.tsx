@@ -3,17 +3,13 @@ import React, { useState } from "react";
 import { ApiDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
-interface IReadObjectProps {
+interface ReadObjectProps {
   apiId: string;
   definition: ApiDefinition;
   testTokens: TestToken[];
 }
 
-export function ReadObject({
-  apiId,
-  definition,
-  testTokens
-}: IReadObjectProps) {
+export function ReadObject({ apiId, definition, testTokens }: ReadObjectProps) {
   const [objectId, setObjectId] = useState("");
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) =>

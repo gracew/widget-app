@@ -3,7 +3,7 @@ import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { AuthenticationType, AuthPolicyType } from "../../graphql/types";
-import { DEPLOY_API } from "../../routes";
+import { CUSTOMIZE_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import { AuthPolicy } from "./AuthPolicy";
 
@@ -64,7 +64,7 @@ export function AuthAPI() {
         writePolicyType
       }
     });
-    history.push(DEPLOY_API(id!));
+    history.push(CUSTOMIZE_API(id!));
   }
 
   if (loading) {

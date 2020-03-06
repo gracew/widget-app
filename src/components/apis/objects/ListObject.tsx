@@ -8,17 +8,13 @@ import React, { useState } from "react";
 import { ApiDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
-interface IListObjectProps {
+interface ListObjectProps {
   apiId: string;
   definition: ApiDefinition;
   testTokens: TestToken[];
 }
 
-export function ListObject({
-  apiId,
-  definition,
-  testTokens
-}: IListObjectProps) {
+export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
   const includeList = definition.operations.find(
     (el: any) => el.type === "LIST"
   );

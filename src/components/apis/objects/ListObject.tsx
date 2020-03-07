@@ -22,7 +22,7 @@ export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) => {
     const query = pageSize ? `?pageSize=${pageSize}` : "";
-    fetch(`http://localhost:8080/apis/${apiId}/STAGING${query}`, {
+    fetch(`http://localhost:8081/${query}`, {
       headers: {
         "X-Parse-Session-Token": token
       }

@@ -7,9 +7,15 @@ interface IArrowsProps {
   next?: (e: React.MouseEvent<HTMLElement>) => void;
   showBack?: boolean;
   showNext?: boolean;
+  disableNext?: boolean;
 }
 
-export function Arrows({ next, showBack, showNext }: IArrowsProps) {
+export function Arrows({
+  next,
+  showBack,
+  showNext,
+  disableNext
+}: IArrowsProps) {
   const history = useHistory();
 
   return (
@@ -28,6 +34,7 @@ export function Arrows({ next, showBack, showNext }: IArrowsProps) {
           minimal={true}
           rightIcon="arrow-right"
           onClick={next}
+          disabled={disableNext}
         />
       )}
     </div>

@@ -13,7 +13,7 @@ export function ReadObject({ apiId, definition, testTokens }: ReadObjectProps) {
   const [objectId, setObjectId] = useState("");
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) =>
-    fetch(`http://localhost:8080/apis/${apiId}/STAGING/${objectId}`, {
+    fetch(`http://localhost:8081/${objectId}`, {
       headers: {
         "X-Parse-Session-Token": token
       }

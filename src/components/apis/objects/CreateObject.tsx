@@ -19,7 +19,7 @@ export function CreateObject({
   const [input, setInput] = useState(initialInput);
   const onSubmit = (token: string) =>
     // TODO(gracew): don't hardcode this
-    fetch(`http://localhost:8080/apis/${apiId}/STAGING`, {
+    fetch(`http://localhost:8081/`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

@@ -22,7 +22,7 @@ export function DeployAPI() {
   const { id } = useParams();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [deployId, setDeployId] = useState("");
+  const [deployId, setDeployId] = useState(undefined);
 
   const [deployAPI, {}] = useMutation(DEPLOY_API);
 
@@ -41,7 +41,7 @@ export function DeployAPI() {
       <p>Great! Let's deploy the API to a sandbox and try calling it.</p>
       <Button text="Deploy" intent="primary" onClick={handleDeploy} />
       <div className="wi-deploy-loading">
-        {deployId === "" && (
+        {!deployId && (
           /* blueprint @gray4 */
           <ScaleLoader height={20} color="#A7B6C2" loading={loading} />
         )}
@@ -53,7 +53,10 @@ export function DeployAPI() {
           intent="success"
         />
       )}
-      <Arrows next={() => history.push(TEST_API(id!, "STAGING"))} />
+      <Arrows
+        next={() => history.push(TEST_API(id!, deployId!))}
+        disableNext={deployId === undefined}
+      />
     </div>
   );
 }

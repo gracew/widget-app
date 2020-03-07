@@ -1,3 +1,9 @@
+.wi-deploy-loading {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+
 .wi-deploy-success {
   margin-left: 10px;
 }

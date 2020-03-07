@@ -13,7 +13,8 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-monaco-editor": "^0.34.0",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.1.2",
+    "react-spinners": "^0.8.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -45,8 +46,8 @@
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
-    "@types/react-router-dom": "^5.1.3",
     "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.3",
     "monaco-editor-webpack-plugin": "^1.9.0",
     "react-app-rewired": "^2.1.5",
     "react-scripts": "3.4.0",

@@ -37,14 +37,12 @@ export function FormAndResult({
             onClick={() => onSubmit(token)}
           />
           <HTMLSelect
-            required
             value={token}
             onChange={(e: any) => setToken(e.currentTarget.value)}
           >
-            <option selected>Run as...</option>
             {testTokens.map(({ label, token }) => (
               <option key={label} value={token}>
-                {label}
+                as {label}
               </option>
             ))}
           </HTMLSelect>

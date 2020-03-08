@@ -77,6 +77,7 @@ export type CustomLogic = {
    __typename?: 'CustomLogic',
   apiID: Scalars['ID'],
   operationType: OperationType,
+  language: Language,
   beforeSave?: Maybe<Scalars['String']>,
   afterSave?: Maybe<Scalars['String']>,
 };
@@ -112,6 +113,11 @@ export type FieldDefinition = {
   list?: Maybe<Scalars['Boolean']>,
   constraints: Constraint,
 };
+
+export enum Language {
+  Javascript = 'JAVASCRIPT',
+  Python = 'PYTHON'
+}
 
 export type Mutation = {
    __typename?: 'Mutation',
@@ -194,6 +200,7 @@ export type QueryCustomLogicArgs = {
 export type SaveCustomLogicInput = {
   apiID: Scalars['ID'],
   operationType: OperationType,
+  language: Language,
   beforeSave?: Maybe<Scalars['String']>,
   afterSave?: Maybe<Scalars['String']>,
 };

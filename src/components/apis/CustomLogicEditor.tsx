@@ -3,13 +3,14 @@ import { Button, Tab, Tabs } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import MonacoEditor from "react-monaco-editor";
-import { OperationType } from "../../graphql/types";
+import { Language, OperationType } from "../../graphql/types";
 import { MONACO_OPTIONS } from "../../monaco";
 import "./CustomLogicEditor.css";
 
 const SAVE_CUSTOM_LOGIC = gql`
   mutation SaveCustomLogic(
     $apiID: ID!
+    $language: Language!
     $operationType: OperationType!
     $beforeSave: String
     $afterSave: String
@@ -17,6 +18,7 @@ const SAVE_CUSTOM_LOGIC = gql`
     saveCustomLogic(
       input: {
         apiID: $apiID
+        language: $language
         operationType: $operationType
         beforeSave: $beforeSave
         afterSave: $afterSave
@@ -27,6 +29,7 @@ const SAVE_CUSTOM_LOGIC = gql`
 
 interface CustomLogicEditorProps {
   apiID: string;
+  language: Language;
   operationType: OperationType;
   currBeforeSave: string | null | undefined;
   currAfterSave: string | null | undefined;
@@ -34,6 +37,7 @@ interface CustomLogicEditorProps {
 
 export function CustomLogicEditor({
   apiID,
+  language,
   operationType,
   currBeforeSave,
   currAfterSave
@@ -46,6 +50,7 @@ export function CustomLogicEditor({
     saveCustomLogic({
       variables: {
         apiID,
+        language,
         operationType,
         beforeSave,
         afterSave

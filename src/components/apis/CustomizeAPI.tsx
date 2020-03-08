@@ -1,14 +1,17 @@
 import { useQuery } from "@apollo/react-hooks";
+import { HTMLSelect } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   CustomLogic,
+  Language,
   OperationDefinition,
   OperationType
 } from "../../graphql/types";
 import { DEPLOY_API } from "../../routes";
 import { Arrows } from "../Arrows";
+import "./CustomizeAPI.css";
 import { CustomLogicEditor } from "./CustomLogicEditor";
 import { CollapseContainer } from "./objects/CollapseContainer";
 
@@ -59,6 +62,7 @@ export function CustomizeAPI() {
   const [createOpen, setCreateOpen] = useState(false);
   const [readOpen, setReadOpen] = useState(false);
   const [listOpen, setListOpen] = useState(false);
+  const [language, setLanguage] = useState(Language.Javascript);
 
   const { data, loading } = useQuery(OBJECTS, { variables: { id } });
   const {
@@ -100,54 +104,62 @@ export function CustomizeAPI() {
     <div>
       <h2>Customize API</h2>
       Here you can add custom logic to run before or after database fetch.
-      <div>
-        {includeCreate && (
-          <CollapseContainer
-            title={`Create a ${data.api.name}`}
-            open={createOpen}
-            setOpen={setCreateOpen}
-          >
-            <CustomLogicEditor
-              apiID={id!}
-              operationType={OperationType.Create}
-              currBeforeSave={createCustomLogic && createCustomLogic.beforeSave}
-              currAfterSave={createCustomLogic && createCustomLogic.afterSave}
-            />
-          </CollapseContainer>
-        )}
-
-        {includeRead && (
-          <CollapseContainer
-            title={`Read a ${data.api.name}`}
-            open={readOpen}
-            setOpen={setReadOpen}
-          >
-            <CustomLogicEditor
-              apiID={id!}
-              operationType={OperationType.Read}
-              currBeforeSave={readCustomLogic && readCustomLogic.beforeSave}
-              currAfterSave={readCustomLogic && readCustomLogic.afterSave}
-            />
-          </CollapseContainer>
-        )}
-
-        {includeList && (
-          <CollapseContainer
-            title={`List ${data.api.name}s`}
-            open={listOpen}
-            setOpen={setListOpen}
-          >
-            <CustomLogicEditor
-              apiID={id!}
-              operationType={OperationType.List}
-              currBeforeSave={listCustomLogic && listCustomLogic.beforeSave}
-              currAfterSave={listCustomLogic && listCustomLogic.afterSave}
-            />
-          </CollapseContainer>
-        )}
-
-        <Arrows next={() => history.push(DEPLOY_API(id!))} />
+      <div className="wi-language-select">
+        Select language:
+        <HTMLSelect
+          value={language}
+          onChange={(e: any) => setLanguage(e.currentTarget.value)}
+        >
+          <option value={Language.Javascript}>Javascript</option>
+          <option value={Language.Python}>Python</option>
+        </HTMLSelect>
       </div>
+      {includeCreate && (
+        <CollapseContainer
+          title={`Create a ${data.api.name}`}
+          open={createOpen}
+          setOpen={setCreateOpen}
+        >
+          <CustomLogicEditor
+            apiID={id!}
+            language={language}
+            operationType={OperationType.Create}
+            currBeforeSave={createCustomLogic && createCustomLogic.beforeSave}
+            currAfterSave={createCustomLogic && createCustomLogic.afterSave}
+          />
+        </CollapseContainer>
+      )}
+      {includeRead && (
+        <CollapseContainer
+          title={`Read a ${data.api.name}`}
+          open={readOpen}
+          setOpen={setReadOpen}
+        >
+          <CustomLogicEditor
+            apiID={id!}
+            language={language}
+            operationType={OperationType.Read}
+            currBeforeSave={readCustomLogic && readCustomLogic.beforeSave}
+            currAfterSave={readCustomLogic && readCustomLogic.afterSave}
+          />
+        </CollapseContainer>
+      )}
+      {includeList && (
+        <CollapseContainer
+          title={`List ${data.api.name}s`}
+          open={listOpen}
+          setOpen={setListOpen}
+        >
+          <CustomLogicEditor
+            apiID={id!}
+            language={language}
+            operationType={OperationType.List}
+            currBeforeSave={listCustomLogic && listCustomLogic.beforeSave}
+            currAfterSave={listCustomLogic && listCustomLogic.afterSave}
+          />
+        </CollapseContainer>
+      )}
+      <Arrows next={() => history.push(DEPLOY_API(id!))} />
     </div>
   );
 }

@@ -52,6 +52,7 @@ export function FormAndResult({
         <MonacoEditor
           width="330"
           height={boundedHeight}
+          language="json"
           theme="vs-dark"
           value={pretty}
           options={MONACO_OPTIONS}

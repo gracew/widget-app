@@ -59,13 +59,14 @@ export function CustomLogicEditor({
     });
   }
 
+  const monacoLang = language === Language.Javascript ? "javascript" : "python";
   const beforePanel = (
     <MonacoEditor
       width="700"
       height="300"
       theme="vs-dark"
       value={before}
-      language="json"
+      language={monacoLang}
       onChange={newValue => setBefore(newValue)}
       options={MONACO_OPTIONS}
     />
@@ -76,7 +77,7 @@ export function CustomLogicEditor({
       height="300"
       theme="vs-dark"
       value={after}
-      language="json"
+      language={monacoLang}
       onChange={newValue => setAfter(newValue)}
       options={MONACO_OPTIONS}
     />

@@ -78,8 +78,8 @@ export type CustomLogic = {
   apiID: Scalars['ID'],
   operationType: OperationType,
   language: Language,
-  beforeSave?: Maybe<Scalars['String']>,
-  afterSave?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  after?: Maybe<Scalars['String']>,
 };
 
 export type DefineApiInput = {
@@ -201,8 +201,8 @@ export type SaveCustomLogicInput = {
   apiID: Scalars['ID'],
   operationType: OperationType,
   language: Language,
-  beforeSave?: Maybe<Scalars['String']>,
-  afterSave?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  after?: Maybe<Scalars['String']>,
 };
 
 export type SortDefinition = {

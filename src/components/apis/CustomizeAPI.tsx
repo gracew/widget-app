@@ -51,8 +51,8 @@ const CUSTOM_LOGIC = gql`
     customLogic(apiID: $apiID) {
       apiID
       operationType
-      beforeSave
-      afterSave
+      before
+      after
     }
   }
 `;
@@ -60,8 +60,6 @@ export function CustomizeAPI() {
   const { id } = useParams();
   const history = useHistory();
   const [createOpen, setCreateOpen] = useState(false);
-  const [readOpen, setReadOpen] = useState(false);
-  const [listOpen, setListOpen] = useState(false);
   const [language, setLanguage] = useState(Language.Javascript);
 
   const { data, loading } = useQuery(OBJECTS, { variables: { id } });
@@ -79,31 +77,15 @@ export function CustomizeAPI() {
     data.api.definition.operations.find(
       (el: OperationDefinition) => el.type === OperationType.Create
     );
-  const includeRead =
-    data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find(
-      (el: OperationDefinition) => el.type === OperationType.Read
-    );
-  const includeList =
-    data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find(
-      (el: OperationDefinition) => el.type === OperationType.Update
-    );
 
   const createCustomLogic: CustomLogic = customLogicData.customLogic.find(
     (el: CustomLogic) => el.operationType === OperationType.Create
-  );
-  const readCustomLogic: CustomLogic = customLogicData.customLogic.find(
-    (el: CustomLogic) => el.operationType === OperationType.Read
-  );
-  const listCustomLogic = customLogicData.customLogic.find(
-    (el: CustomLogic) => el.operationType === OperationType.List
   );
 
   return (
     <div>
       <h2>Customize API</h2>
-      Here you can add custom logic to run before or after database fetch.
+      Here you can add custom logic to run before or after database access.
       <div className="wi-language-select">
         Select language:
         <HTMLSelect
@@ -124,38 +106,8 @@ export function CustomizeAPI() {
             apiID={id!}
             language={language}
             operationType={OperationType.Create}
-            currBeforeSave={createCustomLogic && createCustomLogic.beforeSave}
-            currAfterSave={createCustomLogic && createCustomLogic.afterSave}
-          />
-        </CollapseContainer>
-      )}
-      {includeRead && (
-        <CollapseContainer
-          title={`Read a ${data.api.name}`}
-          open={readOpen}
-          setOpen={setReadOpen}
-        >
-          <CustomLogicEditor
-            apiID={id!}
-            language={language}
-            operationType={OperationType.Read}
-            currBeforeSave={readCustomLogic && readCustomLogic.beforeSave}
-            currAfterSave={readCustomLogic && readCustomLogic.afterSave}
-          />
-        </CollapseContainer>
-      )}
-      {includeList && (
-        <CollapseContainer
-          title={`List ${data.api.name}s`}
-          open={listOpen}
-          setOpen={setListOpen}
-        >
-          <CustomLogicEditor
-            apiID={id!}
-            language={language}
-            operationType={OperationType.List}
-            currBeforeSave={listCustomLogic && listCustomLogic.beforeSave}
-            currAfterSave={listCustomLogic && listCustomLogic.afterSave}
+            currBefore={createCustomLogic && createCustomLogic.before}
+            currAfter={createCustomLogic && createCustomLogic.after}
           />
         </CollapseContainer>
       )}

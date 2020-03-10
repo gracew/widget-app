@@ -1,9 +1,9 @@
-.wi-deploy-loading {
+.wi-button-loading {
   display: inline-block;
   margin-left: 10px;
   vertical-align: bottom;
 }
 
-.wi-deploy-success {
+.wi-button-success {
   margin-left: 10px;
 }

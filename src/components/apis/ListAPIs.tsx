@@ -1,15 +1,22 @@
 import { useQuery } from "@apollo/react-hooks";
-import { Button, HTMLTable, Icon } from "@blueprintjs/core";
+import { Button, HTMLTable } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { AUTH_API, NEW_API, TEST_API } from "../../routes";
+import { Api, Environment } from "../../graphql/types";
+import { AUTH_API, NEW_API } from "../../routes";
+import { DeployStatus } from "./DeployStatus";
 
 export const ALL_APIS = gql`
   {
     apis {
       id
       name
+      deploys {
+        id
+        apiID
+        env
+      }
     }
   }
 `;
@@ -28,17 +35,23 @@ export function ListAPIs() {
   return (
     <div>
       <h2>My APIs</h2>
-      <Button onClick={() => history.push(NEW_API)} icon="add" text="New API" intent="primary" />
+      <Button
+        onClick={() => history.push(NEW_API)}
+        icon="add"
+        text="New API"
+        intent="primary"
+      />
       <HTMLTable striped={true}>
         <thead>
           <tr>
             <th>API</th>
             <th>Sandbox</th>
+            <th>Staging</th>
             <th>Production</th>
           </tr>
         </thead>
         <tbody>
-          {data.apis.map(({ id, name }: { id: string; name: string }) => (
+          {data.apis.map(({ id, name, deploys }: Api) => (
             <tr key={id}>
               <td>
                 {name}
@@ -50,14 +63,20 @@ export function ListAPIs() {
                 />
               </td>
               <td>
-                <Icon icon="tick-circle" intent="success" />
-                <Button
-                  icon="play"
-                  minimal={true}
-                  onClick={() => history.push(TEST_API(id, "STAGING"))}
+                <DeployStatus
+                  deploy={deploys.find(d => d.env === Environment.Sandbox)}
                 />
               </td>
-              <td></td>
+              <td>
+                <DeployStatus
+                  deploy={deploys.find(d => d.env === Environment.Staging)}
+                />
+              </td>
+              <td>
+                <DeployStatus
+                  deploy={deploys.find(d => d.env === Environment.Production)}
+                />
+              </td>
             </tr>
           ))}
         </tbody>

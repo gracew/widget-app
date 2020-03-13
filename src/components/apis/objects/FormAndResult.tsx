@@ -18,7 +18,8 @@ export function FormAndResult({
   output,
   onSubmit
 }: FormAndResultProps) {
-  const [token, setToken] = useState("");
+  // TODO(gracew): fix this...
+  const [token, setToken] = useState(testTokens[0].token);
 
   const pretty = output && JSON.stringify(JSON.parse(output), null, 2);
   const numLines = pretty.split("\n").length;

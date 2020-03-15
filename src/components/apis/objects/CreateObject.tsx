@@ -29,8 +29,17 @@ export function CreateObject({
     })
       .then(res => res.text())
       .then(t => setOutput(t));
+  const copyText = (token: string) =>
+    `curl -XPOST -H "Content-type: application/json" -H "X-Parse-Session-Token: ${token}" http://localhost:8081/ -d '${JSON.stringify(
+      input
+    )}'`;
   return (
-    <FormAndResult testTokens={testTokens} output={output} onSubmit={onSubmit}>
+    <FormAndResult
+      testTokens={testTokens}
+      output={output}
+      copyText={copyText}
+      onSubmit={onSubmit}
+    >
       {definition.fields.map(fieldDef => (
         <FieldInput
           key={fieldDef.name}

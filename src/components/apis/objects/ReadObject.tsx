@@ -20,8 +20,15 @@ export function ReadObject({ apiId, definition, testTokens }: ReadObjectProps) {
     })
       .then(res => res.text())
       .then(t => setOutput(t));
+  const copyText = (token: string) =>
+    `curl -H "X-Parse-Session-Token: ${token}" http://localhost:8081/${objectId}`;
   return (
-    <FormAndResult testTokens={testTokens} output={output} onSubmit={onSubmit}>
+    <FormAndResult
+      testTokens={testTokens}
+      output={output}
+      copyText={copyText}
+      onSubmit={onSubmit}
+    >
       <FormGroup label="id">
         <InputGroup
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

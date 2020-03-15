@@ -1,4 +1,4 @@
-import { Button, ControlGroup, HTMLSelect } from "@blueprintjs/core";
+import { Button, ControlGroup, HTMLSelect, Tooltip } from "@blueprintjs/core";
 import React, { useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { TestToken } from "../../../graphql/types";
@@ -9,12 +9,14 @@ interface FormAndResultProps {
   testTokens: TestToken[];
   children: any;
   output: string;
+  copyText: (token: string) => string;
   onSubmit: (token: string) => void;
 }
 
 export function FormAndResult({
   testTokens,
   children,
+  copyText,
   output,
   onSubmit
 }: FormAndResultProps) {
@@ -30,7 +32,7 @@ export function FormAndResult({
     <div className="wi-form-result">
       <div className="wi-form">
         {children}
-        <ControlGroup>
+        <ControlGroup className="wi-form-buttons">
           <Button
             icon="play"
             text="Run"
@@ -48,6 +50,13 @@ export function FormAndResult({
             ))}
           </HTMLSelect>
         </ControlGroup>
+        <Tooltip className="wi-form-copy" content={"Copy cURL"}>
+          <Button
+            icon="duplicate"
+            onClick={() => navigator.clipboard.writeText(copyText(token))}
+            minimal={true}
+          />
+        </Tooltip>
       </div>
       <div className="wi-result">
         <MonacoEditor

@@ -8,6 +8,15 @@
   margin: 10px;
 }
 
+.wi-form-buttons {
+  display: inline-flex;
+}
+
+.wi-form-copy {
+  margin-left: 5px;
+  vertical-align: bottom;
+}
+
 .wi-result {
   margin: 10px;
 }

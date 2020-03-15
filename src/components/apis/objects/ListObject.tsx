@@ -30,8 +30,17 @@ export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
       .then(res => res.text())
       .then(t => setOutput(t));
   };
+  const copyText = (token: string) => {
+    const query = pageSize ? `?pageSize=${pageSize}` : "";
+    return `curl -H "X-Parse-Session-Token: ${token}" http://localhost:8081/${query}`;
+  };
   return (
-    <FormAndResult testTokens={testTokens} output={output} onSubmit={onSubmit}>
+    <FormAndResult
+      testTokens={testTokens}
+      output={output}
+      copyText={copyText}
+      onSubmit={onSubmit}
+    >
       {includeList && includeList.sort && includeList.sort.length > 0 && (
         <div>
           Sort by:

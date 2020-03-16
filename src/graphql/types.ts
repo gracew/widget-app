@@ -98,6 +98,31 @@ export type DeployApiInput = {
   env: Environment,
 };
 
+export enum DeployStatus {
+  InProgress = 'IN_PROGRESS',
+  Complete = 'COMPLETE',
+  Failed = 'FAILED'
+}
+
+export type DeployStatusResponse = {
+   __typename?: 'DeployStatusResponse',
+  steps: Array<DeployStepStatus>,
+};
+
+export enum DeployStep {
+  GenerateCode = 'GENERATE_CODE',
+  BuildImage = 'BUILD_IMAGE',
+  LaunchContainer = 'LAUNCH_CONTAINER',
+  LaunchCustomLogicContainer = 'LAUNCH_CUSTOM_LOGIC_CONTAINER'
+}
+
+export type DeployStepStatus = {
+   __typename?: 'DeployStepStatus',
+  deployID: Scalars['ID'],
+  step: DeployStep,
+  status: DeployStatus,
+};
+
 export enum Environment {
   Sandbox = 'SANDBOX',
   Staging = 'STAGING',
@@ -177,6 +202,7 @@ export type Query = {
    __typename?: 'Query',
   api?: Maybe<Api>,
   apis: Array<Api>,
+  deployStatus: DeployStatusResponse,
   auth?: Maybe<Auth>,
   customLogic: Array<CustomLogic>,
   testTokens: TestTokenResponse,
@@ -185,6 +211,11 @@ export type Query = {
 
 export type QueryApiArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryDeployStatusArgs = {
+  deployID: Scalars['ID']
 };
 
 

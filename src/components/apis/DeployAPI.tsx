@@ -1,17 +1,35 @@
-import { useMutation } from "@apollo/react-hooks";
+import { useLazyQuery, useMutation } from "@apollo/react-hooks";
+import { Button, Icon, Spinner } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
+import {
+  DeployStatus,
+  DeployStep,
+  DeployStepStatus
+} from "../../graphql/types";
 import { TEST_API } from "../../routes";
 import { Arrows } from "../Arrows";
-import { ButtonLoading } from "./ButtonLoading";
+import "./DeployAPI.css";
+const uuid = require("uuid");
 
 const DEPLOY_API = gql`
-  mutation DeployAPI($apiID: ID!, $env: Environment!) {
-    deployAPI(input: { apiID: $apiID, env: $env }) {
+  mutation DeployAPI($deployID: ID!, $apiID: ID!, $env: Environment!) {
+    deployAPI(input: { deployID: $deployID, apiID: $apiID, env: $env }) {
       id
       apiID
       env
+    }
+  }
+`;
+
+const DEPLOY_STATUS = gql`
+  query DeployStatus($deployID: ID!) {
+    deployStatus(deployID: $deployID) {
+      steps {
+        step
+        status
+      }
     }
   }
 `;
@@ -21,23 +39,88 @@ export function DeployAPI() {
   const history = useHistory();
 
   const [deployAPI, { data, loading }] = useMutation(DEPLOY_API);
+  const [
+    getDeployStatus,
+    { data: statusData, loading: statusLoading, stopPolling }
+  ] = useLazyQuery(DEPLOY_STATUS, {
+    pollInterval: 1000
+  });
+
+  const steps = {
+    [DeployStep.GenerateCode]: "Generating code...",
+    [DeployStep.BuildImage]: "Building docker image...",
+    [DeployStep.LaunchContainer]: "Launching docker container...",
+    [DeployStep.LaunchCustomLogicContainer]:
+      "Launching custom logic docker container..."
+  };
 
   async function handleDeploy() {
-    const { data } = await deployAPI({
-      variables: { apiID: id, env: "SANDBOX" }
+    const deployID = uuid.v4();
+    deployAPI({
+      variables: { deployID, apiID: id, env: "SANDBOX" }
+    }).then(() => {
+      console.log("here");
+      if (data && data.deployAPI) {
+        console.log("stop polling");
+        stopPolling();
+      }
     });
+    getDeployStatus({
+      variables: { deployID }
+    });
+  }
+
+  function stepStatusIcon(step: string, text: string) {
+    let icon;
+    if (
+      statusData &&
+      statusData.deployStatus &&
+      statusData.deployStatus.steps
+    ) {
+      const match = statusData.deployStatus.steps.find(
+        (s: DeployStepStatus) => s.step === step
+      );
+      if (match) {
+        switch (match.status) {
+          case DeployStatus.InProgress:
+            icon = <Spinner size={Icon.SIZE_STANDARD} />;
+            break;
+          case DeployStatus.Complete:
+            icon = <Icon icon="tick-circle" intent="success" />;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+
+    if (!icon) {
+      return (
+        <div key={step} className="wi-deploy-step wi-deploy-step-pending">
+          <span className="wi-deploy-step-label">{text}</span>
+        </div>
+      );
+    }
+    return (
+      <div key={step} className="wi-deploy-step">
+        <span className="wi-deploy-step-label">{text}</span>
+        {icon}
+      </div>
+    );
   }
 
   return (
     <div>
       <h2>Deploy API</h2>
       <p>Great! Let's deploy the API to a sandbox and try calling it.</p>
-      <ButtonLoading
-        text="Deploy"
-        loading={loading}
-        success={data && data.deployAPI.id}
-        onClick={handleDeploy}
-      />
+      <Button text="Deploy" intent="primary" onClick={handleDeploy} />
+      {(loading || data) && (
+        <div className="wi-deploy-steps">
+          {Object.entries(steps).map(([step, text]) =>
+            stepStatusIcon(step, text)
+          )}
+        </div>
+      )}
       <Arrows
         next={() => history.push(TEST_API(id!, data && data.deployAPI.id))}
         disableNext={!(data && data.deployAPI.id)}

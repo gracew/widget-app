@@ -34,45 +34,46 @@ const DEPLOY_STATUS = gql`
   }
 `;
 
+const STEPS = {
+  [DeployStep.GenerateCode]: "Generating code...",
+  [DeployStep.BuildImage]: "Building docker image...",
+  [DeployStep.LaunchContainer]: "Launching docker container...",
+  [DeployStep.LaunchCustomLogicContainer]:
+    "Launching custom logic docker container..."
+};
+
 export function DeployAPI() {
   const { id } = useParams();
   const history = useHistory();
 
   const [deployAPI, { data, loading }] = useMutation(DEPLOY_API);
-  const [
-    getDeployStatus,
-    { data: statusData, loading: statusLoading, stopPolling }
-  ] = useLazyQuery(DEPLOY_STATUS, {
-    pollInterval: 1000
-  });
+  const deployComplete = data && data.deployAPI.id;
 
-  const steps = {
-    [DeployStep.GenerateCode]: "Generating code...",
-    [DeployStep.BuildImage]: "Building docker image...",
-    [DeployStep.LaunchContainer]: "Launching docker container...",
-    [DeployStep.LaunchCustomLogicContainer]:
-      "Launching custom logic docker container..."
-  };
+  const [getDeployStatus, { data: statusData, stopPolling }] = useLazyQuery(
+    DEPLOY_STATUS,
+    {
+      pollInterval: 1000
+    }
+  );
+  if (deployComplete) {
+    stopPolling();
+  }
 
   async function handleDeploy() {
     const deployID = uuid.v4();
     deployAPI({
       variables: { deployID, apiID: id, env: "SANDBOX" }
-    }).then(() => {
-      console.log("here");
-      if (data && data.deployAPI) {
-        console.log("stop polling");
-        stopPolling();
-      }
     });
     getDeployStatus({
       variables: { deployID }
     });
   }
 
-  function stepStatusIcon(step: string, text: string) {
+  function stepStatus(step: string, text: string) {
     let icon;
-    if (
+    if (deployComplete) {
+      icon = <Icon icon="tick-circle" intent="success" />;
+    } else if (
       statusData &&
       statusData.deployStatus &&
       statusData.deployStatus.steps
@@ -87,6 +88,9 @@ export function DeployAPI() {
             break;
           case DeployStatus.Complete:
             icon = <Icon icon="tick-circle" intent="success" />;
+            break;
+          case DeployStatus.Failed:
+            icon = <Icon icon="cross" intent="danger" />;
             break;
           default:
             break;
@@ -116,14 +120,12 @@ export function DeployAPI() {
       <Button text="Deploy" intent="primary" onClick={handleDeploy} />
       {(loading || data) && (
         <div className="wi-deploy-steps">
-          {Object.entries(steps).map(([step, text]) =>
-            stepStatusIcon(step, text)
-          )}
+          {Object.entries(STEPS).map(([step, text]) => stepStatus(step, text))}
         </div>
       )}
       <Arrows
         next={() => history.push(TEST_API(id!, data && data.deployAPI.id))}
-        disableNext={!(data && data.deployAPI.id)}
+        disableNext={!deployComplete}
       />
     </div>
   );

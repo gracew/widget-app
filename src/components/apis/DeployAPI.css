@@ -1,0 +1,21 @@
+.wi-deploy-steps {
+  margin-top: 20px;
+}
+
+.wi-deploy-step {
+  margin: 5px 0;
+}
+
+.wi-deploy-step .bp3-spinner {
+  display: inline-flex;
+}
+
+.wi-deploy-step-pending {
+  /* blueprint @gray5 */
+  color: #bfccd6;
+}
+
+.wi-deploy-step-label {
+  display: inline-block;
+  width: 300px;
+}

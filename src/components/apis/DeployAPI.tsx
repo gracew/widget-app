@@ -46,7 +46,7 @@ export function DeployAPI() {
   const { id } = useParams();
   const history = useHistory();
 
-  const [deployAPI, { data, loading }] = useMutation(DEPLOY_API);
+  const [deployAPI, { data, loading, called }] = useMutation(DEPLOY_API);
   const deployComplete = data && data.deployAPI.id;
 
   const [getDeployStatus, { data: statusData, stopPolling }] = useLazyQuery(
@@ -118,7 +118,7 @@ export function DeployAPI() {
       <h2>Deploy API</h2>
       <p>Great! Let's deploy the API to a sandbox and try calling it.</p>
       <Button text="Deploy" intent="primary" onClick={handleDeploy} />
-      {(loading || data) && (
+      {called && (
         <div className="wi-deploy-steps">
           {Object.entries(STEPS).map(([step, text]) => stepStatus(step, text))}
         </div>

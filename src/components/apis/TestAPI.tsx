@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import React, { useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { TEST_TOKENS } from "../../queries";
 import { Arrows } from "../Arrows";
@@ -41,9 +41,6 @@ const OBJECTS = gql`
 `;
 export function TestAPI() {
   const { id, deployId } = useParams();
-  const [createOpen, setCreateOpen] = useState(false);
-  const [readOpen, setReadOpen] = useState(false);
-  const [listOpen, setListOpen] = useState(false);
 
   const { data, loading } = useQuery(OBJECTS, { variables: { id } });
   const { data: testTokensData, loading: testTokenLoading } = useQuery(
@@ -69,11 +66,7 @@ export function TestAPI() {
       <h2>Test API</h2>
       <div>
         {includeCreate && (
-          <CollapseContainer
-            title={`Create a ${data.api.name}`}
-            open={createOpen}
-            setOpen={setCreateOpen}
-          >
+          <CollapseContainer title={`Create a ${data.api.name}`}>
             <CreateObject
               apiId={id!}
               definition={data.api.definition}
@@ -83,11 +76,7 @@ export function TestAPI() {
         )}
 
         {includeRead && (
-          <CollapseContainer
-            title={`Read a ${data.api.name}`}
-            open={readOpen}
-            setOpen={setReadOpen}
-          >
+          <CollapseContainer title={`Read a ${data.api.name}`}>
             <ReadObject
               apiId={id!}
               definition={data.api.definition}
@@ -97,11 +86,7 @@ export function TestAPI() {
         )}
 
         {includeList && (
-          <CollapseContainer
-            title={`List ${data.api.name}s`}
-            open={listOpen}
-            setOpen={setListOpen}
-          >
+          <CollapseContainer title={`List ${data.api.name}s`}>
             <ListObject
               apiId={id!}
               definition={data.api.definition}

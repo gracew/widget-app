@@ -1,14 +1,33 @@
 import { useMutation } from "@apollo/react-hooks";
-import { FileInput, FormGroup } from "@blueprintjs/core";
+import {
+  Button,
+  Checkbox,
+  ControlGroup,
+  Drawer,
+  FileInput,
+  FormGroup,
+  HTMLSelect,
+  HTMLTable,
+  Icon,
+  InputGroup,
+  Tooltip
+} from "@blueprintjs/core";
 import { gql } from "apollo-boost";
-import React from "react";
-import MonacoEditor from "react-monaco-editor";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { MONACO_OPTIONS } from "../../monaco";
+import {
+  Constraint,
+  FieldDefinition,
+  OperationDefinition,
+  OperationType,
+  SortOrder
+} from "../../graphql/types";
 import { AUTH_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import "./DefineAPI.css";
+import { FieldForm } from "./FieldForm";
 import { ALL_APIS } from "./ListAPIs";
+import { CollapseContainer } from "./objects/CollapseContainer";
 
 const DEFINE_API = gql`
   mutation DefineAPI($rawDefinition: String!) {
@@ -19,32 +38,22 @@ const DEFINE_API = gql`
   }
 `;
 
-const EXAMPLE = `{
-  "name": "GameScore",
-  "fields": [
-    {
-      "name": "name",
-      "type": "STRING",
-      "constraints": {
-        "minLength": 2,
-        "maxLength": 100
-      }
-    },
-    {
-      "name": "score",
-      "type": "FLOAT",
-      "constraints": {
-        "minFloat": 0,
-        "maxFloat": 100
-      }
-    }
-  ],
-  "operations": []
-}
-`;
+const CREATED_AT = "createdAt";
+const CREATED_BY = "createdBy";
 
 export function DefineAPI() {
   const history = useHistory();
+
+  const [name, setName] = useState(undefined);
+  const [create, setCreate] = useState(true);
+  const [read, setRead] = useState(true);
+  const [list, setList] = useState(true);
+  const [sortField, setSortField] = useState(CREATED_AT);
+  const [sortOrder, setSortOrder] = useState(SortOrder.Desc);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [fields, setFields] = useState<FieldDefinition[]>([]);
+  const fieldNames = fields.map(f => f.name).concat([CREATED_AT, CREATED_BY]);
+
   const [defineApi, _] = useMutation(DEFINE_API, {
     update(cache, { data: { defineAPI } }) {
       const cachedRes: any = cache.readQuery({ query: ALL_APIS });
@@ -55,31 +64,144 @@ export function DefineAPI() {
       });
     }
   });
-  let text = EXAMPLE;
 
   async function handleNext() {
-    const { data } = await defineApi({ variables: { rawDefinition: text } });
+    const operations: OperationDefinition[] = [];
+    if (create) {
+      operations.push({ type: OperationType.Create });
+    }
+    if (read) {
+      operations.push({ type: OperationType.Read });
+    }
+    if (list) {
+      operations.push({
+        type: OperationType.Read,
+        sort: [{ field: sortField, order: sortOrder }]
+      });
+    }
+    const definition = { name, fields };
+    const { data } = await defineApi({
+      variables: { rawDefinition: JSON.stringify(definition) }
+    });
     history.push(AUTH_API(data.defineAPI.id));
   }
 
   return (
     <div>
       <h2>New API</h2>
-      <MonacoEditor
-        width="700"
-        height="400"
-        theme="vs-dark"
-        value={text}
-        language="json"
-        onChange={newValue => {
-          text = newValue;
-        }}
-        options={MONACO_OPTIONS}
+      <h3>Name</h3>
+      <InputGroup value={name} onChange={(e: any) => setName(e.target.value)} />
+      <h3>Fields</h3>
+      <HTMLTable striped={true}>
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Field Type</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <code>createdBy</code>
+            </td>
+            <td>String</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>
+              <code>createdAt</code>
+            </td>
+            <td>String</td>
+            <td></td>
+          </tr>
+          {fields.map(f => (
+            <tr key={f.name}>
+              <td>{f.name}</td>
+              <td>
+                {f.type}{" "}
+                {constraintsDefined(f.constraints) && (
+                  <Tooltip content="Value is subject to constraints.">
+                    <Icon icon="form" />
+                  </Tooltip>
+                )}
+              </td>
+              <td className="wi-td-button">
+                <Button icon="edit" minimal={true} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </HTMLTable>
+      <Button
+        icon="add"
+        intent="primary"
+        text="Add field"
+        onClick={() => setDrawerOpen(true)}
       />
+
+      <CollapseContainer title="Operations">
+        <Checkbox
+          checked={create}
+          label="Create"
+          onChange={() => setCreate(!create)}
+        />
+        <Checkbox checked={read} label="Read" onChange={() => setRead(!read)} />
+        <Checkbox checked={list} label="List" onChange={() => setList(!list)} />
+        <h4>Sort Options</h4>
+        <ControlGroup>
+          <FormGroup label="Field">
+            <HTMLSelect
+              value={sortField}
+              onChange={(e: any) => setSortField(e.currentTarget.value)}
+            >
+              {fieldNames.map(n => (
+                <option value={n}>{n}</option>
+              ))}
+            </HTMLSelect>
+          </FormGroup>
+          <FormGroup label="Order">
+            <HTMLSelect
+              value={sortOrder}
+              onChange={(e: any) => setSortOrder(e.currentTarget.value)}
+            >
+              <option value={SortOrder.Asc}>Asc</option>
+              <option value={SortOrder.Desc}>Desc</option>
+            </HTMLSelect>
+          </FormGroup>
+        </ControlGroup>
+      </CollapseContainer>
+
       <FormGroup className="upload-file" label="Upload a file instead">
         <FileInput text="Choose file..." />
       </FormGroup>
+      <Drawer
+        hasBackdrop={false}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        size={Drawer.SIZE_SMALL}
+      >
+        <FieldForm
+          disallowedFieldNames={fieldNames}
+          saveDefinition={(def: FieldDefinition) => {
+            console.log(def);
+            setFields(fields.concat([def]));
+            setDrawerOpen(false);
+          }}
+        />
+      </Drawer>
       <Arrows next={handleNext} showBack={false} showNext={true} />
     </div>
   );
+}
+
+function typeString(def: FieldDefinition) {}
+
+function constraintsDefined(c: Constraint) {
+  for (const [k, v] of Object.entries(c)) {
+    if (v !== undefined) {
+      return true;
+    }
+  }
+  return false;
 }

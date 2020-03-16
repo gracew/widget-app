@@ -1,20 +1,17 @@
 import { Button, Collapse } from "@blueprintjs/core";
-import React from "react";
+import React, { useState } from "react";
 import "./CollapseContainer.css";
 
 interface ICollapseContainerProps {
   title: string;
   children: any;
-  open: boolean;
-  setOpen: (b: boolean) => void;
 }
 
 export function CollapseContainer({
   title,
-  children,
-  open,
-  setOpen
+  children
 }: ICollapseContainerProps) {
+  const [open, setOpen] = useState(false);
   return (
     <div className="wi-collapse">
       <Button

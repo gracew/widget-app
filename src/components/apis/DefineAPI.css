@@ -1,3 +1,8 @@
+.wi-td-button {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
 .upload-file {
   margin: 10px 0;
 }

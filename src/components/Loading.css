@@ -1,0 +1,9 @@
+.wi-loading {
+  height: 100%;
+  display: flex;
+}
+
+.wi-loading .bp3-spinner {
+  margin: auto;
+  align-items: center;
+}

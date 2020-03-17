@@ -4,7 +4,7 @@ import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Api, Environment } from "../../graphql/types";
-import { AUTH_API, NEW_API } from "../../routes";
+import { AUTH_API, EDIT_API, NEW_API } from "../../routes";
 import { DeployStatus } from "./DeployStatus";
 
 export const ALL_APIS = gql`
@@ -55,7 +55,11 @@ export function ListAPIs() {
             <tr key={id}>
               <td>
                 {name}
-                <Button icon="edit" minimal={true} />
+                <Button
+                  icon="edit"
+                  minimal={true}
+                  onClick={() => history.push(EDIT_API(id))}
+                />
                 <Button
                   icon="lock"
                   minimal={true}

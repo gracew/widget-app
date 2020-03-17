@@ -10,3 +10,35 @@ export const TEST_TOKENS = gql`
     }
   }
 `;
+
+export const API_DEFINITION = gql`
+  query ApiDefinition($id: ID!) {
+    api(id: $id) {
+      name
+      definition {
+        name
+        operations {
+          type
+          sort {
+            field
+            order
+          }
+          filter
+        }
+        fields {
+          name
+          type
+          constraints {
+            minInt
+            maxInt
+            minFloat
+            maxFloat
+            minLength
+            maxLength
+          }
+          customLogicPopulated
+        }
+      }
+    }
+  }
+`;

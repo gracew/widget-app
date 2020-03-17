@@ -1,49 +1,17 @@
 import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { TEST_TOKENS } from "../../queries";
+import { API_DEFINITION, TEST_TOKENS } from "../../queries";
 import { Arrows } from "../Arrows";
 import { CollapseContainer } from "./objects/CollapseContainer";
 import { CreateObject } from "./objects/CreateObject";
 import { ListObject } from "./objects/ListObject";
 import { ReadObject } from "./objects/ReadObject";
 
-const OBJECTS = gql`
-  query GET_API($id: ID!) {
-    api(id: $id) {
-      name
-      definition {
-        name
-        operations {
-          type
-          sort {
-            field
-            order
-          }
-          filter
-        }
-        fields {
-          name
-          type
-          constraints {
-            minInt
-            maxInt
-            minFloat
-            maxFloat
-            minLength
-            maxLength
-          }
-          customLogicPopulated
-        }
-      }
-    }
-  }
-`;
 export function TestAPI() {
   const { id, deployId } = useParams();
 
-  const { data, loading } = useQuery(OBJECTS, { variables: { id } });
+  const { data, loading } = useQuery(API_DEFINITION, { variables: { id } });
   const { data: testTokensData, loading: testTokenLoading } = useQuery(
     TEST_TOKENS
   );

@@ -35,11 +35,21 @@ export function FieldForm({
   const [customLogic, setCustomLogic] = useState(
     (definition && definition.customLogicPopulated) || false
   );
-  const [min, setMin] = useState<number | undefined>(undefined);
-  const [max, setMax] = useState<number | undefined>(undefined);
-  const [regex, setRegex] = useState<string | undefined>(undefined);
-  const [minLength, setMinLength] = useState<number | undefined>(undefined);
-  const [maxLength, setMaxLength] = useState<number | undefined>(undefined);
+
+  const c = definition && definition.constraints;
+  const initialMin = type === Type.Int ? c && c.minInt : c && c.minFloat;
+  const initialMax = type === Type.Int ? c && c.maxInt : c && c.maxFloat;
+  const [min, setMin] = useState<number | undefined>(initialMin || undefined);
+  const [max, setMax] = useState<number | undefined>(initialMax || undefined);
+  const [regex, setRegex] = useState<string | undefined>(
+    (c && c.regex) || undefined
+  );
+  const [minLength, setMinLength] = useState<number | undefined>(
+    (c && c.minLength) || undefined
+  );
+  const [maxLength, setMaxLength] = useState<number | undefined>(
+    (c && c.maxLength) || undefined
+  );
 
   const validFieldName = !disallowedFieldNames.includes(name);
 

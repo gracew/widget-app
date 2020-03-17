@@ -259,7 +259,7 @@ function displayType(def: FieldDefinition) {
 
 function constraintsDefined(c: Constraint) {
   for (const [k, v] of Object.entries(c)) {
-    if (v !== undefined) {
+    if (k !== "__typename" && v) {
       return true;
     }
   }

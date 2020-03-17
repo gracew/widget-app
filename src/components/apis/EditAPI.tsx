@@ -4,7 +4,7 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { ApiDefinition, OperationType, SortOrder } from "../../graphql/types";
 import { API_DEFINITION } from "../../queries";
-import { CREATED_BY } from "../../strings";
+import { CREATED_AT } from "../../strings";
 import { DefineAPI } from "./DefineAPI";
 import "./DefineAPI.css";
 
@@ -60,7 +60,7 @@ export function EditAPI() {
             initialList.sort &&
             initialList.sort.length > 0 &&
             initialList.sort[0].order) ||
-          CREATED_BY
+          CREATED_AT
         }
         initialSortOrder={
           (initialList &&

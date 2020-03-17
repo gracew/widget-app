@@ -59,7 +59,6 @@ const CUSTOM_LOGIC = gql`
 export function CustomizeAPI() {
   const { id } = useParams();
   const history = useHistory();
-  const [createOpen, setCreateOpen] = useState(false);
   const [language, setLanguage] = useState(Language.Javascript);
 
   const { data, loading } = useQuery(OBJECTS, { variables: { id } });
@@ -97,11 +96,7 @@ export function CustomizeAPI() {
         </HTMLSelect>
       </div>
       {includeCreate && (
-        <CollapseContainer
-          title={`Create a ${data.api.name}`}
-          open={createOpen}
-          setOpen={setCreateOpen}
-        >
+        <CollapseContainer title={`Create a ${data.api.name}`}>
           <CustomLogicEditor
             apiID={id!}
             language={language}

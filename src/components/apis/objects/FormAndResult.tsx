@@ -50,7 +50,7 @@ export function FormAndResult({
             ))}
           </HTMLSelect>
         </ControlGroup>
-        <Tooltip className="wi-form-copy" content={"Copy cURL"}>
+        <Tooltip className="wi-form-copy" content="Copy cURL">
           <Button
             icon="duplicate"
             onClick={() => navigator.clipboard.writeText(copyText(token))}

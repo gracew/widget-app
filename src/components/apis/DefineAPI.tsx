@@ -109,7 +109,7 @@ export function DefineAPI() {
         sort: [{ field: sortField, order: sortOrder }]
       });
     }
-    const definition = { name, fields };
+    const definition = { name, fields, operations };
     const { data } = await defineApi({
       variables: { rawDefinition: JSON.stringify(definition) }
     });
@@ -120,7 +120,11 @@ export function DefineAPI() {
     <div>
       <h2>New API</h2>
       <h3>Name</h3>
-      <InputGroup value={name} onChange={(e: any) => setName(e.target.value)} />
+      <InputGroup
+        className="wi-api-name"
+        value={name}
+        onChange={(e: any) => setName(e.target.value)}
+      />
       <h3>Fields</h3>
       <HTMLTable className="wi-field-table" striped={true}>
         <thead>
@@ -151,8 +155,11 @@ export function DefineAPI() {
               <td>
                 {displayType(f)}
                 {constraintsDefined(f.constraints) && (
-                  <Tooltip content="Value is subject to constraints.">
-                    <Icon icon="form" />
+                  <Tooltip
+                    className="wi-constraints-icon"
+                    content="Value is subject to constraints"
+                  >
+                    <Icon icon="filter" />
                   </Tooltip>
                 )}
               </td>

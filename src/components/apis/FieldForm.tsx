@@ -16,7 +16,7 @@ import { CollapseContainer } from "./objects/CollapseContainer";
 interface FieldFormProps {
   definition?: FieldDefinition;
   disallowedFieldNames: string[];
-  saveDefinition: (definition: FieldDefinition) => void;
+  saveDefinition: (definition: FieldDefinition, prevName?: string) => void;
 }
 
 export function FieldForm({
@@ -57,14 +57,17 @@ export function FieldForm({
         break;
     }
 
-    saveDefinition({
-      // TODO(gracew): do validation...
-      name: name,
-      type: (type === "LIST" ? elementType : type) as Type,
-      optional,
-      list: type === "LIST",
-      constraints
-    });
+    saveDefinition(
+      {
+        // TODO(gracew): do validation...
+        name: name,
+        type: (type === "LIST" ? elementType : type) as Type,
+        optional,
+        list: type === "LIST",
+        constraints
+      },
+      definition && definition.name
+    );
   };
 
   const intent = validFieldName ? "none" : "danger";

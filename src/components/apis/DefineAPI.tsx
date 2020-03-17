@@ -53,8 +53,36 @@ export function DefineAPI() {
   const [sortField, setSortField] = useState(CREATED_AT);
   const [sortOrder, setSortOrder] = useState(SortOrder.Desc);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // use a list for stable ordering
   const [fields, setFields] = useState<FieldDefinition[]>([]);
   const fieldNames = fields.map(f => f.name).concat([CREATED_AT, CREATED_BY]);
+
+  const [selectedDefinition, setSelectedDefinition] = useState<
+    FieldDefinition | undefined
+  >(undefined);
+  const drawerContent = (
+    <FieldForm
+      disallowedFieldNames={
+        selectedDefinition
+          ? fieldNames.filter(n => n !== selectedDefinition.name)
+          : fieldNames
+      }
+      definition={selectedDefinition}
+      saveDefinition={(def: FieldDefinition, prevName?: string) => {
+        if (prevName) {
+          const i = fields.findIndex(f => f.name === prevName);
+          if (i >= 0) {
+            fields[i] = def;
+          }
+        } else {
+          fields.push(def);
+        }
+        setFields(fields);
+        setDrawerOpen(false);
+        setSelectedDefinition(undefined);
+      }}
+    />
+  );
 
   const [defineApi, _] = useMutation(DEFINE_API, {
     update(cache, { data: { defineAPI } }) {
@@ -94,7 +122,7 @@ export function DefineAPI() {
       <h3>Name</h3>
       <InputGroup value={name} onChange={(e: any) => setName(e.target.value)} />
       <h3>Fields</h3>
-      <HTMLTable striped={true}>
+      <HTMLTable className="wi-field-table" striped={true}>
         <thead>
           <tr>
             <th>Field Name</th>
@@ -117,7 +145,7 @@ export function DefineAPI() {
             <td>{TYPES[Type.String]}</td>
             <td></td>
           </tr>
-          {fields.map(f => (
+          {fields.map((f, i) => (
             <tr key={f.name}>
               <td>{f.name}</td>
               <td>
@@ -129,7 +157,19 @@ export function DefineAPI() {
                 )}
               </td>
               <td className="wi-td-button">
-                <Button icon="edit" minimal={true} />
+                <Button
+                  icon="edit"
+                  minimal={true}
+                  onClick={() => {
+                    setSelectedDefinition(f);
+                    setDrawerOpen(true);
+                  }}
+                />
+                <Button
+                  icon="trash"
+                  minimal={true}
+                  onClick={() => setFields(fields.filter(field => field !== f))}
+                />
               </td>
             </tr>
           ))}
@@ -183,14 +223,7 @@ export function DefineAPI() {
         onClose={() => setDrawerOpen(false)}
         size={Drawer.SIZE_SMALL}
       >
-        <FieldForm
-          disallowedFieldNames={fieldNames}
-          saveDefinition={(def: FieldDefinition) => {
-            console.log(def);
-            setFields(fields.concat([def]));
-            setDrawerOpen(false);
-          }}
-        />
+        {drawerContent}
       </Drawer>
       <Arrows next={handleNext} showBack={false} showNext={true} />
     </div>

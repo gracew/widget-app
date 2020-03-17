@@ -9,6 +9,7 @@ import {
 } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { Constraint, FieldDefinition, Type } from "../../graphql/types";
+import { TYPES } from "../../strings";
 import "./FieldForm.css";
 import { CollapseContainer } from "./objects/CollapseContainer";
 
@@ -89,10 +90,9 @@ export function FieldForm({
             value={type}
             onChange={(e: any) => setType(e.currentTarget.value)}
           >
-            <option value={Type.String}>String</option>
-            <option value={Type.Boolean}>Boolean</option>
-            <option value={Type.Int}>Int</option>
-            <option value={Type.Float}>Float</option>
+            {Object.entries(TYPES).map(([type, display]) => (
+              <option value={type}>{display}</option>
+            ))}
             <option value={"LIST"}>List</option>
           </HTMLSelect>
         </FormGroup>
@@ -104,10 +104,9 @@ export function FieldForm({
             value={elementType}
             onChange={(e: any) => setElementType(e.currentTarget.value)}
           >
-            <option value={Type.String}>String</option>
-            <option value={Type.Boolean}>Boolean</option>
-            <option value={Type.Int}>Int</option>
-            <option value={Type.Float}>Float</option>
+            {Object.entries(TYPES).map(([type, display]) => (
+              <option value={type}>{display}</option>
+            ))}
           </HTMLSelect>
         </FormGroup>
       )}

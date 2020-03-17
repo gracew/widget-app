@@ -20,9 +20,11 @@ import {
   FieldDefinition,
   OperationDefinition,
   OperationType,
-  SortOrder
+  SortOrder,
+  Type
 } from "../../graphql/types";
 import { AUTH_API } from "../../routes";
+import { TYPES } from "../../strings";
 import { Arrows } from "../Arrows";
 import "./DefineAPI.css";
 import { FieldForm } from "./FieldForm";
@@ -105,21 +107,21 @@ export function DefineAPI() {
             <td>
               <code>createdBy</code>
             </td>
-            <td>String</td>
+            <td>{TYPES[Type.String]}</td>
             <td></td>
           </tr>
           <tr>
             <td>
               <code>createdAt</code>
             </td>
-            <td>String</td>
+            <td>{TYPES[Type.String]}</td>
             <td></td>
           </tr>
           {fields.map(f => (
             <tr key={f.name}>
               <td>{f.name}</td>
               <td>
-                {f.type}{" "}
+                {displayType(f)}
                 {constraintsDefined(f.constraints) && (
                   <Tooltip content="Value is subject to constraints.">
                     <Icon icon="form" />
@@ -195,7 +197,16 @@ export function DefineAPI() {
   );
 }
 
-function typeString(def: FieldDefinition) {}
+function displayType(def: FieldDefinition) {
+  const base = TYPES[def.type];
+  if (def.optional) {
+    return `${base} (optional)`;
+  }
+  if (def.list) {
+    return `${base} (list)`;
+  }
+  return base;
+}
 
 function constraintsDefined(c: Constraint) {
   for (const [k, v] of Object.entries(c)) {

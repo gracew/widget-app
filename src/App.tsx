@@ -5,9 +5,10 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { AuthAPI } from "./components/apis/AuthAPI";
 import { CustomizeAPI } from "./components/apis/CustomizeAPI";
-import { DefineAPI } from "./components/apis/DefineAPI";
 import { DeployAPI } from "./components/apis/DeployAPI";
+import { EditAPI } from "./components/apis/EditAPI";
 import { ListAPIs } from "./components/apis/ListAPIs";
+import { NewAPI } from "./components/apis/NewAPI";
 import { TestAPI } from "./components/apis/TestAPI";
 import { Navbar } from "./components/Navbar";
 import { Tests } from "./components/Tests";
@@ -33,8 +34,8 @@ function App() {
         <Route path="/" component={Navbar} />
         <div className="App">
           <Switch>
-            <Route path={NEW_API} exact={true} component={DefineAPI} />
-            <Route path={EDIT_API(":id")} exact={true} component={DefineAPI} />
+            <Route path={NEW_API} exact={true} component={NewAPI} />
+            <Route path={EDIT_API(":id")} exact={true} component={EditAPI} />
             <Route path={AUTH_API(":id")} exact={true} component={AuthAPI} />
             <Route
               path={CUSTOMIZE_API(":id")}

@@ -1,4 +1,3 @@
-import { useMutation } from "@apollo/react-hooks";
 import {
   Button,
   Checkbox,
@@ -12,10 +11,9 @@ import {
   InputGroup,
   Tooltip
 } from "@blueprintjs/core";
-import { gql } from "apollo-boost";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import {
+  ApiDefinition,
   Constraint,
   FieldDefinition,
   OperationDefinition,
@@ -23,51 +21,57 @@ import {
   SortOrder,
   Type
 } from "../../graphql/types";
-import { AUTH_API } from "../../routes";
-import { TYPES } from "../../strings";
+import { CREATED_AT, CREATED_BY, TYPES } from "../../strings";
 import { Arrows } from "../Arrows";
 import "./DefineAPI.css";
 import { FieldForm } from "./FieldForm";
-import { ALL_APIS } from "./ListAPIs";
 import { CollapseContainer } from "./objects/CollapseContainer";
 
-const DEFINE_API = gql`
-  mutation DefineAPI($rawDefinition: String!) {
-    defineAPI(input: { rawDefinition: $rawDefinition }) {
-      id
-      name
-    }
-  }
-`;
+interface DefineAPIProps {
+  saveDefinition: (definition: ApiDefinition) => any;
+  initialName?: string;
+  initialFields: FieldDefinition[];
+  initialCreate: boolean;
+  initialRead: boolean;
+  initialList: boolean;
+  initialSortField: string;
+  initialSortOrder: SortOrder;
+}
 
-const CREATED_AT = "createdAt";
-const CREATED_BY = "createdBy";
+export function DefineAPI({
+  saveDefinition,
+  initialName,
+  initialFields,
+  initialCreate,
+  initialRead,
+  initialList,
+  initialSortField,
+  initialSortOrder
+}: DefineAPIProps) {
+  const [name, setName] = useState(initialName);
 
-export function DefineAPI() {
-  const history = useHistory();
+  const [create, setCreate] = useState(initialCreate);
+  const [read, setRead] = useState(initialRead);
+  const [list, setList] = useState(initialList);
+  const [sortField, setSortField] = useState(initialSortField);
+  const [sortOrder, setSortOrder] = useState(initialSortOrder);
 
-  const [name, setName] = useState(undefined);
-  const [create, setCreate] = useState(true);
-  const [read, setRead] = useState(true);
-  const [list, setList] = useState(true);
-  const [sortField, setSortField] = useState(CREATED_AT);
-  const [sortOrder, setSortOrder] = useState(SortOrder.Desc);
   const [drawerOpen, setDrawerOpen] = useState(false);
   // use a list for stable ordering
-  const [fields, setFields] = useState<FieldDefinition[]>([]);
+  const [fields, setFields] = useState<FieldDefinition[]>(initialFields);
   const fieldNames = fields.map(f => f.name).concat([CREATED_AT, CREATED_BY]);
 
-  const [selectedDefinition, setSelectedDefinition] = useState<
+  const [selectedField, setSelectedField] = useState<
     FieldDefinition | undefined
   >(undefined);
   const drawerContent = (
     <FieldForm
       disallowedFieldNames={
-        selectedDefinition
-          ? fieldNames.filter(n => n !== selectedDefinition.name)
+        selectedField
+          ? fieldNames.filter(n => n !== selectedField.name)
           : fieldNames
       }
-      definition={selectedDefinition}
+      definition={selectedField}
       saveDefinition={(def: FieldDefinition, prevName?: string) => {
         if (prevName) {
           const i = fields.findIndex(f => f.name === prevName);
@@ -79,23 +83,12 @@ export function DefineAPI() {
         }
         setFields(fields);
         setDrawerOpen(false);
-        setSelectedDefinition(undefined);
+        setSelectedField(undefined);
       }}
     />
   );
 
-  const [defineApi, _] = useMutation(DEFINE_API, {
-    update(cache, { data: { defineAPI } }) {
-      const cachedRes: any = cache.readQuery({ query: ALL_APIS });
-      const apis = (cachedRes && cachedRes.apis) || [];
-      cache.writeQuery({
-        query: ALL_APIS,
-        data: { apis: apis.concat([defineAPI]) }
-      });
-    }
-  });
-
-  async function handleNext() {
+  const currDefinition = () => {
     const operations: OperationDefinition[] = [];
     if (create) {
       operations.push({ type: OperationType.Create });
@@ -109,16 +102,11 @@ export function DefineAPI() {
         sort: [{ field: sortField, order: sortOrder }]
       });
     }
-    const definition = { name, fields, operations };
-    const { data } = await defineApi({
-      variables: { rawDefinition: JSON.stringify(definition) }
-    });
-    history.push(AUTH_API(data.defineAPI.id));
-  }
+    return { name: name!, fields, operations };
+  };
 
   return (
     <div>
-      <h2>New API</h2>
       <h3>Name</h3>
       <InputGroup
         className="wi-api-name"
@@ -178,7 +166,7 @@ export function DefineAPI() {
                   icon="edit"
                   minimal={true}
                   onClick={() => {
-                    setSelectedDefinition(f);
+                    setSelectedField(f);
                     setDrawerOpen(true);
                   }}
                 />
@@ -198,7 +186,6 @@ export function DefineAPI() {
         text="Add field"
         onClick={() => setDrawerOpen(true)}
       />
-
       <CollapseContainer title="Operations">
         <Checkbox
           checked={create}
@@ -230,7 +217,6 @@ export function DefineAPI() {
           </FormGroup>
         </ControlGroup>
       </CollapseContainer>
-
       <FormGroup className="upload-file" label="Upload a file instead">
         <FileInput text="Choose file..." />
       </FormGroup>
@@ -242,7 +228,20 @@ export function DefineAPI() {
       >
         {drawerContent}
       </Drawer>
-      <Arrows next={handleNext} showBack={false} showNext={true} />
+      {!initialName && (
+        <Arrows
+          next={() => saveDefinition(currDefinition())}
+          showBack={false}
+          showNext={true}
+        />
+      )}
+      {initialName && (
+        <Button
+          text="Save"
+          intent="primary"
+          onClick={() => saveDefinition(currDefinition())}
+        />
+      )}
     </div>
   );
 }

@@ -273,6 +273,6 @@ export enum Type {
 }
 
 export type UpdateApiInput = {
-  apiID: Scalars['ID'],
+  id: Scalars['ID'],
   rawDefinition: Scalars['String'],
 };

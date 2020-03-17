@@ -32,6 +32,9 @@ export function FieldForm({
   const [optional, setOptional] = useState(
     (definition && definition.optional) || false
   );
+  const [customLogic, setCustomLogic] = useState(
+    (definition && definition.customLogicPopulated) || false
+  );
   const [min, setMin] = useState<number | undefined>(undefined);
   const [max, setMax] = useState<number | undefined>(undefined);
   const [regex, setRegex] = useState<string | undefined>(undefined);
@@ -64,7 +67,8 @@ export function FieldForm({
         type: (type === "LIST" ? elementType : type) as Type,
         optional,
         list: type === "LIST",
-        constraints
+        constraints,
+        customLogicPopulated: customLogic
       },
       definition && definition.name
     );
@@ -122,6 +126,14 @@ export function FieldForm({
       />
 
       <CollapseContainer title="Advanced">
+        <FormGroup label="If checked, this field will not be required as a request parameter">
+          <Checkbox
+            inline={true}
+            label="Populated by custom logic"
+            checked={customLogic}
+            onChange={() => setCustomLogic(!customLogic)}
+          />
+        </FormGroup>
         {(type === Type.Float || type === Type.Int) && (
           <FormGroup label="Minimum value">
             <NumericInput

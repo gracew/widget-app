@@ -151,12 +151,22 @@ export function DefineAPI() {
           </tr>
           {fields.map((f, i) => (
             <tr key={f.name}>
-              <td>{f.name}</td>
+              <td>
+                <code>{f.name}</code>
+              </td>
               <td>
                 {displayType(f)}
-                {constraintsDefined(f.constraints) && (
+                {f.customLogicPopulated && (
                   <Tooltip
-                    className="wi-constraints-icon"
+                    className="wi-field-icon"
+                    content="Value is populated by custom logic"
+                  >
+                    <Icon icon="code" />
+                  </Tooltip>
+                )}
+                {f.constraints && constraintsDefined(f.constraints) && (
+                  <Tooltip
+                    className="wi-field-icon"
                     content="Value is subject to constraints"
                   >
                     <Icon icon="filter" />

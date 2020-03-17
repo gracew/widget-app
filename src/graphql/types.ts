@@ -95,6 +95,7 @@ export type Deploy = {
 
 export type DeployApiInput = {
   apiID: Scalars['ID'],
+  deployID: Scalars['ID'],
   env: Environment,
 };
 
@@ -136,7 +137,8 @@ export type FieldDefinition = {
   customType?: Maybe<Scalars['String']>,
   optional?: Maybe<Scalars['Boolean']>,
   list?: Maybe<Scalars['Boolean']>,
-  constraints: Constraint,
+  constraints?: Maybe<Constraint>,
+  customLogicPopulated?: Maybe<Scalars['Boolean']>,
 };
 
 export enum Language {

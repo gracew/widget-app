@@ -34,6 +34,7 @@ const OBJECTS = gql`
             minLength
             maxLength
           }
+          customLogicPopulated
         }
       }
     }

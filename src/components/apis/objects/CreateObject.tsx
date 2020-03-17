@@ -40,14 +40,18 @@ export function CreateObject({
       copyText={copyText}
       onSubmit={onSubmit}
     >
-      {definition.fields.map(fieldDef => (
-        <FieldInput
-          key={fieldDef.name}
-          definition={fieldDef}
-          value={input[fieldDef.name]}
-          setValue={(val: any) => setInput({ ...input, [fieldDef.name]: val })}
-        />
-      ))}
+      {definition.fields
+        .filter(fieldDef => !fieldDef.customLogicPopulated)
+        .map(fieldDef => (
+          <FieldInput
+            key={fieldDef.name}
+            definition={fieldDef}
+            value={input[fieldDef.name]}
+            setValue={(val: any) =>
+              setInput({ ...input, [fieldDef.name]: val })
+            }
+          />
+        ))}
     </FormAndResult>
   );
 }

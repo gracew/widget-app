@@ -52,7 +52,7 @@ export function DeployAPI() {
   const [getDeployStatus, { data: statusData, stopPolling }] = useLazyQuery(
     DEPLOY_STATUS,
     {
-      pollInterval: 1000
+      pollInterval: 5000
     }
   );
   if (deployComplete) {

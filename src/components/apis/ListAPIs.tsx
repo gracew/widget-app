@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/react-hooks";
-import { Button, HTMLTable } from "@blueprintjs/core";
+import { Button, HTMLTable, Popover, Position } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Api, Environment } from "../../graphql/types";
-import { AUTH_API, EDIT_API, NEW_API } from "../../routes";
+import { NEW_API } from "../../routes";
+import { APIMenu } from "./APIMenu";
 import { DeployStatus } from "./DeployStatus";
 
 export const ALL_APIS = gql`
@@ -55,16 +56,12 @@ export function ListAPIs() {
             <tr key={id}>
               <td>
                 {name}
-                <Button
-                  icon="edit"
-                  minimal={true}
-                  onClick={() => history.push(EDIT_API(id))}
-                />
-                <Button
-                  icon="lock"
-                  minimal={true}
-                  onClick={() => history.push(AUTH_API(id))}
-                />
+                <Popover
+                  content={<APIMenu id={id} />}
+                  position={Position.RIGHT}
+                >
+                  <Button icon="more" minimal={true} />
+                </Popover>
               </td>
               <td>
                 <DeployStatus

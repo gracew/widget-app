@@ -105,7 +105,7 @@ export function DefineAPI() {
     }
     if (list) {
       operations.push({
-        type: OperationType.Read,
+        type: OperationType.List,
         sort: [{ field: sortField, order: sortOrder }]
       });
     }

@@ -20,7 +20,7 @@ export type ApiDefinition = {
    __typename?: 'APIDefinition',
   name: Scalars['String'],
   fields: Array<FieldDefinition>,
-  operations: Array<OperationDefinition>,
+  operations: OperationDefinition,
 };
 
 export type Auth = {
@@ -146,12 +146,19 @@ export enum Language {
   Python = 'PYTHON'
 }
 
+export type ListDefinition = {
+   __typename?: 'ListDefinition',
+  sort: Array<SortDefinition>,
+  filter: Array<Scalars['String']>,
+};
+
 export type Mutation = {
    __typename?: 'Mutation',
   defineAPI: Api,
   updateAPI: Api,
   authAPI: Scalars['Boolean'],
   deployAPI: Deploy,
+  deleteAPI: Scalars['Boolean'],
   saveCustomLogic: Scalars['Boolean'],
   addTestToken: TestToken,
 };
@@ -177,6 +184,11 @@ export type MutationDeployApiArgs = {
 };
 
 
+export type MutationDeleteApiArgs = {
+  id: Scalars['ID']
+};
+
+
 export type MutationSaveCustomLogicArgs = {
   input: SaveCustomLogicInput
 };
@@ -188,9 +200,9 @@ export type MutationAddTestTokenArgs = {
 
 export type OperationDefinition = {
    __typename?: 'OperationDefinition',
-  type: OperationType,
-  sort?: Maybe<Array<SortDefinition>>,
-  filter?: Maybe<Array<Scalars['String']>>,
+  create?: Maybe<Scalars['Boolean']>,
+  read?: Maybe<Scalars['Boolean']>,
+  list?: Maybe<ListDefinition>,
 };
 
 export enum OperationType {

@@ -8,10 +8,10 @@ import {
   NumericInput
 } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { Constraint, FieldDefinition, Type } from "../../graphql/types";
-import { TYPES } from "../../strings";
+import { Constraint, FieldDefinition, Type } from "../../../graphql/types";
+import { TYPES } from "../../../strings";
+import { CollapseContainer } from "../objects/CollapseContainer";
 import "./FieldForm.css";
-import { CollapseContainer } from "./objects/CollapseContainer";
 
 interface FieldFormProps {
   definition?: FieldDefinition;
@@ -108,7 +108,9 @@ export function FieldForm({
             onChange={(e: any) => setType(e.currentTarget.value)}
           >
             {Object.entries(TYPES).map(([type, display]) => (
-              <option value={type}>{display}</option>
+              <option key={type} value={type}>
+                {display}
+              </option>
             ))}
             <option value={"LIST"}>List</option>
           </HTMLSelect>

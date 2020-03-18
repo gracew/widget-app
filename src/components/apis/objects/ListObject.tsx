@@ -15,10 +15,8 @@ interface ListObjectProps {
 }
 
 export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
-  const includeList = definition.operations.find(
-    (el: any) => el.type === "LIST"
-  );
-  const [pageSize, setPageSize] = useState();
+  const list = definition.operations.list;
+  const [pageSize, setPageSize] = useState<number | undefined>();
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) => {
     const query = pageSize ? `?pageSize=${pageSize}` : "";
@@ -41,11 +39,11 @@ export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
       copyText={copyText}
       onSubmit={onSubmit}
     >
-      {includeList && includeList.sort && includeList.sort.length > 0 && (
+      {list && list.sort.length > 0 && (
         <div>
           Sort by:
           <HTMLSelect id="sort">
-            {includeList.sort.map(
+            {list.sort.map(
               ({ field, order }: { field: string; order: string }) => (
                 <option value={field + order}>
                   {field} {order}
@@ -55,11 +53,11 @@ export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
           </HTMLSelect>
         </div>
       )}
-      {includeList && includeList.filter && includeList.filter.length > 0 && (
+      {list && list.filter.length > 0 && (
         <div>
           Filter by:
           <HTMLSelect id="filter">
-            {includeList.filter.map((name: string) => (
+            {list.filter.map((name: string) => (
               <option value={name}>{name}</option>
             ))}
           </HTMLSelect>

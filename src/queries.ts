@@ -18,12 +18,15 @@ export const API_DEFINITION = gql`
       definition {
         name
         operations {
-          type
-          sort {
-            field
-            order
+          create
+          read
+          list {
+            sort {
+              field
+              order
+            }
+            filter
           }
-          filter
         }
         fields {
           name

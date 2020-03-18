@@ -6,7 +6,8 @@ import "./App.css";
 import { AuthAPI } from "./components/apis/AuthAPI";
 import { CustomizeAPI } from "./components/apis/CustomizeAPI";
 import { DeployAPI } from "./components/apis/DeployAPI";
-import { EditAPI } from "./components/apis/EditAPI";
+import { EditFields } from "./components/apis/EditFields";
+import { EditOperations } from "./components/apis/EditOperations";
 import { ListAPIs } from "./components/apis/ListAPIs";
 import { NewAPI } from "./components/apis/NewAPI";
 import { TestAPI } from "./components/apis/TestAPI";
@@ -16,7 +17,8 @@ import {
   AUTH_API,
   CUSTOMIZE_API,
   DEPLOY_API,
-  EDIT_API,
+  EDIT_FIELDS,
+  EDIT_OPERATIONS,
   LIST_APIS,
   NEW_API,
   TESTS,
@@ -35,7 +37,16 @@ function App() {
         <div className="App">
           <Switch>
             <Route path={NEW_API} exact={true} component={NewAPI} />
-            <Route path={EDIT_API(":id")} exact={true} component={EditAPI} />
+            <Route
+              path={EDIT_FIELDS(":id")}
+              exact={true}
+              component={EditFields}
+            />
+            <Route
+              path={EDIT_OPERATIONS(":id")}
+              exact={true}
+              component={EditOperations}
+            />
             <Route path={AUTH_API(":id")} exact={true} component={AuthAPI} />
             <Route
               path={CUSTOMIZE_API(":id")}

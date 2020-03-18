@@ -2,11 +2,10 @@ import { useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { ApiDefinition, SortOrder } from "../../graphql/types";
-import { AUTH_API } from "../../routes";
+import { FieldDefinition, SortOrder } from "../../graphql/types";
+import { EDIT_OPERATIONS } from "../../routes";
 import { CREATED_AT } from "../../strings";
-import { DefineAPI } from "./DefineAPI";
-import "./DefineAPI.css";
+import { DefineAPI } from "./define/DefineAPI";
 import { ALL_APIS } from "./ListAPIs";
 
 const DEFINE_API = gql`
@@ -32,25 +31,29 @@ export function NewAPI() {
     }
   });
 
-  async function handleNext(definition: ApiDefinition) {
+  async function handleNext(name: string, fields: FieldDefinition[]) {
+    const definition = {
+      name,
+      fields,
+      operations: {
+        create: true,
+        read: true,
+        list: {
+          sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
+          filter: []
+        }
+      }
+    };
     const { data } = await defineApi({
       variables: { rawDefinition: JSON.stringify(definition) }
     });
-    history.push(AUTH_API(data.defineAPI.id));
+    history.push(EDIT_OPERATIONS(data.defineAPI.id));
   }
 
   return (
     <div>
       <h2>New API</h2>
-      <DefineAPI
-        saveDefinition={handleNext}
-        initialCreate={true}
-        initialRead={true}
-        initialList={true}
-        initialSortField={CREATED_AT}
-        initialSortOrder={SortOrder.Desc}
-        initialFields={[]}
-      />
+      <DefineAPI saveDefinition={handleNext} initialFields={[]} />
     </div>
   );
 }

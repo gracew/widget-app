@@ -20,21 +20,11 @@ export function TestAPI() {
     return <p>Loading</p>;
   }
 
-  const includeCreate =
-    data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find((el: any) => el.type === "CREATE");
-  const includeRead =
-    data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find((el: any) => el.type === "READ");
-  const includeList =
-    data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find((el: any) => el.type === "LIST");
-
   return (
     <div>
       <h2>Test API</h2>
       <div>
-        {includeCreate && (
+        {data.api.definition.operations.create && (
           <CollapseContainer title={`Create a ${data.api.name}`}>
             <CreateObject
               apiId={id!}
@@ -44,7 +34,7 @@ export function TestAPI() {
           </CollapseContainer>
         )}
 
-        {includeRead && (
+        {data.api.definition.operations.read && (
           <CollapseContainer title={`Read a ${data.api.name}`}>
             <ReadObject
               apiId={id!}
@@ -54,7 +44,7 @@ export function TestAPI() {
           </CollapseContainer>
         )}
 
-        {includeList && (
+        {data.api.definition.operations.list && (
           <CollapseContainer title={`List ${data.api.name}s`}>
             <ListObject
               apiId={id!}

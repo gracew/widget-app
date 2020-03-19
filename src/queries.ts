@@ -18,12 +18,20 @@ export const API_DEFINITION = gql`
       definition {
         name
         operations {
-          type
-          sort {
-            field
-            order
+          create {
+            enabled
           }
-          filter
+          read {
+            enabled
+          }
+          list {
+            enabled
+            sort {
+              field
+              order
+            }
+            filter
+          }
         }
         fields {
           name
@@ -39,6 +47,15 @@ export const API_DEFINITION = gql`
           customLogicPopulated
         }
       }
+    }
+  }
+`;
+
+export const UPDATE_API = gql`
+  mutation UpdateAPI($id: ID!, $rawDefinition: String!) {
+    updateAPI(input: { id: $id, rawDefinition: $rawDefinition }) {
+      id
+      name
     }
   }
 `;

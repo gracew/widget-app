@@ -1,5 +1,6 @@
 export const NEW_API = "/apis/new";
-export const EDIT_API = (apiId: string) => `/apis/${apiId}/edit`;
+export const EDIT_FIELDS = (apiId: string) => `/apis/${apiId}/edit`;
+export const EDIT_OPERATIONS = (apiId: string) => `/apis/${apiId}/operations`;
 export const AUTH_API = (apiId: string) => `/apis/${apiId}/auth`;
 export const CUSTOMIZE_API = (apiId: string) => `/apis/${apiId}/customize`;
 

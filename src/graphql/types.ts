@@ -12,15 +12,15 @@ export type Api = {
    __typename?: 'API',
   id: Scalars['ID'],
   name: Scalars['String'],
-  deploys: Array<Deploy>,
   definition: ApiDefinition,
+  deploys: Array<Deploy>,
 };
 
 export type ApiDefinition = {
    __typename?: 'APIDefinition',
   name: Scalars['String'],
   fields: Array<FieldDefinition>,
-  operations: Array<OperationDefinition>,
+  operations: OperationDefinition,
 };
 
 export type Auth = {
@@ -71,6 +71,11 @@ export type Constraint = {
   regex?: Maybe<Scalars['String']>,
   minLength?: Maybe<Scalars['Int']>,
   maxLength?: Maybe<Scalars['Int']>,
+};
+
+export type CreateDefinition = {
+   __typename?: 'CreateDefinition',
+  enabled: Scalars['Boolean'],
 };
 
 export type CustomLogic = {
@@ -146,13 +151,21 @@ export enum Language {
   Python = 'PYTHON'
 }
 
+export type ListDefinition = {
+   __typename?: 'ListDefinition',
+  enabled: Scalars['Boolean'],
+  sort: Array<SortDefinition>,
+  filter: Array<Scalars['String']>,
+};
+
 export type Mutation = {
    __typename?: 'Mutation',
   defineAPI: Api,
   updateAPI: Api,
+  deleteAPI: Scalars['Boolean'],
   authAPI: Scalars['Boolean'],
-  deployAPI: Deploy,
   saveCustomLogic: Scalars['Boolean'],
+  deployAPI: Deploy,
   addTestToken: TestToken,
 };
 
@@ -167,18 +180,23 @@ export type MutationUpdateApiArgs = {
 };
 
 
+export type MutationDeleteApiArgs = {
+  id: Scalars['ID']
+};
+
+
 export type MutationAuthApiArgs = {
   input: AuthApiInput
 };
 
 
-export type MutationDeployApiArgs = {
-  input: DeployApiInput
+export type MutationSaveCustomLogicArgs = {
+  input: SaveCustomLogicInput
 };
 
 
-export type MutationSaveCustomLogicArgs = {
-  input: SaveCustomLogicInput
+export type MutationDeployApiArgs = {
+  input: DeployApiInput
 };
 
 
@@ -188,9 +206,9 @@ export type MutationAddTestTokenArgs = {
 
 export type OperationDefinition = {
    __typename?: 'OperationDefinition',
-  type: OperationType,
-  sort?: Maybe<Array<SortDefinition>>,
-  filter?: Maybe<Array<Scalars['String']>>,
+  create: CreateDefinition,
+  read: ReadDefinition,
+  list: ListDefinition,
 };
 
 export enum OperationType {
@@ -204,20 +222,15 @@ export type Query = {
    __typename?: 'Query',
   api?: Maybe<Api>,
   apis: Array<Api>,
-  deployStatus: DeployStatusResponse,
   auth?: Maybe<Auth>,
   customLogic: Array<CustomLogic>,
+  deployStatus: DeployStatusResponse,
   testTokens: TestTokenResponse,
 };
 
 
 export type QueryApiArgs = {
   id: Scalars['ID']
-};
-
-
-export type QueryDeployStatusArgs = {
-  deployID: Scalars['ID']
 };
 
 
@@ -228,6 +241,16 @@ export type QueryAuthArgs = {
 
 export type QueryCustomLogicArgs = {
   apiID: Scalars['ID']
+};
+
+
+export type QueryDeployStatusArgs = {
+  deployID: Scalars['ID']
+};
+
+export type ReadDefinition = {
+   __typename?: 'ReadDefinition',
+  enabled: Scalars['Boolean'],
 };
 
 export type SaveCustomLogicInput = {

@@ -3,7 +3,12 @@ import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { AUTH_API, CUSTOMIZE_API, EDIT_API } from "../../routes";
+import {
+  AUTH_API,
+  CUSTOMIZE_API,
+  EDIT_FIELDS,
+  EDIT_OPERATIONS
+} from "../../routes";
 import { ALL_APIS } from "./ListAPIs";
 
 const DELETE_API = gql`
@@ -34,8 +39,13 @@ export function APIMenu({ id }: APIMenuProps) {
     <Menu>
       <MenuItem
         icon="edit"
-        text="Edit"
-        onClick={() => history.push(EDIT_API(id!))}
+        text="Edit Fields"
+        onClick={() => history.push(EDIT_FIELDS(id!))}
+      />
+      <MenuItem
+        icon="globe-network"
+        text="Edit Operations"
+        onClick={() => history.push(EDIT_OPERATIONS(id!))}
       />
       <MenuItem
         icon="lock"

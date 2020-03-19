@@ -3,48 +3,13 @@ import { HTMLSelect } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import {
-  CustomLogic,
-  Language,
-  OperationDefinition,
-  OperationType
-} from "../../graphql/types";
+import { CustomLogic, Language, OperationType } from "../../graphql/types";
+import { API_DEFINITION } from "../../queries";
 import { DEPLOY_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import "./CustomizeAPI.css";
 import { CustomLogicEditor } from "./CustomLogicEditor";
 import { CollapseContainer } from "./objects/CollapseContainer";
-
-const OBJECTS = gql`
-  query GET_API($id: ID!) {
-    api(id: $id) {
-      name
-      definition {
-        name
-        operations {
-          type
-          sort {
-            field
-            order
-          }
-          filter
-        }
-        fields {
-          name
-          type
-          constraints {
-            minInt
-            maxInt
-            minFloat
-            maxFloat
-            minLength
-            maxLength
-          }
-        }
-      }
-    }
-  }
-`;
 
 const CUSTOM_LOGIC = gql`
   query CUSTOM_LOGIC($apiID: ID!) {
@@ -61,7 +26,7 @@ export function CustomizeAPI() {
   const history = useHistory();
   const [language, setLanguage] = useState(Language.Javascript);
 
-  const { data, loading } = useQuery(OBJECTS, { variables: { id } });
+  const { data, loading } = useQuery(API_DEFINITION, { variables: { id } });
   const {
     data: customLogicData,
     loading: customLogicLoading
@@ -70,12 +35,6 @@ export function CustomizeAPI() {
   if (loading || customLogicLoading) {
     return <p>Loading</p>;
   }
-
-  const includeCreate =
-    data.api.definition.operations.length === 0 ||
-    data.api.definition.operations.find(
-      (el: OperationDefinition) => el.type === OperationType.Create
-    );
 
   const createCustomLogic: CustomLogic = customLogicData.customLogic.find(
     (el: CustomLogic) => el.operationType === OperationType.Create
@@ -95,7 +54,7 @@ export function CustomizeAPI() {
           <option value={Language.Python}>Python</option>
         </HTMLSelect>
       </div>
-      {includeCreate && (
+      {data.api.definition.operations.create && (
         <CollapseContainer title={`Create a ${data.api.name}`}>
           <CustomLogicEditor
             apiID={id!}

@@ -1,19 +1,9 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { ApiDefinition, FieldDefinition } from "../../graphql/types";
-import { API_DEFINITION } from "../../queries";
+import { API_DEFINITION, UPDATE_API } from "../../queries";
 import { DefineAPI } from "./define/Fields";
-
-const UPDATE_API = gql`
-  mutation UpdateAPI($id: ID!, $rawDefinition: String!) {
-    updateAPI(input: { id: $id, rawDefinition: $rawDefinition }) {
-      id
-      name
-    }
-  }
-`;
 
 export function EditFields() {
   const history = useHistory();
@@ -25,9 +15,9 @@ export function EditFields() {
 
   async function handleSave(name: string, fields: FieldDefinition[]) {
     const definition = {
+      ...data.api.definition,
       name,
-      fields,
-      operations: data.api.definition.operations
+      fields
     };
     await updateApi({
       variables: { id, rawDefinition: JSON.stringify(definition) }

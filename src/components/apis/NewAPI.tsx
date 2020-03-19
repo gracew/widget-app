@@ -36,9 +36,10 @@ export function NewAPI() {
       name,
       fields,
       operations: {
-        create: true,
-        read: true,
+        create: { enabled: true },
+        read: { enabled: true },
         list: {
+          enabled: true,
           sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
           filter: []
         }

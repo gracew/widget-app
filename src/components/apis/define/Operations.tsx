@@ -1,17 +1,21 @@
 import { Checkbox } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition } from "../../../graphql/types";
+import { ApiDefinition, OperationDefinition } from "../../../graphql/types";
+import { CREATED_AT, CREATED_BY } from "../../../strings";
 import { Arrows } from "../../Arrows";
 import { ListOptions } from "../define/ListOptions";
 
 interface OperationsProps {
+  saveDefinition: (operations: OperationDefinition) => any;
   definition: ApiDefinition;
 }
 
-export function Operations({ definition }: OperationsProps) {
-  const [create, setCreate] = useState(!!definition.operations.create);
-  const [read, setRead] = useState(!!definition.operations.read);
-  const [list, setList] = useState(definition.operations.list);
+export function Operations({ definition, saveDefinition }: OperationsProps) {
+  const [create, setCreate] = useState(definition.operations.create.enabled);
+  const [read, setRead] = useState(!!definition.operations.read.enabled);
+  const [list, setList] = useState(!!definition.operations.list.enabled);
+  const [sort, setSort] = useState(definition.operations.list.sort);
+  const [filter, setFilter] = useState(definition.operations.list.filter);
 
   return (
     <div>
@@ -21,15 +25,33 @@ export function Operations({ definition }: OperationsProps) {
         onChange={() => setCreate(!create)}
       />
       <Checkbox checked={read} label="Read" onChange={() => setRead(!read)} />
-      <Checkbox checked={list !== undefined} label="List" />
+      <Checkbox
+        checked={!!list}
+        label="List"
+        onChange={() => {
+          setList(!list);
+        }}
+      />
       {list && (
         <ListOptions
-          fieldNames={definition.fields.map(f => f.name)}
-          list={list}
-          setList={setList}
+          fieldNames={definition.fields
+            .map(f => f.name)
+            .concat([CREATED_AT, CREATED_BY])}
+          sort={sort}
+          setSort={setSort}
+          filter={filter}
+          setFilter={setFilter}
         />
       )}
-      <Arrows next={() => "foo"} />
+      <Arrows
+        next={() =>
+          saveDefinition({
+            create: { enabled: create },
+            read: { enabled: read },
+            list: { enabled: list, sort, filter }
+          })
+        }
+      />
     </div>
   );
 }

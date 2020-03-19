@@ -1,19 +1,23 @@
 import { MenuItem, Position } from "@blueprintjs/core";
 import { IItemRendererProps, MultiSelect } from "@blueprintjs/select";
 import React from "react";
-import {
-  ListDefinition,
-  SortDefinition,
-  SortOrder
-} from "../../../graphql/types";
+import { SortDefinition, SortOrder } from "../../../graphql/types";
 
 interface ListOptionsProps {
   fieldNames: string[];
-  list: ListDefinition;
-  setList: (def: ListDefinition) => void;
+  sort: SortDefinition[];
+  setSort: (sort: SortDefinition[]) => void;
+  filter: string[];
+  setFilter: (fields: string[]) => void;
 }
 
-export function ListOptions({ fieldNames, list, setList }: ListOptionsProps) {
+export function ListOptions({
+  fieldNames,
+  sort,
+  setSort,
+  filter,
+  setFilter
+}: ListOptionsProps) {
   const sortOptions: SortDefinition[] = [];
   fieldNames.forEach(field => {
     sortOptions.push({
@@ -27,11 +31,13 @@ export function ListOptions({ fieldNames, list, setList }: ListOptionsProps) {
   });
 
   const sortRenderer = (
-    sort: SortDefinition,
+    def: SortDefinition,
     { modifiers, handleClick }: IItemRendererProps
   ) => {
-    const icon = list.sort.indexOf(sort) < 0 ? "blank" : "tick";
-    const text = `${sort.field} ${sort.order}`;
+    const icon = sort.some(d => d.field === def.field && d.order === def.order)
+      ? "tick"
+      : "blank";
+    const text = `${def.field} ${def.order}`;
     return (
       <MenuItem
         active={modifiers.active}
@@ -47,7 +53,7 @@ export function ListOptions({ fieldNames, list, setList }: ListOptionsProps) {
     field: string,
     { modifiers, handleClick }: IItemRendererProps
   ) => {
-    const icon = list.filter.indexOf(field) < 0 ? "blank" : "tick";
+    const icon = filter.indexOf(field) < 0 ? "blank" : "tick";
     return (
       <MenuItem
         active={modifiers.active}
@@ -64,25 +70,22 @@ export function ListOptions({ fieldNames, list, setList }: ListOptionsProps) {
       <h4>Sort Options</h4>
       <MultiSelect
         items={sortOptions}
-        selectedItems={list.sort}
+        selectedItems={sort}
         itemRenderer={sortRenderer}
-        onItemSelect={sort => {
-          const i = list.sort.indexOf(sort);
-          setList({
-            ...list,
-            sort:
-              i < 0
-                ? list.sort.concat([sort])
-                : list.sort.slice(0, i).concat(list.sort.slice(i + 1))
-          });
+        onItemSelect={def => {
+          const i = sort.findIndex(
+            d => d.field === def.field && d.order === def.order
+          );
+          setSort(
+            i < 0
+              ? sort.concat([def])
+              : sort.slice(0, i).concat(sort.slice(i + 1))
+          );
         }}
         tagRenderer={(s: SortDefinition) => `${s.field} ${s.order}`}
         tagInputProps={{
           onRemove: (_, i) =>
-            setList({
-              ...list,
-              sort: list.sort.slice(0, i).concat(list.sort.slice(i + 1))
-            })
+            setSort(sort.slice(0, i).concat(sort.slice(i + 1)))
         }}
         popoverProps={{ minimal: true, position: Position.BOTTOM }}
       ></MultiSelect>
@@ -90,25 +93,20 @@ export function ListOptions({ fieldNames, list, setList }: ListOptionsProps) {
       <h4>Filter Options</h4>
       <MultiSelect
         items={fieldNames}
-        selectedItems={list.filter}
+        selectedItems={filter}
         itemRenderer={filterRenderer}
         onItemSelect={name => {
-          const i = list.filter.indexOf(name);
-          setList({
-            ...list,
-            filter:
-              i < 0
-                ? list.filter.concat([name])
-                : list.filter.slice(0, i).concat(list.filter.slice(i + 1))
-          });
+          const i = filter.indexOf(name);
+          setFilter(
+            i < 0
+              ? filter.concat([name])
+              : filter.slice(0, i).concat(filter.slice(i + 1))
+          );
         }}
         tagRenderer={(n: string) => n}
         tagInputProps={{
           onRemove: (_, i) =>
-            setList({
-              ...list,
-              filter: list.filter.slice(0, i).concat(list.filter.slice(i + 1))
-            })
+            setFilter(filter.slice(0, i).concat(filter.slice(i + 1)))
         }}
         popoverProps={{ minimal: true, position: Position.BOTTOM }}
       ></MultiSelect>

@@ -12,8 +12,8 @@ interface OperationsProps {
 
 export function Operations({ definition, saveDefinition }: OperationsProps) {
   const [create, setCreate] = useState(definition.operations.create.enabled);
-  const [read, setRead] = useState(!!definition.operations.read.enabled);
-  const [list, setList] = useState(!!definition.operations.list.enabled);
+  const [read, setRead] = useState(definition.operations.read.enabled);
+  const [list, setList] = useState(definition.operations.list.enabled);
   const [sort, setSort] = useState(definition.operations.list.sort);
   const [filter, setFilter] = useState(definition.operations.list.filter);
 
@@ -26,7 +26,7 @@ export function Operations({ definition, saveDefinition }: OperationsProps) {
       />
       <Checkbox checked={read} label="Read" onChange={() => setRead(!read)} />
       <Checkbox
-        checked={!!list}
+        checked={list}
         label="List"
         onChange={() => {
           setList(!list);

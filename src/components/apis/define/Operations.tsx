@@ -13,8 +13,6 @@ export function Operations({ definition }: OperationsProps) {
   const [read, setRead] = useState(!!definition.operations.read);
   const [list, setList] = useState(definition.operations.list);
 
-  const fieldNames = definition.fields.map(f => f.name);
-
   return (
     <div>
       <Checkbox
@@ -25,7 +23,11 @@ export function Operations({ definition }: OperationsProps) {
       <Checkbox checked={read} label="Read" onChange={() => setRead(!read)} />
       <Checkbox checked={list !== undefined} label="List" />
       {list && (
-        <ListOptions fieldNames={fieldNames} list={list} setList={setList} />
+        <ListOptions
+          fieldNames={definition.fields.map(f => f.name)}
+          list={list}
+          setList={setList}
+        />
       )}
       <Arrows next={() => "foo"} />
     </div>

@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { FieldDefinition, SortOrder } from "../../graphql/types";
 import { EDIT_OPERATIONS } from "../../routes";
 import { CREATED_AT } from "../../strings";
-import { DefineAPI } from "./define/DefineAPI";
+import { DefineAPI } from "./define/Fields";
 import { ALL_APIS } from "./ListAPIs";
 
 const DEFINE_API = gql`

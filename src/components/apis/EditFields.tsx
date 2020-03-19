@@ -4,7 +4,7 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { ApiDefinition, FieldDefinition } from "../../graphql/types";
 import { API_DEFINITION } from "../../queries";
-import { DefineAPI } from "./define/DefineAPI";
+import { DefineAPI } from "./define/Fields";
 
 const UPDATE_API = gql`
   mutation UpdateAPI($id: ID!, $rawDefinition: String!) {

@@ -6,7 +6,6 @@ import {
   SortDefinition,
   SortOrder
 } from "../../../graphql/types";
-import "./DefineAPI.css";
 
 interface ListOptionsProps {
   fieldNames: string[];
@@ -31,7 +30,7 @@ export function ListOptions({ fieldNames, list, setList }: ListOptionsProps) {
     sort: SortDefinition,
     { modifiers, handleClick }: IItemRendererProps
   ) => {
-    const icon = list.sort.indexOf(sort) >= 0 ? "tick" : "blank";
+    const icon = list.sort.indexOf(sort) < 0 ? "blank" : "tick";
     const text = `${sort.field} ${sort.order}`;
     return (
       <MenuItem

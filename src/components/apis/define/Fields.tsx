@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { FieldDefinition } from "../../../graphql/types";
 import { CREATED_AT, CREATED_BY } from "../../../strings";
 import { Arrows } from "../../Arrows";
-import "./DefineAPI.css";
 import { FieldForm } from "./FieldForm";
+import "./Fields.css";
 import { FieldTable } from "./FieldTable";
 
 interface DefineAPIProps {

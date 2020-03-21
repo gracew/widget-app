@@ -11,51 +11,49 @@ export const TEST_TOKENS = gql`
   }
 `;
 
+// TODO(gracew): use fragments
 export const API_DEFINITION = gql`
   query ApiDefinition($id: ID!) {
     api(id: $id) {
+      id
       name
-      definition {
+      operations {
+        create {
+          enabled
+        }
+        read {
+          enabled
+        }
+        list {
+          enabled
+          sort {
+            field
+            order
+          }
+          filter
+        }
+      }
+      fields {
         name
-        operations {
-          create {
-            enabled
-          }
-          read {
-            enabled
-          }
-          list {
-            enabled
-            sort {
-              field
-              order
-            }
-            filter
-          }
+        type
+        constraints {
+          minInt
+          maxInt
+          minFloat
+          maxFloat
+          minLength
+          maxLength
         }
-        fields {
-          name
-          type
-          constraints {
-            minInt
-            maxInt
-            minFloat
-            maxFloat
-            minLength
-            maxLength
-          }
-          customLogicPopulated
-        }
+        customLogicPopulated
       }
     }
   }
 `;
 
 export const UPDATE_API = gql`
-  mutation UpdateAPI($id: ID!, $rawDefinition: String!) {
-    updateAPI(input: { id: $id, rawDefinition: $rawDefinition }) {
+  mutation UpdateAPI($input: UpdateAPIInput!) {
+    updateAPI(input: $input) {
       id
-      name
     }
   }
 `;

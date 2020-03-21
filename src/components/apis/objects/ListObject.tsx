@@ -5,17 +5,16 @@ import {
   NumericInput
 } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition, TestToken } from "../../../graphql/types";
+import { OperationDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface ListObjectProps {
-  apiId: string;
-  definition: ApiDefinition;
+  definition: OperationDefinition;
   testTokens: TestToken[];
 }
 
-export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
-  const list = definition.operations.list;
+export function ListObject({ definition, testTokens }: ListObjectProps) {
+  const list = definition.list;
   const [pageSize, setPageSize] = useState<number | undefined>();
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) => {

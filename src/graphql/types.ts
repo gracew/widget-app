@@ -12,36 +12,23 @@ export type Api = {
    __typename?: 'API',
   id: Scalars['ID'],
   name: Scalars['String'],
-  definition: ApiDefinition,
-  deploys: Array<Deploy>,
-};
-
-export type ApiDefinition = {
-   __typename?: 'APIDefinition',
-  name: Scalars['String'],
   fields: Array<FieldDefinition>,
-  operations: OperationDefinition,
+  deploys: Array<Deploy>,
+  operations?: Maybe<OperationDefinition>,
 };
 
 export type Auth = {
    __typename?: 'Auth',
-  id: Scalars['ID'],
   apiID: Scalars['ID'],
-  authenticationType: AuthenticationType,
   readPolicy: AuthPolicy,
   writePolicy: AuthPolicy,
 };
 
 export type AuthApiInput = {
   apiID: Scalars['ID'],
-  authenticationType: AuthenticationType,
   readPolicy: AuthPolicyInput,
   writePolicy: AuthPolicyInput,
 };
-
-export enum AuthenticationType {
-  BuiltIn = 'BUILT_IN'
-}
 
 export type AuthPolicy = {
    __typename?: 'AuthPolicy',
@@ -73,8 +60,22 @@ export type Constraint = {
   maxLength?: Maybe<Scalars['Int']>,
 };
 
+export type ConstraintInput = {
+  minInt?: Maybe<Scalars['Int']>,
+  maxInt?: Maybe<Scalars['Int']>,
+  minFloat?: Maybe<Scalars['Float']>,
+  maxFloat?: Maybe<Scalars['Float']>,
+  regex?: Maybe<Scalars['String']>,
+  minLength?: Maybe<Scalars['Int']>,
+  maxLength?: Maybe<Scalars['Int']>,
+};
+
 export type CreateDefinition = {
    __typename?: 'CreateDefinition',
+  enabled: Scalars['Boolean'],
+};
+
+export type CreateDefinitionInput = {
   enabled: Scalars['Boolean'],
 };
 
@@ -88,7 +89,8 @@ export type CustomLogic = {
 };
 
 export type DefineApiInput = {
-  rawDefinition: Scalars['String'],
+  name: Scalars['String'],
+  fields: Array<FieldDefinitionInput>,
 };
 
 export type Deploy = {
@@ -146,6 +148,16 @@ export type FieldDefinition = {
   customLogicPopulated?: Maybe<Scalars['Boolean']>,
 };
 
+export type FieldDefinitionInput = {
+  name: Scalars['String'],
+  type: Type,
+  customType?: Maybe<Scalars['String']>,
+  optional?: Maybe<Scalars['Boolean']>,
+  list?: Maybe<Scalars['Boolean']>,
+  constraints?: Maybe<ConstraintInput>,
+  customLogicPopulated?: Maybe<Scalars['Boolean']>,
+};
+
 export enum Language {
   Javascript = 'JAVASCRIPT',
   Python = 'PYTHON'
@@ -155,6 +167,12 @@ export type ListDefinition = {
    __typename?: 'ListDefinition',
   enabled: Scalars['Boolean'],
   sort: Array<SortDefinition>,
+  filter: Array<Scalars['String']>,
+};
+
+export type ListDefinitionInput = {
+  enabled: Scalars['Boolean'],
+  sort: Array<SortDefinitionInput>,
   filter: Array<Scalars['String']>,
 };
 
@@ -211,6 +229,12 @@ export type OperationDefinition = {
   list: ListDefinition,
 };
 
+export type OperationDefinitionInput = {
+  create: CreateDefinitionInput,
+  read: ReadDefinitionInput,
+  list: ListDefinitionInput,
+};
+
 export enum OperationType {
   Create = 'CREATE',
   Update = 'UPDATE',
@@ -253,6 +277,10 @@ export type ReadDefinition = {
   enabled: Scalars['Boolean'],
 };
 
+export type ReadDefinitionInput = {
+  enabled: Scalars['Boolean'],
+};
+
 export type SaveCustomLogicInput = {
   apiID: Scalars['ID'],
   operationType: OperationType,
@@ -263,6 +291,11 @@ export type SaveCustomLogicInput = {
 
 export type SortDefinition = {
    __typename?: 'SortDefinition',
+  field: Scalars['String'],
+  order: SortOrder,
+};
+
+export type SortDefinitionInput = {
   field: Scalars['String'],
   order: SortOrder,
 };
@@ -292,10 +325,12 @@ export enum Type {
   Float = 'FLOAT',
   Int = 'INT',
   Boolean = 'BOOLEAN',
-  String = 'STRING'
+  String = 'STRING',
+  List = 'LIST'
 }
 
 export type UpdateApiInput = {
   id: Scalars['ID'],
-  rawDefinition: Scalars['String'],
+  fields?: Maybe<Array<FieldDefinitionInput>>,
+  operations?: Maybe<OperationDefinitionInput>,
 };

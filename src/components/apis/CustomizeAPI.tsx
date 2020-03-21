@@ -54,7 +54,7 @@ export function CustomizeAPI() {
           <option value={Language.Python}>Python</option>
         </HTMLSelect>
       </div>
-      {data.api.definition.operations.create && (
+      {data.api.operations.create && (
         <CollapseContainer title={`Create a ${data.api.name}`}>
           <CustomLogicEditor
             apiID={id!}

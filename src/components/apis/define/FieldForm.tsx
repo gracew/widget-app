@@ -65,7 +65,7 @@ export function FieldForm({
       case Type.String:
         constraints = { regex, minLength, maxLength };
         break;
-      case "LIST":
+      case Type.List:
         constraints = { minLength, maxLength };
         break;
     }
@@ -74,9 +74,9 @@ export function FieldForm({
       {
         // TODO(gracew): do validation...
         name: name,
-        type: (type === "LIST" ? elementType : type) as Type,
+        type: (type === Type.List ? elementType : type) as Type,
         optional,
-        list: type === "LIST",
+        list: type === Type.List,
         constraints,
         customLogicPopulated: customLogic
       },
@@ -112,12 +112,11 @@ export function FieldForm({
                 {display}
               </option>
             ))}
-            <option value={"LIST"}>List</option>
           </HTMLSelect>
         </FormGroup>
       </ControlGroup>
 
-      {type === "LIST" && (
+      {type === Type.List && (
         <FormGroup label="List Element Type">
           <HTMLSelect
             value={elementType}
@@ -172,7 +171,7 @@ export function FieldForm({
             />
           </FormGroup>
         )}
-        {(type === Type.String || type === "LIST") && (
+        {(type === Type.String || type === Type.List) && (
           <FormGroup label="Minimum Length">
             <NumericInput
               value={minLength}
@@ -180,7 +179,7 @@ export function FieldForm({
             />
           </FormGroup>
         )}
-        {(type === Type.String || type === "LIST") && (
+        {(type === Type.String || type === Type.List) && (
           <FormGroup label="Maximum Length">
             <NumericInput
               value={maxLength}
@@ -200,7 +199,7 @@ function initialType(definition?: FieldDefinition) {
     return Type.String;
   }
   if (definition.list) {
-    return "LIST";
+    return Type.List;
   }
   return definition.type;
 }

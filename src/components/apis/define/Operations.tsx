@@ -1,21 +1,26 @@
 import { Checkbox } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition, OperationDefinition } from "../../../graphql/types";
+import { FieldDefinition, OperationDefinition } from "../../../graphql/types";
 import { CREATED_AT, CREATED_BY } from "../../../strings";
 import { Arrows } from "../../Arrows";
 import { ListOptions } from "../define/ListOptions";
 
 interface OperationsProps {
   saveDefinition: (operations: OperationDefinition) => any;
-  definition: ApiDefinition;
+  fields: FieldDefinition[];
+  definition: OperationDefinition;
 }
 
-export function Operations({ definition, saveDefinition }: OperationsProps) {
-  const [create, setCreate] = useState(definition.operations.create.enabled);
-  const [read, setRead] = useState(definition.operations.read.enabled);
-  const [list, setList] = useState(definition.operations.list.enabled);
-  const [sort, setSort] = useState(definition.operations.list.sort);
-  const [filter, setFilter] = useState(definition.operations.list.filter);
+export function Operations({
+  fields,
+  definition,
+  saveDefinition
+}: OperationsProps) {
+  const [create, setCreate] = useState(definition.create.enabled);
+  const [read, setRead] = useState(definition.read.enabled);
+  const [list, setList] = useState(definition.list.enabled);
+  const [sort, setSort] = useState(definition.list.sort);
+  const [filter, setFilter] = useState(definition.list.filter);
 
   return (
     <div>
@@ -34,9 +39,7 @@ export function Operations({ definition, saveDefinition }: OperationsProps) {
       />
       {list && (
         <ListOptions
-          fieldNames={definition.fields
-            .map(f => f.name)
-            .concat([CREATED_AT, CREATED_BY])}
+          fieldNames={fields.map(f => f.name).concat([CREATED_AT, CREATED_BY])}
           sort={sort}
           setSort={setSort}
           filter={filter}

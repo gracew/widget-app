@@ -2,15 +2,14 @@ import { useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { FieldDefinition, SortOrder } from "../../graphql/types";
+import { FieldDefinition } from "../../graphql/types";
 import { EDIT_OPERATIONS } from "../../routes";
-import { CREATED_AT } from "../../strings";
 import { DefineAPI } from "./define/Fields";
 import { ALL_APIS } from "./ListAPIs";
 
 const DEFINE_API = gql`
-  mutation DefineAPI($rawDefinition: String!) {
-    defineAPI(input: { rawDefinition: $rawDefinition }) {
+  mutation DefineAPI($input: DefineAPIInput!) {
+    defineAPI(input: $input) {
       id
       name
     }
@@ -32,21 +31,8 @@ export function NewAPI() {
   });
 
   async function handleNext(name: string, fields: FieldDefinition[]) {
-    const definition = {
-      name,
-      fields,
-      operations: {
-        create: { enabled: true },
-        read: { enabled: true },
-        list: {
-          enabled: true,
-          sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
-          filter: []
-        }
-      }
-    };
     const { data } = await defineApi({
-      variables: { rawDefinition: JSON.stringify(definition) }
+      variables: { input: { name, fields } }
     });
     history.push(EDIT_OPERATIONS(data.defineAPI.id));
   }

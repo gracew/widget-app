@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { AuthenticationType, AuthPolicyType } from "../../graphql/types";
+import { AuthPolicyType } from "../../graphql/types";
 import { CUSTOMIZE_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import { AuthPolicy } from "./AuthPolicy";
@@ -27,14 +27,12 @@ const AUTH = gql`
 const SET_AUTH = gql`
   mutation AuthAPI(
     $apiID: ID!
-    $authenticationType: AuthenticationType!
     $readPolicyType: AuthPolicyType!
     $writePolicyType: AuthPolicyType!
   ) {
     authAPI(
       input: {
         apiID: $apiID
-        authenticationType: $authenticationType
         readPolicy: { type: $readPolicyType }
         writePolicy: { type: $writePolicyType }
       }
@@ -56,10 +54,9 @@ export function AuthAPI() {
   );
 
   async function handleNext() {
-    const { data } = await authApi({
+    await authApi({
       variables: {
         apiID: id,
-        authenticationType: AuthenticationType.BuiltIn,
         readPolicyType,
         writePolicyType
       }

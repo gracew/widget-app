@@ -24,31 +24,25 @@ export function TestAPI() {
     <div>
       <h2>Test API</h2>
       <div>
-        {data.api.definition.operations.create && (
+        {data.api.operations.create && (
           <CollapseContainer title={`Create a ${data.api.name}`}>
             <CreateObject
-              apiId={id!}
-              definition={data.api.definition}
+              fields={data.api.fields}
               testTokens={testTokensData.testTokens.testTokens}
             />
           </CollapseContainer>
         )}
 
-        {data.api.definition.operations.read && (
+        {data.api.operations.read && (
           <CollapseContainer title={`Read a ${data.api.name}`}>
-            <ReadObject
-              apiId={id!}
-              definition={data.api.definition}
-              testTokens={testTokensData.testTokens.testTokens}
-            />
+            <ReadObject testTokens={testTokensData.testTokens.testTokens} />
           </CollapseContainer>
         )}
 
-        {data.api.definition.operations.list && (
+        {data.api.operations.list && (
           <CollapseContainer title={`List ${data.api.name}s`}>
             <ListObject
-              apiId={id!}
-              definition={data.api.definition}
+              definition={data.api.operations}
               testTokens={testTokensData.testTokens.testTokens}
             />
           </CollapseContainer>

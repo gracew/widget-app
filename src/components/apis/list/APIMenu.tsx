@@ -8,8 +8,8 @@ import {
   CUSTOMIZE_API,
   EDIT_FIELDS,
   EDIT_OPERATIONS
-} from "../../routes";
-import { ALL_APIS } from "./ListAPIs";
+} from "../../../routes";
+import { ALL_APIS } from "../ListAPIs";
 
 const DELETE_API = gql`
   mutation DeleteAPI($id: ID!) {

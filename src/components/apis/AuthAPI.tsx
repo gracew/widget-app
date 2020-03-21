@@ -6,7 +6,7 @@ import { AuthPolicyType } from "../../graphql/types";
 import { CUSTOMIZE_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import { SaveCancel } from "../SaveCancel";
-import { AuthPolicy } from "./AuthPolicy";
+import { AuthPolicy } from "./auth/AuthPolicy";
 
 const AUTH = gql`
   query AUTH($apiID: ID!) {

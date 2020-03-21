@@ -3,10 +3,10 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { API_DEFINITION, TEST_TOKENS } from "../../queries";
 import { Arrows } from "../Arrows";
-import { CollapseContainer } from "./objects/CollapseContainer";
-import { CreateObject } from "./objects/CreateObject";
-import { ListObject } from "./objects/ListObject";
-import { ReadObject } from "./objects/ReadObject";
+import { CollapseContainer } from "../CollapseContainer";
+import { CreateObject } from "./test/CreateObject";
+import { ListObject } from "./test/ListObject";
+import { ReadObject } from "./test/ReadObject";
 
 export function TestAPI() {
   const { id, deployId } = useParams();

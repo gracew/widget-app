@@ -3,9 +3,9 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import MonacoEditor from "react-monaco-editor";
-import { Language, OperationType } from "../../graphql/types";
-import { MONACO_OPTIONS } from "../../monaco";
-import { ButtonLoading } from "../ButtonLoading";
+import { Language, OperationType } from "../../../graphql/types";
+import { MONACO_OPTIONS } from "../../../monaco";
+import { ButtonLoading } from "../../ButtonLoading";
 import "./CustomLogicEditor.css";
 
 const SAVE_CUSTOM_LOGIC = gql`

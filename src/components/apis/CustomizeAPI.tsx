@@ -7,10 +7,10 @@ import { CustomLogic, Language, OperationType } from "../../graphql/types";
 import { API_DEFINITION } from "../../queries";
 import { DEPLOY_API } from "../../routes";
 import { Arrows } from "../Arrows";
+import { CollapseContainer } from "../CollapseContainer";
 import { SaveCancel } from "../SaveCancel";
+import { CustomLogicEditor } from "./customize/CustomLogicEditor";
 import "./CustomizeAPI.css";
-import { CustomLogicEditor } from "./CustomLogicEditor";
-import { CollapseContainer } from "./objects/CollapseContainer";
 
 const CUSTOM_LOGIC = gql`
   query CUSTOM_LOGIC($apiID: ID!) {

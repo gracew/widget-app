@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { Constraint, FieldDefinition, Type } from "../../../graphql/types";
 import { TYPES } from "../../../strings";
-import { CollapseContainer } from "../objects/CollapseContainer";
+import { CollapseContainer } from "../../CollapseContainer";
 import "./FieldForm.css";
 
 interface FieldFormProps {

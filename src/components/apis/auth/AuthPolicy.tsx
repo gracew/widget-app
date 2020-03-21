@@ -1,6 +1,6 @@
 import { HTMLSelect } from "@blueprintjs/core";
 import React from "react";
-import { AuthPolicyType } from "../../graphql/types";
+import { AuthPolicyType } from "../../../graphql/types";
 
 interface AuthPolicyProps {
   value: AuthPolicyType;

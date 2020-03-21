@@ -5,8 +5,8 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { Api, Environment } from "../../graphql/types";
 import { NEW_API } from "../../routes";
-import { APIMenu } from "./APIMenu";
-import { DeployStatus } from "./DeployStatus";
+import { DeployStatus } from "./deploy/DeployStatus";
+import { APIMenu } from "./list/APIMenu";
 
 export const ALL_APIS = gql`
   {

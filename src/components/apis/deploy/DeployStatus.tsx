@@ -1,8 +1,8 @@
 import { Button, Icon } from "@blueprintjs/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Deploy } from "../../graphql/types";
-import { TEST_API } from "../../routes";
+import { Deploy } from "../../../graphql/types";
+import { TEST_API } from "../../../routes";
 
 interface DeployStatusProps {
   deploy?: Deploy;

@@ -12,7 +12,7 @@ import { ListAPIs } from "./components/apis/ListAPIs";
 import { NewAPI } from "./components/apis/NewAPI";
 import { TestAPI } from "./components/apis/TestAPI";
 import { Navbar } from "./components/Navbar";
-import { Tests } from "./components/Tests";
+import { Tests } from "./components/tokens/Tests";
 import {
   AUTH_API,
   CUSTOMIZE_API,

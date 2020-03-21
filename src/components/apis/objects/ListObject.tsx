@@ -5,17 +5,15 @@ import {
   NumericInput
 } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition, TestToken } from "../../../graphql/types";
+import { OperationDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
 
 interface ListObjectProps {
-  apiId: string;
-  definition: ApiDefinition;
+  operations: OperationDefinition;
   testTokens: TestToken[];
 }
 
-export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
-  const list = definition.operations.list;
+export function ListObject({ operations, testTokens }: ListObjectProps) {
   const [pageSize, setPageSize] = useState<number | undefined>();
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) => {
@@ -39,11 +37,11 @@ export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
       copyText={copyText}
       onSubmit={onSubmit}
     >
-      {list && list.sort.length > 0 && (
+      {operations.list.sort.length > 0 && (
         <div>
           Sort by:
           <HTMLSelect id="sort">
-            {list.sort.map(
+            {operations.list.sort.map(
               ({ field, order }: { field: string; order: string }) => (
                 <option value={field + order}>
                   {field} {order}
@@ -53,11 +51,11 @@ export function ListObject({ apiId, definition, testTokens }: ListObjectProps) {
           </HTMLSelect>
         </div>
       )}
-      {list && list.filter.length > 0 && (
+      {operations.list.filter.length > 0 && (
         <div>
           Filter by:
           <HTMLSelect id="filter">
-            {list.filter.map((name: string) => (
+            {operations.list.filter.map((name: string) => (
               <option value={name}>{name}</option>
             ))}
           </HTMLSelect>

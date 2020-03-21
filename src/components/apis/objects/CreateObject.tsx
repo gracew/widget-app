@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-import { ApiDefinition, TestToken } from "../../../graphql/types";
+import { FieldDefinition, TestToken } from "../../../graphql/types";
 import { FieldInput } from "./FieldInput";
 import { FormAndResult } from "./FormAndResult";
 
 interface CreateObjectProps {
-  apiId: string;
-  definition: ApiDefinition;
+  fields: FieldDefinition[];
   testTokens: TestToken[];
 }
 
-export function CreateObject({
-  apiId,
-  definition,
-  testTokens
-}: CreateObjectProps) {
+export function CreateObject({ fields, testTokens }: CreateObjectProps) {
   const [output, setOutput] = useState("");
   const initialInput: Record<string, any> = {};
   const [input, setInput] = useState(initialInput);
@@ -40,7 +35,7 @@ export function CreateObject({
       copyText={copyText}
       onSubmit={onSubmit}
     >
-      {definition.fields
+      {fields
         .filter(fieldDef => !fieldDef.customLogicPopulated)
         .map(fieldDef => (
           <FieldInput

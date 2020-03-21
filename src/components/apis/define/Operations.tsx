@@ -1,21 +1,26 @@
 import { Checkbox } from "@blueprintjs/core";
 import React, { useState } from "react";
-import { ApiDefinition, OperationDefinition } from "../../../graphql/types";
+import { FieldDefinition, OperationDefinition } from "../../../graphql/types";
 import { CREATED_AT, CREATED_BY } from "../../../strings";
 import { Arrows } from "../../Arrows";
 import { ListOptions } from "../define/ListOptions";
 
 interface OperationsProps {
-  saveDefinition: (operations: OperationDefinition) => any;
-  definition: ApiDefinition;
+  operations: OperationDefinition;
+  saveOperations: (operations: OperationDefinition) => any;
+  fields: FieldDefinition[];
 }
 
-export function Operations({ definition, saveDefinition }: OperationsProps) {
-  const [create, setCreate] = useState(definition.operations.create.enabled);
-  const [read, setRead] = useState(definition.operations.read.enabled);
-  const [list, setList] = useState(definition.operations.list.enabled);
-  const [sort, setSort] = useState(definition.operations.list.sort);
-  const [filter, setFilter] = useState(definition.operations.list.filter);
+export function Operations({
+  operations,
+  saveOperations,
+  fields
+}: OperationsProps) {
+  const [create, setCreate] = useState(operations.create.enabled);
+  const [read, setRead] = useState(operations.read.enabled);
+  const [list, setList] = useState(operations.list.enabled);
+  const [sort, setSort] = useState(operations.list.sort);
+  const [filter, setFilter] = useState(operations.list.filter);
 
   return (
     <div>
@@ -34,9 +39,7 @@ export function Operations({ definition, saveDefinition }: OperationsProps) {
       />
       {list && (
         <ListOptions
-          fieldNames={definition.fields
-            .map(f => f.name)
-            .concat([CREATED_AT, CREATED_BY])}
+          fieldNames={fields.map(f => f.name).concat([CREATED_AT, CREATED_BY])}
           sort={sort}
           setSort={setSort}
           filter={filter}
@@ -45,7 +48,7 @@ export function Operations({ definition, saveDefinition }: OperationsProps) {
       )}
       <Arrows
         next={() =>
-          saveDefinition({
+          saveOperations({
             create: { enabled: create },
             read: { enabled: read },
             list: { enabled: list, sort, filter }

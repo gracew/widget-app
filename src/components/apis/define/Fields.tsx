@@ -2,27 +2,20 @@ import { Button, Drawer, InputGroup } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { FieldDefinition } from "../../../graphql/types";
 import { CREATED_AT, CREATED_BY } from "../../../strings";
-import { Arrows } from "../../Arrows";
 import { FieldForm } from "./FieldForm";
 import "./Fields.css";
 import { FieldTable } from "./FieldTable";
 
-interface DefineAPIProps {
-  saveDefinition: (name: string, fields: FieldDefinition[]) => any;
-  initialName?: string;
-  initialFields: FieldDefinition[];
+interface FieldsProps {
+  name?: string;
+  fields: FieldDefinition[];
+  setName: (name: string) => void;
+  setFields: (fields: FieldDefinition[]) => void;
 }
 
-export function DefineAPI({
-  saveDefinition,
-  initialName,
-  initialFields
-}: DefineAPIProps) {
-  const [name, setName] = useState<string | undefined>(initialName);
-
+export function Fields({ name, fields, setName, setFields }: FieldsProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   // use a list for stable ordering
-  const [fields, setFields] = useState<FieldDefinition[]>(initialFields);
   const fieldNames = fields.map(f => f.name).concat([CREATED_AT, CREATED_BY]);
 
   const [selectedField, setSelectedField] = useState<
@@ -85,20 +78,6 @@ export function DefineAPI({
       >
         {drawerContent}
       </Drawer>
-      {!initialName && (
-        <Arrows
-          next={() => saveDefinition(name!, fields)}
-          showBack={false}
-          showNext={true}
-        />
-      )}
-      {initialName && (
-        <Button
-          text="Save"
-          intent="primary"
-          onClick={() => saveDefinition(name!, fields)}
-        />
-      )}
     </div>
   );
 }

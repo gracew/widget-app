@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { AuthPolicyType } from "../../graphql/types";
 import { CUSTOMIZE_API } from "../../routes";
 import { Arrows } from "../Arrows";
+import { SaveCancel } from "../SaveCancel";
 import { AuthPolicy } from "./AuthPolicy";
 
 const AUTH = gql`
@@ -42,9 +43,13 @@ const SET_AUTH = gql`
 
 export function AuthAPI() {
   const { id } = useParams();
+  const query = new URLSearchParams(useLocation().search);
+  const edit = query.get("edit") === "true";
   const history = useHistory();
-  const { loading, error, data } = useQuery(AUTH, { variables: { apiID: id } });
+
+  const { loading, data } = useQuery(AUTH, { variables: { apiID: id } });
   const [authApi, _] = useMutation(SET_AUTH);
+
   const [readPolicyType, setReadPolicyType] = useState(
     (data && data.auth && data.auth.readPolicy.type) || AuthPolicyType.CreatedBy
   );
@@ -53,7 +58,7 @@ export function AuthAPI() {
       AuthPolicyType.CreatedBy
   );
 
-  async function handleNext() {
+  async function handleSave() {
     await authApi({
       variables: {
         apiID: id,
@@ -61,7 +66,11 @@ export function AuthAPI() {
         writePolicyType
       }
     });
-    history.push(CUSTOMIZE_API(id!));
+    if (edit) {
+      history.goBack();
+    } else {
+      history.push(CUSTOMIZE_API(id!));
+    }
   }
 
   if (loading) {
@@ -78,7 +87,8 @@ export function AuthAPI() {
         <h3>Write Policy</h3>
         <AuthPolicy value={writePolicyType} setValue={setWritePolicyType} />
 
-        <Arrows next={handleNext} />
+        {!edit && <Arrows next={handleSave} />}
+        {edit && <SaveCancel onSave={handleSave} />}
       </div>
     </div>
   );

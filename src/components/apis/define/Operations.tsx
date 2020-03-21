@@ -1,60 +1,68 @@
 import { Checkbox } from "@blueprintjs/core";
-import React, { useState } from "react";
+import React from "react";
 import { FieldDefinition, OperationDefinition } from "../../../graphql/types";
 import { CREATED_AT, CREATED_BY } from "../../../strings";
-import { Arrows } from "../../Arrows";
 import { ListOptions } from "../define/ListOptions";
 
 interface OperationsProps {
   operations: OperationDefinition;
-  saveOperations: (operations: OperationDefinition) => any;
+  setOperations: (operations: OperationDefinition) => any;
   fields: FieldDefinition[];
 }
 
 export function Operations({
   operations,
-  saveOperations,
+  setOperations,
   fields
 }: OperationsProps) {
-  const [create, setCreate] = useState(operations.create.enabled);
-  const [read, setRead] = useState(operations.read.enabled);
-  const [list, setList] = useState(operations.list.enabled);
-  const [sort, setSort] = useState(operations.list.sort);
-  const [filter, setFilter] = useState(operations.list.filter);
-
   return (
     <div>
       <Checkbox
-        checked={create}
+        checked={operations.create.enabled}
         label="Create"
-        onChange={() => setCreate(!create)}
-      />
-      <Checkbox checked={read} label="Read" onChange={() => setRead(!read)} />
-      <Checkbox
-        checked={list}
-        label="List"
-        onChange={() => {
-          setList(!list);
-        }}
-      />
-      {list && (
-        <ListOptions
-          fieldNames={fields.map(f => f.name).concat([CREATED_AT, CREATED_BY])}
-          sort={sort}
-          setSort={setSort}
-          filter={filter}
-          setFilter={setFilter}
-        />
-      )}
-      <Arrows
-        next={() =>
-          saveOperations({
-            create: { enabled: create },
-            read: { enabled: read },
-            list: { enabled: list, sort, filter }
+        onChange={() =>
+          setOperations({
+            ...operations,
+            create: { enabled: !operations.create.enabled }
           })
         }
       />
+      <Checkbox
+        checked={operations.read.enabled}
+        label="Read"
+        onChange={() =>
+          setOperations({
+            ...operations,
+            read: { enabled: !operations.read.enabled }
+          })
+        }
+      />
+      <Checkbox
+        checked={operations.list.enabled}
+        label="List"
+        onChange={() =>
+          setOperations({
+            ...operations,
+            list: { ...operations.list, enabled: !operations.list.enabled }
+          })
+        }
+      />
+      {operations.list.enabled && (
+        <ListOptions
+          fieldNames={fields.map(f => f.name).concat([CREATED_AT, CREATED_BY])}
+          sort={operations.list.sort}
+          setSort={sort =>
+            setOperations({ ...operations, list: { ...operations.list, sort } })
+          }
+          filter={operations.list.filter}
+          setFilter={filter =>
+            setOperations({
+              ...operations,
+              list: { ...operations.list, filter }
+            })
+          }
+        />
+      )}
     </div>
   );
 }

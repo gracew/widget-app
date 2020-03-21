@@ -73,7 +73,7 @@ export function FieldForm({
     saveDefinition(
       {
         // TODO(gracew): do validation...
-        name: name,
+        name,
         type: (type === Type.List ? elementType : type) as Type,
         optional,
         list: type === Type.List,

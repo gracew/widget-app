@@ -6,21 +6,21 @@ import { Arrows } from "../../Arrows";
 import { ListOptions } from "../define/ListOptions";
 
 interface OperationsProps {
-  saveDefinition: (operations: OperationDefinition) => any;
+  operations: OperationDefinition;
+  saveOperations: (operations: OperationDefinition) => any;
   fields: FieldDefinition[];
-  definition: OperationDefinition;
 }
 
 export function Operations({
-  fields,
-  definition,
-  saveDefinition
+  operations,
+  saveOperations,
+  fields
 }: OperationsProps) {
-  const [create, setCreate] = useState(definition.create.enabled);
-  const [read, setRead] = useState(definition.read.enabled);
-  const [list, setList] = useState(definition.list.enabled);
-  const [sort, setSort] = useState(definition.list.sort);
-  const [filter, setFilter] = useState(definition.list.filter);
+  const [create, setCreate] = useState(operations.create.enabled);
+  const [read, setRead] = useState(operations.read.enabled);
+  const [list, setList] = useState(operations.list.enabled);
+  const [sort, setSort] = useState(operations.list.sort);
+  const [filter, setFilter] = useState(operations.list.filter);
 
   return (
     <div>
@@ -48,7 +48,7 @@ export function Operations({
       )}
       <Arrows
         next={() =>
-          saveDefinition({
+          saveOperations({
             create: { enabled: create },
             read: { enabled: read },
             list: { enabled: list, sort, filter }

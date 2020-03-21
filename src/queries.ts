@@ -17,6 +17,19 @@ export const API_DEFINITION = gql`
     api(id: $id) {
       id
       name
+      fields {
+        name
+        type
+        constraints {
+          minInt
+          maxInt
+          minFloat
+          maxFloat
+          minLength
+          maxLength
+        }
+        customLogicPopulated
+      }
       operations {
         create {
           enabled
@@ -32,19 +45,6 @@ export const API_DEFINITION = gql`
           }
           filter
         }
-      }
-      fields {
-        name
-        type
-        constraints {
-          minInt
-          maxInt
-          minFloat
-          maxFloat
-          minLength
-          maxLength
-        }
-        customLogicPopulated
       }
     }
   }

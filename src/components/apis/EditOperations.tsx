@@ -31,6 +31,7 @@ const UPDATE_OPERATIONS = gql`
     }
   }
 `;
+
 export function EditOperations() {
   const { id } = useParams();
   const history = useHistory();
@@ -55,8 +56,8 @@ export function EditOperations() {
     <div>
       <h2>Operations</h2>
       <Operations
-        saveDefinition={handleNext}
-        definition={
+        saveOperations={handleNext}
+        operations={
           data.api.operations || {
             create: { enabled: true },
             read: { enabled: true },

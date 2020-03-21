@@ -70,7 +70,7 @@ export function CustomizeAPI() {
         </CollapseContainer>
       )}
       {!edit && <Arrows next={() => history.push(DEPLOY_API(id!))} />}
-      {edit && <SaveCancel onClick={history.goBack} />}
+      {edit && <SaveCancel onSave={history.goBack} />}
     </div>
   );
 }

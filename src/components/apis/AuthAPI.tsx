@@ -88,7 +88,7 @@ export function AuthAPI() {
         <AuthPolicy value={writePolicyType} setValue={setWritePolicyType} />
 
         {!edit && <Arrows next={handleSave} />}
-        {edit && <SaveCancel onClick={handleSave} />}
+        {edit && <SaveCancel onSave={handleSave} />}
       </div>
     </div>
   );

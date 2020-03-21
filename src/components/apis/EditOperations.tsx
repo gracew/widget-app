@@ -84,8 +84,8 @@ export function EditOperations() {
         operations={operations}
         fields={data.api.fields}
       />
-      {!edit && <Arrows next={() => handleSave} />}
-      {edit && <SaveCancel onClick={handleSave} />}
+      {!edit && <Arrows next={handleSave} />}
+      {edit && <SaveCancel onSave={handleSave} />}
     </div>
   );
 }

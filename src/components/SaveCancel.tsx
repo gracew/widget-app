@@ -4,15 +4,14 @@ import { useHistory } from "react-router-dom";
 import "./SaveCancel.css";
 
 interface SaveCancelProps {
-  onClick: () => void;
+  onSave: () => void;
 }
 
-export function SaveCancel({ onClick }: SaveCancelProps) {
+export function SaveCancel({ onSave }: SaveCancelProps) {
   const history = useHistory();
-  // color of loader is blueprint @gray4
   return (
     <div className="wi-save-cancel">
-      <Button text="Save" intent="primary" onClick={onClick} />
+      <Button text="Save" intent="primary" onClick={onSave} />
       <Button text="Cancel" onClick={history.goBack} />
     </div>
   );

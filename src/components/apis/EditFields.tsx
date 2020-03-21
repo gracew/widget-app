@@ -44,7 +44,7 @@ export function EditFields() {
         setName={setName}
         setFields={setFields}
       />
-      <SaveCancel onClick={() => handleSave(name!, fields)} />
+      <SaveCancel onSave={() => handleSave(name!, fields)} />
     </div>
   );
 }

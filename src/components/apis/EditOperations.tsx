@@ -1,11 +1,13 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { OperationDefinition, SortOrder } from "../../graphql/types";
 import { API_DEFINITION } from "../../queries";
 import { AUTH_API } from "../../routes";
 import { CREATED_AT } from "../../strings";
+import { Arrows } from "../Arrows";
+import { SaveCancel } from "../SaveCancel";
 import { Operations } from "./define/Operations";
 
 const UPDATE_OPERATIONS = gql`
@@ -34,42 +36,56 @@ const UPDATE_OPERATIONS = gql`
 
 export function EditOperations() {
   const { id } = useParams();
+  const query = new URLSearchParams(useLocation().search);
+  const edit = query.get("edit") === "true";
   const history = useHistory();
-  const { data, loading } = useQuery(API_DEFINITION, { variables: { id } });
+
+  const [operations, setOperations] = useState<
+    OperationDefinition | undefined
+  >();
+
+  const { data, loading } = useQuery(API_DEFINITION, {
+    variables: { id },
+    onCompleted: d =>
+      setOperations(
+        d.api.operations || {
+          create: { enabled: true },
+          read: { enabled: true },
+          list: {
+            enabled: true,
+            sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
+            filter: []
+          }
+        }
+      )
+  });
   const [updateApi, _] = useMutation(UPDATE_OPERATIONS);
 
-  async function handleNext(operations: OperationDefinition) {
+  async function handleSave() {
     await updateApi({
       variables: { id, operations }
     });
-    history.push(AUTH_API(id!));
+    if (edit) {
+      history.goBack();
+    } else {
+      history.push(AUTH_API(id!));
+    }
   }
 
-  if (loading) {
+  if (loading || !operations) {
     return <p>Loading</p>;
-  }
-  if (!data.api) {
-    return <p>Not found</p>;
   }
 
   return (
     <div>
       <h2>Operations</h2>
       <Operations
-        saveOperations={handleNext}
-        operations={
-          data.api.operations || {
-            create: { enabled: true },
-            read: { enabled: true },
-            list: {
-              enabled: true,
-              sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
-              filter: []
-            }
-          }
-        }
+        setOperations={setOperations}
+        operations={operations}
         fields={data.api.fields}
       />
+      {!edit && <Arrows next={() => handleSave} />}
+      {edit && <SaveCancel onClick={handleSave} />}
     </div>
   );
 }

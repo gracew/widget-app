@@ -45,17 +45,17 @@ export function APIMenu({ id }: APIMenuProps) {
       <MenuItem
         icon="globe-network"
         text="Edit Operations"
-        onClick={() => history.push(EDIT_OPERATIONS(id!))}
+        onClick={() => history.push(EDIT_OPERATIONS(id!) + "?edit=true")}
       />
       <MenuItem
         icon="lock"
         text="Authorize"
-        onClick={() => history.push(AUTH_API(id!))}
+        onClick={() => history.push(AUTH_API(id!) + "?edit=true")}
       />
       <MenuItem
         icon="code"
         text="Customize"
-        onClick={() => history.push(CUSTOMIZE_API(id!))}
+        onClick={() => history.push(CUSTOMIZE_API(id!) + "?edit=true")}
       />
       <MenuDivider />
       <MenuItem

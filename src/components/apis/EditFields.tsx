@@ -1,16 +1,25 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import React from "react";
+import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { FieldDefinition } from "../../graphql/types";
 import { API_DEFINITION, UPDATE_API } from "../../queries";
-import { DefineAPI } from "./define/Fields";
+import { SaveCancel } from "../SaveCancel";
+import { Fields } from "./define/Fields";
 
 export function EditFields() {
+  const { id } = useParams();
   const history = useHistory();
 
-  const { id } = useParams();
-  const { data, loading } = useQuery(API_DEFINITION, { variables: { id } });
+  const [name, setName] = useState<string | undefined>();
+  const [fields, setFields] = useState<FieldDefinition[]>([]);
 
+  const { loading } = useQuery(API_DEFINITION, {
+    variables: { id },
+    onCompleted: data => {
+      setName(data.api && data.api.name);
+      setFields(data.api && data.api.fields);
+    }
+  });
   const [updateApi, _] = useMutation(UPDATE_API);
 
   async function handleSave(name: string, fields: FieldDefinition[]) {
@@ -29,11 +38,13 @@ export function EditFields() {
   return (
     <div>
       <h2>Edit API</h2>
-      <DefineAPI
-        saveDefinition={handleSave}
-        initialName={data.api.name}
-        initialFields={data.api.fields}
+      <Fields
+        name={name}
+        fields={fields}
+        setName={setName}
+        setFields={setFields}
       />
+      <SaveCancel onClick={() => handleSave(name!, fields)} />
     </div>
   );
 }

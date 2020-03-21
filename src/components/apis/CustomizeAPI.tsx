@@ -2,11 +2,12 @@ import { useQuery } from "@apollo/react-hooks";
 import { HTMLSelect } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { CustomLogic, Language, OperationType } from "../../graphql/types";
 import { API_DEFINITION } from "../../queries";
 import { DEPLOY_API } from "../../routes";
 import { Arrows } from "../Arrows";
+import { SaveCancel } from "../SaveCancel";
 import "./CustomizeAPI.css";
 import { CustomLogicEditor } from "./CustomLogicEditor";
 import { CollapseContainer } from "./objects/CollapseContainer";
@@ -23,7 +24,10 @@ const CUSTOM_LOGIC = gql`
 `;
 export function CustomizeAPI() {
   const { id } = useParams();
+  const query = new URLSearchParams(useLocation().search);
+  const edit = query.get("edit") === "true";
   const history = useHistory();
+
   const [language, setLanguage] = useState(Language.Javascript);
 
   const { data, loading } = useQuery(API_DEFINITION, { variables: { id } });
@@ -65,7 +69,8 @@ export function CustomizeAPI() {
           />
         </CollapseContainer>
       )}
-      <Arrows next={() => history.push(DEPLOY_API(id!))} />
+      {!edit && <Arrows next={() => history.push(DEPLOY_API(id!))} />}
+      {edit && <SaveCancel onClick={history.goBack} />}
     </div>
   );
 }

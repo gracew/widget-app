@@ -5,8 +5,8 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { Api, Environment } from "../../graphql/types";
 import { NEW_API } from "../../routes";
-import { DeployStatus } from "./deploy/DeployStatus";
 import { APIMenu } from "./list/APIMenu";
+import { DeployStatus } from "./list/DeployStatus";
 
 export const ALL_APIS = gql`
   {
@@ -65,16 +65,22 @@ export function ListAPIs() {
               </td>
               <td>
                 <DeployStatus
+                  apiID={id}
+                  env={Environment.Sandbox}
                   deploy={deploys.find(d => d.env === Environment.Sandbox)}
                 />
               </td>
               <td>
                 <DeployStatus
+                  apiID={id}
+                  env={Environment.Staging}
                   deploy={deploys.find(d => d.env === Environment.Staging)}
                 />
               </td>
               <td>
                 <DeployStatus
+                  apiID={id}
+                  env={Environment.Production}
                   deploy={deploys.find(d => d.env === Environment.Production)}
                 />
               </td>

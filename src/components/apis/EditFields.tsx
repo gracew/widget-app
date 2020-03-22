@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import { API_DEFINITION, UPDATE_API } from "../../graphql/queries";
 import { FieldDefinition } from "../../graphql/types";
-import { API_DEFINITION, UPDATE_API } from "../../queries";
 import { SaveCancel } from "../SaveCancel";
 import { Fields } from "./define/Fields";
 

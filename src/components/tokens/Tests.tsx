@@ -8,7 +8,7 @@ import {
 } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
-import { TEST_TOKENS } from "../../queries";
+import { TEST_TOKENS } from "../../graphql/queries";
 
 const ADD_TEST_TOKEN = gql`
   mutation AddTestToken($label: String!, $token: String!) {

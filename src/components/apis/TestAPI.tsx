@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/react-hooks";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { API_DEFINITION, TEST_TOKENS } from "../../queries";
+import { API_DEFINITION, TEST_TOKENS } from "../../graphql/queries";
 import { Arrows } from "../Arrows";
 import { CollapseContainer } from "../CollapseContainer";
 import { CreateObject } from "./test/CreateObject";

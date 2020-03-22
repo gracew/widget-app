@@ -11,6 +11,7 @@ import {
 import { TEST_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import "./DeployAPI.css";
+import { ALL_APIS } from "./ListAPIs";
 const uuid = require("uuid");
 
 const DEPLOY_API = gql`
@@ -46,13 +47,28 @@ export function DeployAPI() {
   const { id } = useParams();
   const history = useHistory();
 
-  const [deployAPI, { data, loading, called }] = useMutation(DEPLOY_API);
+  const [deployAPI, { data, called }] = useMutation(DEPLOY_API, {
+    update(cache, { data: updateData }) {
+      const cachedRes: any = cache.readQuery({ query: ALL_APIS });
+      const apis = (cachedRes && cachedRes.apis) || [];
+      cache.writeQuery({
+        query: ALL_APIS,
+        data: {
+          apis: apis.map((a: any) => ({
+            ...a,
+            deploys:
+              a.id === id ? a.deploys.push(updateData.deployAPI) : a.deploys
+          }))
+        }
+      });
+    }
+  });
   const deployComplete = data && data.deployAPI.id;
 
   const [getDeployStatus, { data: statusData, stopPolling }] = useLazyQuery(
     DEPLOY_STATUS,
     {
-      pollInterval: 5000
+      pollInterval: 1000
     }
   );
   if (deployComplete) {

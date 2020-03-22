@@ -7,6 +7,7 @@ import {
 import React, { useState } from "react";
 import { OperationDefinition, TestToken } from "../../../graphql/types";
 import { FormAndResult } from "./FormAndResult";
+import "./ListObject.css";
 
 interface ListObjectProps {
   operations: OperationDefinition;
@@ -40,10 +41,10 @@ export function ListObject({ operations, testTokens }: ListObjectProps) {
       {operations.list.sort.length > 0 && (
         <div>
           Sort by:
-          <HTMLSelect id="sort">
+          <HTMLSelect className="wi-sort-select">
             {operations.list.sort.map(
               ({ field, order }: { field: string; order: string }) => (
-                <option value={field + order}>
+                <option key={field + order} value={field + order}>
                   {field} {order}
                 </option>
               )
@@ -54,15 +55,17 @@ export function ListObject({ operations, testTokens }: ListObjectProps) {
       {operations.list.filter.length > 0 && (
         <div>
           Filter by:
-          <HTMLSelect id="filter">
+          <HTMLSelect>
             {operations.list.filter.map((name: string) => (
-              <option value={name}>{name}</option>
+              <option key={name} value={name}>
+                {name}
+              </option>
             ))}
           </HTMLSelect>
           <InputGroup />
         </div>
       )}
-      <FormGroup label="Page Size (default 100)">
+      <FormGroup className="wi-page-size" label="Page Size (default 100)">
         <NumericInput onValueChange={(num: number) => setPageSize(num)} />
       </FormGroup>
     </FormAndResult>

@@ -22,12 +22,14 @@ export type Auth = {
   apiID: Scalars['ID'],
   readPolicy: AuthPolicy,
   writePolicy: AuthPolicy,
+  deletePolicy: AuthPolicy,
 };
 
 export type AuthApiInput = {
   apiID: Scalars['ID'],
   readPolicy: AuthPolicyInput,
   writePolicy: AuthPolicyInput,
+  deletePolicy: AuthPolicyInput,
 };
 
 export type AuthPolicy = {
@@ -91,6 +93,15 @@ export type CustomLogic = {
 export type DefineApiInput = {
   name: Scalars['String'],
   fields: Array<FieldDefinitionInput>,
+};
+
+export type DeleteDefinition = {
+   __typename?: 'DeleteDefinition',
+  enabled: Scalars['Boolean'],
+};
+
+export type DeleteDefinitionInput = {
+  enabled: Scalars['Boolean'],
 };
 
 export type Deploy = {
@@ -184,6 +195,7 @@ export type Mutation = {
   authAPI: Scalars['Boolean'],
   saveCustomLogic: Scalars['Boolean'],
   deployAPI: Deploy,
+  deleteDeploy: Scalars['Boolean'],
   addTestToken: TestToken,
 };
 
@@ -218,6 +230,11 @@ export type MutationDeployApiArgs = {
 };
 
 
+export type MutationDeleteDeployArgs = {
+  id: Scalars['ID']
+};
+
+
 export type MutationAddTestTokenArgs = {
   input: TestTokenInput
 };
@@ -227,19 +244,22 @@ export type OperationDefinition = {
   create: CreateDefinition,
   read: ReadDefinition,
   list: ListDefinition,
+  delete: DeleteDefinition,
 };
 
 export type OperationDefinitionInput = {
   create: CreateDefinitionInput,
   read: ReadDefinitionInput,
   list: ListDefinitionInput,
+  delete: DeleteDefinitionInput,
 };
 
 export enum OperationType {
   Create = 'CREATE',
-  Update = 'UPDATE',
   Read = 'READ',
-  List = 'LIST'
+  List = 'LIST',
+  Update = 'UPDATE',
+  Delete = 'DELETE'
 }
 
 export type Query = {

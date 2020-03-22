@@ -2,6 +2,7 @@ import { MenuItem, Position } from "@blueprintjs/core";
 import { IItemRendererProps, MultiSelect } from "@blueprintjs/select";
 import React from "react";
 import { SortDefinition, SortOrder } from "../../../graphql/types";
+import "./ListOptions.css";
 
 interface ListOptionsProps {
   fieldNames: string[];
@@ -66,7 +67,7 @@ export function ListOptions({
   };
 
   return (
-    <div>
+    <div className="wi-list-options">
       <h4>Sort Options</h4>
       <MultiSelect
         items={sortOptions}

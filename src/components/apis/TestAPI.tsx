@@ -5,6 +5,7 @@ import { API_DEFINITION, TEST_TOKENS } from "../../graphql/queries";
 import { Arrows } from "../Arrows";
 import { CollapseContainer } from "../CollapseContainer";
 import { CreateObject } from "./test/CreateObject";
+import { DeleteObject } from "./test/DeleteObject";
 import { ListObject } from "./test/ListObject";
 import { ReadObject } from "./test/ReadObject";
 
@@ -24,7 +25,7 @@ export function TestAPI() {
     <div>
       <h2>Test API</h2>
       <div>
-        {data.api.operations.create && (
+        {data.api.operations.create.enabled && (
           <CollapseContainer title={`Create a ${data.api.name}`}>
             <CreateObject
               fields={data.api.fields}
@@ -33,18 +34,24 @@ export function TestAPI() {
           </CollapseContainer>
         )}
 
-        {data.api.operations.read && (
+        {data.api.operations.read.enabled && (
           <CollapseContainer title={`Read a ${data.api.name}`}>
             <ReadObject testTokens={testTokensData.testTokens.testTokens} />
           </CollapseContainer>
         )}
 
-        {data.api.operations.list && (
+        {data.api.operations.list.enabled && (
           <CollapseContainer title={`List ${data.api.name}s`}>
             <ListObject
               operations={data.api.operations}
               testTokens={testTokensData.testTokens.testTokens}
             />
+          </CollapseContainer>
+        )}
+
+        {data.api.operations.delete.enabled && (
+          <CollapseContainer title={`Delete a ${data.api.name}`}>
+            <DeleteObject testTokens={testTokensData.testTokens.testTokens} />
           </CollapseContainer>
         )}
 

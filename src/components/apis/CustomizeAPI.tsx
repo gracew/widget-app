@@ -43,6 +43,9 @@ export function CustomizeAPI() {
   const createCustomLogic: CustomLogic = customLogicData.customLogic.find(
     (el: CustomLogic) => el.operationType === OperationType.Create
   );
+  const deleteCustomLogic: CustomLogic = customLogicData.customLogic.find(
+    (el: CustomLogic) => el.operationType === OperationType.Delete
+  );
 
   return (
     <div>
@@ -66,6 +69,17 @@ export function CustomizeAPI() {
             operationType={OperationType.Create}
             currBefore={createCustomLogic && createCustomLogic.before}
             currAfter={createCustomLogic && createCustomLogic.after}
+          />
+        </CollapseContainer>
+      )}
+      {data.api.operations.delete && (
+        <CollapseContainer title={`Delete a ${data.api.name}`}>
+          <CustomLogicEditor
+            apiID={id!}
+            language={language}
+            operationType={OperationType.Delete}
+            currBefore={deleteCustomLogic && deleteCustomLogic.before}
+            currAfter={deleteCustomLogic && deleteCustomLogic.after}
           />
         </CollapseContainer>
       )}

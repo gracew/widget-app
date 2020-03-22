@@ -29,6 +29,9 @@ const UPDATE_OPERATIONS = gql`
           }
           filter
         }
+        delete {
+          enabled
+        }
       }
     }
   }
@@ -55,7 +58,8 @@ export function EditOperations() {
             enabled: true,
             sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
             filter: []
-          }
+          },
+          delete: { enabled: true }
         }
       )
   });

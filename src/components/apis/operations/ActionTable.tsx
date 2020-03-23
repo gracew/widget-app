@@ -1,6 +1,7 @@
 import { Button, HTMLTable, Tag } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { ActionDefinition } from "../../../graphql/types";
+import "./ActionTable.css";
 import { ActionTableRow } from "./ActionTableRow";
 
 interface ActionTableProps {
@@ -19,7 +20,7 @@ export function ActionTable({
   const [selected, setSelected] = useState<ActionDefinition | undefined>();
 
   return (
-    <HTMLTable className="wi-field-table" striped={true}>
+    <HTMLTable className="wi-action-table" striped={true}>
       <thead>
         <tr>
           <th>Action Name</th>
@@ -43,7 +44,9 @@ export function ActionTable({
               <td>{action.name}</td>
               <td>
                 {action.fields.map(f => (
-                  <Tag key={f}>{f}</Tag>
+                  <Tag className="wi-action-field-tag" key={f}>
+                    {f}
+                  </Tag>
                 ))}
               </td>
               <td className="wi-td-button">

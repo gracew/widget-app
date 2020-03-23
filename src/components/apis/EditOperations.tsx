@@ -2,39 +2,22 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { API_DEFINITION } from "../../graphql/queries";
+import { API_DEFINITION, OPERATIONS_FRAGMENT } from "../../graphql/queries";
 import { OperationDefinition, SortOrder } from "../../graphql/types";
 import { AUTH_API } from "../../routes";
 import { CREATED_AT } from "../../strings";
 import { Arrows } from "../Arrows";
 import { SaveCancel } from "../SaveCancel";
-import { Operations } from "./define/Operations";
+import { Operations } from "./operations/Operations";
 
 const UPDATE_OPERATIONS = gql`
   mutation UpdateOperations($id: ID!, $operations: OperationDefinitionInput!) {
     updateAPI(input: { id: $id, operations: $operations }) {
       id
-      operations {
-        create {
-          enabled
-        }
-        read {
-          enabled
-        }
-        list {
-          enabled
-          sort {
-            field
-            order
-          }
-          filter
-        }
-        delete {
-          enabled
-        }
-      }
+      ...OperationsDefinition
     }
   }
+  ${OPERATIONS_FRAGMENT}
 `;
 
 export function EditOperations() {
@@ -59,7 +42,11 @@ export function EditOperations() {
             sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
             filter: []
           },
-          delete: { enabled: true }
+          update: {
+            enabled: false,
+            actions: []
+          },
+          delete: { enabled: false }
         }
       )
   });

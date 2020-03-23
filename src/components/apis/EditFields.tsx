@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { API_DEFINITION, UPDATE_API } from "../../graphql/queries";
 import { FieldDefinition } from "../../graphql/types";
 import { SaveCancel } from "../SaveCancel";
-import { Fields } from "./define/Fields";
+import { Fields } from "./fields/Fields";
 
 export function EditFields() {
   const { id } = useParams();

@@ -11,7 +11,37 @@ export const TEST_TOKENS = gql`
   }
 `;
 
-// TODO(gracew): use fragments
+export const OPERATIONS_FRAGMENT = gql`
+  fragment OperationsDefinition on API {
+    operations {
+      create {
+        enabled
+      }
+      read {
+        enabled
+      }
+      list {
+        enabled
+        sort {
+          field
+          order
+        }
+        filter
+      }
+      update {
+        enabled
+        actions {
+          name
+          fields
+        }
+      }
+      delete {
+        enabled
+      }
+    }
+  }
+`;
+
 export const API_DEFINITION = gql`
   query ApiDefinition($id: ID!) {
     api(id: $id) {
@@ -30,27 +60,10 @@ export const API_DEFINITION = gql`
         }
         customLogicPopulated
       }
-      operations {
-        create {
-          enabled
-        }
-        read {
-          enabled
-        }
-        list {
-          enabled
-          sort {
-            field
-            order
-          }
-          filter
-        }
-        delete {
-          enabled
-        }
-      }
+      ...OperationsDefinition
     }
   }
+  ${OPERATIONS_FRAGMENT}
 `;
 
 export const UPDATE_API = gql`

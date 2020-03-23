@@ -8,6 +8,17 @@ export type Scalars = {
   Float: number,
 };
 
+export type ActionDefinition = {
+   __typename?: 'ActionDefinition',
+  name: Scalars['String'],
+  fields: Array<Scalars['String']>,
+};
+
+export type ActionDefinitionInput = {
+  name: Scalars['String'],
+  fields: Array<Scalars['String']>,
+};
+
 export type Api = {
    __typename?: 'API',
   id: Scalars['ID'],
@@ -244,6 +255,7 @@ export type OperationDefinition = {
   create: CreateDefinition,
   read: ReadDefinition,
   list: ListDefinition,
+  update: UpdateDefinition,
   delete: DeleteDefinition,
 };
 
@@ -251,6 +263,7 @@ export type OperationDefinitionInput = {
   create: CreateDefinitionInput,
   read: ReadDefinitionInput,
   list: ListDefinitionInput,
+  update: UpdateDefinitionInput,
   delete: DeleteDefinitionInput,
 };
 
@@ -353,4 +366,15 @@ export type UpdateApiInput = {
   id: Scalars['ID'],
   fields?: Maybe<Array<FieldDefinitionInput>>,
   operations?: Maybe<OperationDefinitionInput>,
+};
+
+export type UpdateDefinition = {
+   __typename?: 'UpdateDefinition',
+  enabled: Scalars['Boolean'],
+  actions: Array<ActionDefinition>,
+};
+
+export type UpdateDefinitionInput = {
+  enabled: Scalars['Boolean'],
+  actions: Array<ActionDefinitionInput>,
 };

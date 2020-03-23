@@ -45,6 +45,9 @@ export const API_DEFINITION = gql`
           }
           filter
         }
+        delete {
+          enabled
+        }
       }
     }
   }

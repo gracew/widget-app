@@ -63,6 +63,16 @@ export function Operations({
           }
         />
       )}
+      <Checkbox
+        checked={operations.delete.enabled}
+        label="Delete"
+        onChange={() =>
+          setOperations({
+            ...operations,
+            delete: { enabled: !operations.delete.enabled }
+          })
+        }
+      />
     </div>
   );
 }

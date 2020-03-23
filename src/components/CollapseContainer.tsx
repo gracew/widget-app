@@ -15,6 +15,7 @@ export function CollapseContainer({
   return (
     <div className="wi-collapse">
       <Button
+        icon={open ? "caret-down" : "caret-right"}
         className="wi-collapse-button"
         minimal={true}
         onClick={() => setOpen(!open)}

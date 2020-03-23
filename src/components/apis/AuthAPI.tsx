@@ -30,12 +30,14 @@ const SET_AUTH = gql`
     $apiID: ID!
     $readPolicyType: AuthPolicyType!
     $writePolicyType: AuthPolicyType!
+    $deletePolicyType: AuthPolicyType!
   ) {
     authAPI(
       input: {
         apiID: $apiID
         readPolicy: { type: $readPolicyType }
         writePolicy: { type: $writePolicyType }
+        deletePolicy: { type: $deletePolicyType }
       }
     )
   }
@@ -57,13 +59,18 @@ export function AuthAPI() {
     (data && data.auth && data.auth.writePolicy.type) ||
       AuthPolicyType.CreatedBy
   );
+  const [deletePolicyType, setDeletePolicyType] = useState(
+    (data && data.auth && data.auth.deletePolicy.type) ||
+      AuthPolicyType.CreatedBy
+  );
 
   async function handleSave() {
     await authApi({
       variables: {
         apiID: id,
         readPolicyType,
-        writePolicyType
+        writePolicyType,
+        deletePolicyType
       }
     });
     if (edit) {
@@ -86,6 +93,9 @@ export function AuthAPI() {
 
         <h3>Write Policy</h3>
         <AuthPolicy value={writePolicyType} setValue={setWritePolicyType} />
+
+        <h3>Delete Policy</h3>
+        <AuthPolicy value={deletePolicyType} setValue={setDeletePolicyType} />
 
         {!edit && <Arrows next={handleSave} />}
         {edit && <SaveCancel onSave={handleSave} />}

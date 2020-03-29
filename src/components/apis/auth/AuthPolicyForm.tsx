@@ -1,17 +1,17 @@
 import { HTMLSelect } from "@blueprintjs/core";
 import React from "react";
-import { AuthPolicyType } from "../../../graphql/types";
+import { AuthPolicy, AuthPolicyType } from "../../../graphql/types";
 
 interface AuthPolicyProps {
-  value: AuthPolicyType;
-  setValue: (value: AuthPolicyType) => void;
+  policy: AuthPolicy;
+  setPolicy: (value: AuthPolicy) => void;
 }
 
-export function AuthPolicy({ value, setValue }: AuthPolicyProps) {
+export function AuthPolicyForm({ policy, setPolicy }: AuthPolicyProps) {
   return (
     <HTMLSelect
-      value={value}
-      onChange={(e: any) => setValue(e.currentTarget.value)}
+      value={policy.type}
+      onChange={(e: any) => setPolicy({ type: e.currentTarget.policy })}
     >
       <option value={AuthPolicyType.CreatedBy}>
         Allow for objects created by the user

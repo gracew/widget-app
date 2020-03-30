@@ -40,6 +40,7 @@ export function CustomizeAPI() {
   const [create, setCreate] = useState({});
   const [update, setUpdate] = useState<Record<string, {}>>({});
   const [del, setDel] = useState({});
+  const [modified, setModified] = useState(false);
 
   const { data, loading } = useQuery(API_DEFINITION, {
     variables: { id },
@@ -67,17 +68,19 @@ export function CustomizeAPI() {
   const [saveCustomLogic, _] = useMutation(SAVE_CUSTOM_LOGIC);
 
   async function handleSave() {
-    await saveCustomLogic({
-      variables: {
-        apiID: id,
-        create: { ...create, language },
-        update: Object.entries(update).map(([actionName, customLogic]) => ({
-          actionName,
-          customLogic: { ...customLogic, language }
-        })),
-        delete: { ...del, language }
-      }
-    });
+    if (modified) {
+      await saveCustomLogic({
+        variables: {
+          apiID: id,
+          create: { ...create, language },
+          update: Object.entries(update).map(([actionName, customLogic]) => ({
+            actionName,
+            customLogic: { ...customLogic, language }
+          })),
+          delete: { ...del, language }
+        }
+      });
+    }
     if (edit) {
       history.goBack();
     } else {
@@ -108,7 +111,10 @@ export function CustomizeAPI() {
           <CustomLogicEditor
             apiID={id!}
             customLogic={{ ...create, language }}
-            setCustomLogic={setCreate}
+            setCustomLogic={customLogic => {
+              setCreate(customLogic);
+              setModified(true);
+            }}
           />
         </CollapseContainer>
       )}
@@ -121,9 +127,10 @@ export function CustomizeAPI() {
             <CustomLogicEditor
               apiID={id!}
               customLogic={{ ...update[action.name], language }}
-              setCustomLogic={customLogic =>
-                setUpdate({ ...update, [action.name]: customLogic })
-              }
+              setCustomLogic={customLogic => {
+                setUpdate({ ...update, [action.name]: customLogic });
+                setModified(true);
+              }}
             />
           </CollapseContainer>
         ))}
@@ -132,7 +139,10 @@ export function CustomizeAPI() {
           <CustomLogicEditor
             apiID={id!}
             customLogic={{ ...del, language }}
-            setCustomLogic={setDel}
+            setCustomLogic={customLogic => {
+              setDel(customLogic);
+              setModified(true);
+            }}
           />
         </CollapseContainer>
       )}

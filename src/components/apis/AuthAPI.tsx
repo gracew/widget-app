@@ -17,10 +17,12 @@ const SET_AUTH = gql`
   mutation AuthAPI(
     $apiID: ID!
     $read: AuthPolicyInput!
-    $update: [UpdateAuthInput!]!
+    $update: [UpdateAuthPolicyInput!]!
     $delete: AuthPolicyInput!
   ) {
-    authAPI(input: { apiID: $apiID, read: $read, delete: $delete })
+    authAPI(
+      input: { apiID: $apiID, read: $read, update: $update, delete: $delete }
+    )
   }
 `;
 
@@ -46,9 +48,11 @@ export function AuthAPI() {
         setUpdate(
           Object.assign(
             {},
-            d.api.operations.update.actions.map((action: ActionDefinition) => ({
-              [action.name]: action.auth
-            }))
+            ...d.api.operations.update.actions.map(
+              (action: ActionDefinition) => ({
+                [action.name]: action.auth || DEFAULT_AUTH_POLICY
+              })
+            )
           )
         );
         if (d.api.operations.delete.auth) {
@@ -96,7 +100,7 @@ export function AuthAPI() {
 
         {data.api.operations.update.enabled &&
           data.api.operations.update.actions.map((action: ActionDefinition) => (
-            <div>
+            <div key={action.name}>
               <h3>Update Policy: {action.name}</h3>
               <AuthPolicyForm
                 policy={update[action.name] || DEFAULT_AUTH_POLICY}

@@ -54,6 +54,7 @@ export function TestAPI() {
         {data.api.operations.update.enabled &&
           data.api.operations.update.actions.map((action: ActionDefinition) => (
             <CollapseContainer
+              key={action.name}
               title={`Update a ${data.api.name}: ${action.name}`}
             >
               <UpdateObject

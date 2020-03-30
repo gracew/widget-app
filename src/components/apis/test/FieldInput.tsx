@@ -1,4 +1,9 @@
-import { FormGroup, InputGroup, NumericInput } from "@blueprintjs/core";
+import {
+  FormGroup,
+  HTMLSelect,
+  InputGroup,
+  NumericInput
+} from "@blueprintjs/core";
 import React, { useState } from "react";
 import { FieldDefinition, Type } from "../../../graphql/types";
 
@@ -119,14 +124,29 @@ export function FieldInput({ definition, value, setValue }: IFieldInputProps) {
     setValue(v);
   }
   const intent = valid ? "none" : "danger";
-  const input =
-    definition.type === Type.Float || definition.type === Type.Int ? (
-      <NumericInput
-        intent={intent}
-        value={value}
-        onValueChange={(num: number) => validate(num)}
-      />
-    ) : (
+  const input = () => {
+    if (definition.type === Type.Float || definition.type === Type.Int) {
+      return (
+        <NumericInput
+          intent={intent}
+          value={value}
+          onValueChange={(num: number) => validate(num)}
+        />
+      );
+    }
+    if (definition.type === Type.Boolean) {
+      return (
+        <HTMLSelect
+          value={value}
+          onChange={(e: any) => setValue(e.currentTarget.value === "true")}
+        >
+          <option>--</option>
+          <option value={"true"}>true</option>
+          <option value={"false"}>false</option>
+        </HTMLSelect>
+      );
+    }
+    return (
       <InputGroup
         intent={intent}
         value={value}
@@ -135,6 +155,7 @@ export function FieldInput({ definition, value, setValue }: IFieldInputProps) {
         }
       />
     );
+  };
   const text = helperText(definition);
   return (
     <FormGroup
@@ -143,7 +164,7 @@ export function FieldInput({ definition, value, setValue }: IFieldInputProps) {
       helperText={text}
       intent={intent}
     >
-      {input}
+      {input()}
     </FormGroup>
   );
 }

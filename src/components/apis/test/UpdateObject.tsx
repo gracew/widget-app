@@ -1,3 +1,4 @@
+import { FormGroup, InputGroup } from "@blueprintjs/core";
 import React, { useState } from "react";
 import {
   ActionDefinition,
@@ -18,15 +19,17 @@ export function UpdateObject({
   action,
   testTokens
 }: UpdateObjectProps) {
+  const [objectId, setObjectId] = useState("");
   const [output, setOutput] = useState("");
   const initialInput: Record<string, any> = {};
   const [input, setInput] = useState(initialInput);
 
   const fieldsByName = Object.assign({}, ...fields.map(f => ({ [f.name]: f })));
+  const url = `http://localhost:8081/${objectId}/${action.name}`;
 
   const onSubmit = (token: string) =>
     // TODO(gracew): don't hardcode this
-    fetch(`http://localhost:8081/${action.name}`, {
+    fetch(url, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -37,9 +40,9 @@ export function UpdateObject({
       .then(res => res.text())
       .then(t => setOutput(t));
   const copyText = (token: string) =>
-    `curl -XPOST -H "Content-type: application/json" -H "X-Parse-Session-Token: ${token}" http://localhost:8081/${
-      action.name
-    } -d '${JSON.stringify(input)}'`;
+    `curl -XPOST -H "Content-type: application/json" -H "X-Parse-Session-Token: ${token}" ${url} -d '${JSON.stringify(
+      input
+    )}'`;
 
   return (
     <FormAndResult
@@ -48,6 +51,13 @@ export function UpdateObject({
       copyText={copyText}
       onSubmit={onSubmit}
     >
+      <FormGroup label="id">
+        <InputGroup
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setObjectId(e.target.value)
+          }
+        />
+      </FormGroup>
       {action.fields.map(name => (
         <FieldInput
           key={name}

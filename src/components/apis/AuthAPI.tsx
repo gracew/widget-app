@@ -2,46 +2,31 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { AuthPolicyType } from "../../graphql/types";
+import { API_DEFINITION } from "../../graphql/queries";
+import {
+  ActionDefinition,
+  AuthPolicy,
+  AuthPolicyType
+} from "../../graphql/types";
 import { CUSTOMIZE_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import { SaveCancel } from "../SaveCancel";
-import { AuthPolicy } from "./auth/AuthPolicy";
-
-const AUTH = gql`
-  query AUTH($apiID: ID!) {
-    auth(apiID: $apiID) {
-      readPolicy {
-        type
-        userAttribute
-        objectAttribute
-      }
-      writePolicy {
-        type
-        userAttribute
-        objectAttribute
-      }
-    }
-  }
-`;
+import { AuthPolicyForm } from "./auth/AuthPolicyForm";
 
 const SET_AUTH = gql`
   mutation AuthAPI(
     $apiID: ID!
-    $readPolicyType: AuthPolicyType!
-    $writePolicyType: AuthPolicyType!
-    $deletePolicyType: AuthPolicyType!
+    $read: AuthPolicyInput!
+    $update: [UpdateAuthPolicyInput!]!
+    $delete: AuthPolicyInput!
   ) {
     authAPI(
-      input: {
-        apiID: $apiID
-        readPolicy: { type: $readPolicyType }
-        writePolicy: { type: $writePolicyType }
-        deletePolicy: { type: $deletePolicyType }
-      }
+      input: { apiID: $apiID, read: $read, update: $update, delete: $delete }
     )
   }
 `;
+
+const DEFAULT_AUTH_POLICY = { type: AuthPolicyType.CreatedBy };
 
 export function AuthAPI() {
   const { id } = useParams();
@@ -49,28 +34,45 @@ export function AuthAPI() {
   const edit = query.get("edit") === "true";
   const history = useHistory();
 
-  const { loading, data } = useQuery(AUTH, { variables: { apiID: id } });
-  const [authApi, _] = useMutation(SET_AUTH);
+  const [read, setRead] = useState(DEFAULT_AUTH_POLICY);
+  const [update, setUpdate] = useState<Record<string, AuthPolicy>>({});
+  const [del, setDel] = useState(DEFAULT_AUTH_POLICY);
 
-  const [readPolicyType, setReadPolicyType] = useState(
-    (data && data.auth && data.auth.readPolicy.type) || AuthPolicyType.CreatedBy
-  );
-  const [writePolicyType, setWritePolicyType] = useState(
-    (data && data.auth && data.auth.writePolicy.type) ||
-      AuthPolicyType.CreatedBy
-  );
-  const [deletePolicyType, setDeletePolicyType] = useState(
-    (data && data.auth && data.auth.deletePolicy.type) ||
-      AuthPolicyType.CreatedBy
-  );
+  const { loading, data } = useQuery(API_DEFINITION, {
+    variables: { id },
+    onCompleted: d => {
+      if (d && d.api && d.api.operations) {
+        if (d.api.operations.read.auth) {
+          setRead(d.api.operations.read.auth);
+        }
+        setUpdate(
+          Object.assign(
+            {},
+            ...d.api.operations.update.actions.map(
+              (action: ActionDefinition) => ({
+                [action.name]: action.auth || DEFAULT_AUTH_POLICY
+              })
+            )
+          )
+        );
+        if (d.api.operations.delete.auth) {
+          setDel(d.api.operations.delete.auth);
+        }
+      }
+    }
+  });
+  const [authApi, _] = useMutation(SET_AUTH);
 
   async function handleSave() {
     await authApi({
       variables: {
         apiID: id,
-        readPolicyType,
-        writePolicyType,
-        deletePolicyType
+        read,
+        update: Object.entries(update).map(([actionName, auth]) => ({
+          actionName,
+          auth
+        })),
+        delete: del
       }
     });
     if (edit) {
@@ -80,7 +82,7 @@ export function AuthAPI() {
     }
   }
 
-  if (loading) {
+  if (loading || !data) {
     return <p>Loading</p>;
   }
 
@@ -88,14 +90,36 @@ export function AuthAPI() {
     <div>
       <h2>Auth API</h2>
       <div>
-        <h3>Read Policy</h3>
-        <AuthPolicy value={readPolicyType} setValue={setReadPolicyType} />
+        {(data.api.operations.read.enabled ||
+          data.api.operations.list.enabled) && (
+          <div>
+            <h3>Read Policy</h3>
+            <AuthPolicyForm policy={read} setPolicy={setRead} />
+          </div>
+        )}
 
-        <h3>Write Policy</h3>
-        <AuthPolicy value={writePolicyType} setValue={setWritePolicyType} />
+        {data.api.operations.update.enabled &&
+          data.api.operations.update.actions.map((action: ActionDefinition) => (
+            <div key={action.name}>
+              <h3>Update Policy: {action.name}</h3>
+              <AuthPolicyForm
+                policy={update[action.name] || DEFAULT_AUTH_POLICY}
+                setPolicy={policy =>
+                  setUpdate({
+                    ...update,
+                    [action.name]: policy
+                  })
+                }
+              />
+            </div>
+          ))}
 
-        <h3>Delete Policy</h3>
-        <AuthPolicy value={deletePolicyType} setValue={setDeletePolicyType} />
+        {data.api.operations.delete.enabled && (
+          <div>
+            <h3>Delete Policy</h3>
+            <AuthPolicyForm policy={del} setPolicy={setDel} />
+          </div>
+        )}
 
         {!edit && <Arrows next={handleSave} />}
         {edit && <SaveCancel onSave={handleSave} />}

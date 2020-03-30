@@ -2,12 +2,14 @@ import { useQuery } from "@apollo/react-hooks";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { API_DEFINITION, TEST_TOKENS } from "../../graphql/queries";
+import { ActionDefinition } from "../../graphql/types";
 import { Arrows } from "../Arrows";
 import { CollapseContainer } from "../CollapseContainer";
 import { CreateObject } from "./test/CreateObject";
 import { DeleteObject } from "./test/DeleteObject";
 import { ListObject } from "./test/ListObject";
 import { ReadObject } from "./test/ReadObject";
+import { UpdateObject } from "./test/UpdateObject";
 
 export function TestAPI() {
   const { id, deployId } = useParams();
@@ -48,6 +50,20 @@ export function TestAPI() {
             />
           </CollapseContainer>
         )}
+
+        {data.api.operations.update.enabled &&
+          data.api.operations.update.actions.map((action: ActionDefinition) => (
+            <CollapseContainer
+              key={action.name}
+              title={`Update a ${data.api.name}: ${action.name}`}
+            >
+              <UpdateObject
+                fields={data.api.fields}
+                action={action}
+                testTokens={testTokensData.testTokens.testTokens}
+              />
+            </CollapseContainer>
+          ))}
 
         {data.api.operations.delete.enabled && (
           <CollapseContainer title={`Delete a ${data.api.name}`}>

@@ -22,8 +22,10 @@ export function Operations({
   setOperations,
   fields
 }: OperationsProps) {
-  const userFieldNames = fields.map(f => f.name);
-  const fieldNames = userFieldNames.concat([CREATED_AT, CREATED_BY]);
+  const updateFieldNames = fields
+    .filter(f => !f.customLogicPopulated)
+    .map(f => f.name);
+  const fieldNames = fields.map(f => f.name).concat([CREATED_AT, CREATED_BY]);
   return (
     <div>
       <Checkbox
@@ -98,7 +100,7 @@ export function Operations({
       />
       {operations.update.enabled && (
         <ActionTable
-          fieldNames={userFieldNames}
+          fieldNames={updateFieldNames}
           actions={operations.update.actions}
           saveAction={(a: ActionDefinition, i?: number) => {
             const actions = operations.update.actions;

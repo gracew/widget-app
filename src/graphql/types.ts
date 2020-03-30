@@ -12,6 +12,8 @@ export type ActionDefinition = {
    __typename?: 'ActionDefinition',
   name: Scalars['String'],
   fields: Array<Scalars['String']>,
+  auth?: Maybe<AuthPolicy>,
+  customLogic?: Maybe<CustomLogic>,
 };
 
 export type ActionDefinitionInput = {
@@ -28,19 +30,11 @@ export type Api = {
   operations?: Maybe<OperationDefinition>,
 };
 
-export type Auth = {
-   __typename?: 'Auth',
-  apiID: Scalars['ID'],
-  readPolicy: AuthPolicy,
-  writePolicy: AuthPolicy,
-  deletePolicy: AuthPolicy,
-};
-
 export type AuthApiInput = {
   apiID: Scalars['ID'],
-  readPolicy: AuthPolicyInput,
-  writePolicy: AuthPolicyInput,
-  deletePolicy: AuthPolicyInput,
+  read?: Maybe<AuthPolicyInput>,
+  update?: Maybe<Array<UpdateAuthPolicyInput>>,
+  delete?: Maybe<AuthPolicyInput>,
 };
 
 export type AuthPolicy = {
@@ -86,6 +80,7 @@ export type ConstraintInput = {
 export type CreateDefinition = {
    __typename?: 'CreateDefinition',
   enabled: Scalars['Boolean'],
+  customLogic?: Maybe<CustomLogic>,
 };
 
 export type CreateDefinitionInput = {
@@ -94,8 +89,12 @@ export type CreateDefinitionInput = {
 
 export type CustomLogic = {
    __typename?: 'CustomLogic',
-  apiID: Scalars['ID'],
-  operationType: OperationType,
+  language: Language,
+  before?: Maybe<Scalars['String']>,
+  after?: Maybe<Scalars['String']>,
+};
+
+export type CustomLogicInput = {
   language: Language,
   before?: Maybe<Scalars['String']>,
   after?: Maybe<Scalars['String']>,
@@ -109,6 +108,8 @@ export type DefineApiInput = {
 export type DeleteDefinition = {
    __typename?: 'DeleteDefinition',
   enabled: Scalars['Boolean'],
+  auth?: Maybe<AuthPolicy>,
+  customLogic?: Maybe<CustomLogic>,
 };
 
 export type DeleteDefinitionInput = {
@@ -190,6 +191,7 @@ export type ListDefinition = {
   enabled: Scalars['Boolean'],
   sort: Array<SortDefinition>,
   filter: Array<Scalars['String']>,
+  auth?: Maybe<AuthPolicy>,
 };
 
 export type ListDefinitionInput = {
@@ -267,20 +269,10 @@ export type OperationDefinitionInput = {
   delete: DeleteDefinitionInput,
 };
 
-export enum OperationType {
-  Create = 'CREATE',
-  Read = 'READ',
-  List = 'LIST',
-  Update = 'UPDATE',
-  Delete = 'DELETE'
-}
-
 export type Query = {
    __typename?: 'Query',
   api?: Maybe<Api>,
   apis: Array<Api>,
-  auth?: Maybe<Auth>,
-  customLogic: Array<CustomLogic>,
   deployStatus: DeployStatusResponse,
   testTokens: TestTokenResponse,
 };
@@ -291,16 +283,6 @@ export type QueryApiArgs = {
 };
 
 
-export type QueryAuthArgs = {
-  apiID: Scalars['ID']
-};
-
-
-export type QueryCustomLogicArgs = {
-  apiID: Scalars['ID']
-};
-
-
 export type QueryDeployStatusArgs = {
   deployID: Scalars['ID']
 };
@@ -308,6 +290,7 @@ export type QueryDeployStatusArgs = {
 export type ReadDefinition = {
    __typename?: 'ReadDefinition',
   enabled: Scalars['Boolean'],
+  auth?: Maybe<AuthPolicy>,
 };
 
 export type ReadDefinitionInput = {
@@ -316,10 +299,9 @@ export type ReadDefinitionInput = {
 
 export type SaveCustomLogicInput = {
   apiID: Scalars['ID'],
-  operationType: OperationType,
-  language: Language,
-  before?: Maybe<Scalars['String']>,
-  after?: Maybe<Scalars['String']>,
+  create?: Maybe<CustomLogicInput>,
+  update?: Maybe<Array<UpdateCustomLogicInput>>,
+  delete?: Maybe<CustomLogicInput>,
 };
 
 export type SortDefinition = {
@@ -366,6 +348,16 @@ export type UpdateApiInput = {
   id: Scalars['ID'],
   fields?: Maybe<Array<FieldDefinitionInput>>,
   operations?: Maybe<OperationDefinitionInput>,
+};
+
+export type UpdateAuthPolicyInput = {
+  actionName: Scalars['String'],
+  auth: AuthPolicyInput,
+};
+
+export type UpdateCustomLogicInput = {
+  actionName: Scalars['String'],
+  customLogic: CustomLogicInput,
 };
 
 export type UpdateDefinition = {

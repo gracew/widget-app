@@ -26,29 +26,28 @@ export function EditOperations() {
   const edit = query.get("edit") === "true";
   const history = useHistory();
 
-  const [operations, setOperations] = useState<
-    OperationDefinition | undefined
-  >();
+  const [operations, setOperations] = useState<OperationDefinition>({
+    create: { enabled: true },
+    read: { enabled: true },
+    list: {
+      enabled: true,
+      sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
+      filter: []
+    },
+    update: {
+      enabled: false,
+      actions: []
+    },
+    delete: { enabled: false }
+  });
 
   const { data, loading } = useQuery(API_DEFINITION, {
     variables: { id },
-    onCompleted: d =>
-      setOperations(
-        d.api.operations || {
-          create: { enabled: true },
-          read: { enabled: true },
-          list: {
-            enabled: true,
-            sort: [{ field: CREATED_AT, order: SortOrder.Desc }],
-            filter: []
-          },
-          update: {
-            enabled: false,
-            actions: []
-          },
-          delete: { enabled: false }
-        }
-      )
+    onCompleted: d => {
+      if (d && d.api && d.api.operations) {
+        setOperations(d.api.operations);
+      }
+    }
   });
   const [updateApi, _] = useMutation(UPDATE_OPERATIONS);
 

@@ -1,10 +1,10 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { HTMLSelect } from "@blueprintjs/core";
 import { gql } from "apollo-boost";
 import React, { useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { API_DEFINITION } from "../../graphql/queries";
-import { CustomLogic, Language, OperationType } from "../../graphql/types";
+import { ActionDefinition, Language } from "../../graphql/types";
 import { DEPLOY_API } from "../../routes";
 import { Arrows } from "../Arrows";
 import { CollapseContainer } from "../CollapseContainer";
@@ -12,16 +12,24 @@ import { SaveCancel } from "../SaveCancel";
 import { CustomLogicEditor } from "./customize/CustomLogicEditor";
 import "./CustomizeAPI.css";
 
-const CUSTOM_LOGIC = gql`
-  query CUSTOM_LOGIC($apiID: ID!) {
-    customLogic(apiID: $apiID) {
-      apiID
-      operationType
-      before
-      after
-    }
+const SAVE_CUSTOM_LOGIC = gql`
+  mutation SaveCustomLogic(
+    $apiID: ID!
+    $create: CustomLogicInput!
+    $update: [UpdateCustomLogicInput!]!
+    $delete: CustomLogicInput!
+  ) {
+    saveCustomLogic(
+      input: {
+        apiID: $apiID
+        create: $create
+        update: $update
+        delete: $delete
+      }
+    )
   }
 `;
+
 export function CustomizeAPI() {
   const { id } = useParams();
   const query = new URLSearchParams(useLocation().search);
@@ -29,23 +37,60 @@ export function CustomizeAPI() {
   const history = useHistory();
 
   const [language, setLanguage] = useState(Language.Javascript);
+  const [create, setCreate] = useState({});
+  const [update, setUpdate] = useState<Record<string, {}>>({});
+  const [del, setDel] = useState({});
+  const [modified, setModified] = useState(false);
 
-  const { data, loading } = useQuery(API_DEFINITION, { variables: { id } });
-  const {
-    data: customLogicData,
-    loading: customLogicLoading
-  } = useQuery(CUSTOM_LOGIC, { variables: { apiID: id } });
+  const { data, loading } = useQuery(API_DEFINITION, {
+    variables: { id },
+    onCompleted: d => {
+      if (d && d.api && d.api.operations) {
+        if (d.api.operations.create.customLogic) {
+          setCreate(d.api.operations.create.customLogic);
+        }
+        setUpdate(
+          Object.assign(
+            {},
+            ...d.api.operations.update.actions.map(
+              (action: ActionDefinition) => ({
+                [action.name]: action.customLogic
+              })
+            )
+          )
+        );
+        if (d.api.operations.delete.customLogic) {
+          setDel(d.api.operations.delete.customLogic);
+        }
+      }
+    }
+  });
+  const [saveCustomLogic, _] = useMutation(SAVE_CUSTOM_LOGIC);
 
-  if (loading || customLogicLoading) {
-    return <p>Loading</p>;
+  async function handleSave() {
+    if (modified) {
+      await saveCustomLogic({
+        variables: {
+          apiID: id,
+          create: { ...create, language },
+          update: Object.entries(update).map(([actionName, customLogic]) => ({
+            actionName,
+            customLogic: { ...customLogic, language }
+          })),
+          delete: { ...del, language }
+        }
+      });
+    }
+    if (edit) {
+      history.goBack();
+    } else {
+      history.push(DEPLOY_API(id!));
+    }
   }
 
-  const createCustomLogic: CustomLogic = customLogicData.customLogic.find(
-    (el: CustomLogic) => el.operationType === OperationType.Create
-  );
-  const deleteCustomLogic: CustomLogic = customLogicData.customLogic.find(
-    (el: CustomLogic) => el.operationType === OperationType.Delete
-  );
+  if (loading) {
+    return <p>Loading</p>;
+  }
 
   return (
     <div>
@@ -61,30 +106,48 @@ export function CustomizeAPI() {
           <option value={Language.Python}>Python</option>
         </HTMLSelect>
       </div>
-      {data.api.operations.create && (
+      {data.api.operations.create.enabled && (
         <CollapseContainer title={`Create a ${data.api.name}`}>
           <CustomLogicEditor
             apiID={id!}
-            language={language}
-            operationType={OperationType.Create}
-            currBefore={createCustomLogic && createCustomLogic.before}
-            currAfter={createCustomLogic && createCustomLogic.after}
+            customLogic={{ ...create, language }}
+            setCustomLogic={customLogic => {
+              setCreate(customLogic);
+              setModified(true);
+            }}
           />
         </CollapseContainer>
       )}
-      {data.api.operations.delete && (
+      {data.api.operations.update.enabled &&
+        data.api.operations.update.actions.map((action: ActionDefinition) => (
+          <CollapseContainer
+            key={action.name}
+            title={`Update a ${data.api.name}: ${action.name}`}
+          >
+            <CustomLogicEditor
+              apiID={id!}
+              customLogic={{ ...update[action.name], language }}
+              setCustomLogic={customLogic => {
+                setUpdate({ ...update, [action.name]: customLogic });
+                setModified(true);
+              }}
+            />
+          </CollapseContainer>
+        ))}
+      {data.api.operations.delete.enabled && (
         <CollapseContainer title={`Delete a ${data.api.name}`}>
           <CustomLogicEditor
             apiID={id!}
-            language={language}
-            operationType={OperationType.Delete}
-            currBefore={deleteCustomLogic && deleteCustomLogic.before}
-            currAfter={deleteCustomLogic && deleteCustomLogic.after}
+            customLogic={{ ...del, language }}
+            setCustomLogic={customLogic => {
+              setDel(customLogic);
+              setModified(true);
+            }}
           />
         </CollapseContainer>
       )}
-      {!edit && <Arrows next={() => history.push(DEPLOY_API(id!))} />}
-      {edit && <SaveCancel onSave={history.goBack} />}
+      {!edit && <Arrows next={handleSave} />}
+      {edit && <SaveCancel onSave={handleSave} />}
     </div>
   );
 }

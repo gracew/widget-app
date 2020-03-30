@@ -16,9 +16,17 @@ export const OPERATIONS_FRAGMENT = gql`
     operations {
       create {
         enabled
+        customLogic {
+          language
+          before
+          after
+        }
       }
       read {
         enabled
+        auth {
+          type
+        }
       }
       list {
         enabled
@@ -27,16 +35,35 @@ export const OPERATIONS_FRAGMENT = gql`
           order
         }
         filter
+        auth {
+          type
+        }
       }
       update {
         enabled
         actions {
           name
           fields
+          auth {
+            type
+          }
+          customLogic {
+            language
+            before
+            after
+          }
         }
       }
       delete {
         enabled
+        auth {
+          type
+        }
+        customLogic {
+          language
+          before
+          after
+        }
       }
     }
   }

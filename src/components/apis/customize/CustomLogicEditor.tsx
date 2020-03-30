@@ -1,73 +1,33 @@
-import { useMutation } from "@apollo/react-hooks";
 import { Tab, Tabs } from "@blueprintjs/core";
-import { gql } from "apollo-boost";
-import React, { useState } from "react";
+import React from "react";
 import MonacoEditor from "react-monaco-editor";
-import { Language, OperationType } from "../../../graphql/types";
+import { CustomLogic, Language } from "../../../graphql/types";
 import { MONACO_OPTIONS } from "../../../monaco";
-import { ButtonLoading } from "../../ButtonLoading";
 import "./CustomLogicEditor.css";
-
-const SAVE_CUSTOM_LOGIC = gql`
-  mutation SaveCustomLogic(
-    $apiID: ID!
-    $language: Language!
-    $operationType: OperationType!
-    $before: String
-    $after: String
-  ) {
-    saveCustomLogic(
-      input: {
-        apiID: $apiID
-        language: $language
-        operationType: $operationType
-        before: $before
-        after: $after
-      }
-    )
-  }
-`;
 
 interface CustomLogicEditorProps {
   apiID: string;
-  language: Language;
-  operationType: OperationType;
-  currBefore: string | null | undefined;
-  currAfter: string | null | undefined;
+  customLogic: CustomLogic;
+  setCustomLogic: (customLogic: CustomLogic) => any;
 }
 
 export function CustomLogicEditor({
   apiID,
-  language,
-  operationType,
-  currBefore,
-  currAfter
+  customLogic,
+  setCustomLogic
 }: CustomLogicEditorProps) {
-  const [before, setBefore] = useState(currBefore);
-  const [after, setAfter] = useState(currAfter);
-  const [saveCustomLogic, { data, loading }] = useMutation(SAVE_CUSTOM_LOGIC);
-
-  function onClick() {
-    saveCustomLogic({
-      variables: {
-        apiID,
-        language,
-        operationType,
-        before,
-        after
-      }
-    });
-  }
-
-  const monacoLang = language === Language.Javascript ? "javascript" : "python";
+  const monacoLang =
+    customLogic.language === Language.Javascript ? "javascript" : "python";
   const beforePanel = (
     <MonacoEditor
       width="700"
       height="300"
       theme="vs-dark"
-      value={before}
+      value={customLogic.before}
       language={monacoLang}
-      onChange={newValue => setBefore(newValue)}
+      onChange={newValue =>
+        setCustomLogic({ ...customLogic, before: newValue })
+      }
       options={MONACO_OPTIONS}
     />
   );
@@ -76,9 +36,9 @@ export function CustomLogicEditor({
       width="700"
       height="300"
       theme="vs-dark"
-      value={after}
+      value={customLogic.after}
       language={monacoLang}
-      onChange={newValue => setAfter(newValue)}
+      onChange={newValue => setCustomLogic({ ...customLogic, after: newValue })}
       options={MONACO_OPTIONS}
     />
   );
@@ -89,13 +49,6 @@ export function CustomLogicEditor({
         <Tab id="before" title="Before" panel={beforePanel} />
         <Tab id="after" title="After" panel={afterPanel} />
       </Tabs>
-      <ButtonLoading
-        text="Save"
-        className="wi-custom-logic-save"
-        loading={loading}
-        success={data && data.saveCustomLogic}
-        onClick={onClick}
-      />
     </div>
   );
 }

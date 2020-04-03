@@ -11,6 +11,7 @@ interface IFieldInputProps {
   definition: FieldDefinition;
   value: any;
   setValue: (val: any) => void;
+  hideLabel?: boolean;
 }
 
 function helperText(definition: FieldDefinition) {
@@ -70,7 +71,12 @@ function helperText(definition: FieldDefinition) {
   }
 }
 
-export function FieldInput({ definition, value, setValue }: IFieldInputProps) {
+export function FieldInput({
+  definition,
+  value,
+  setValue,
+  hideLabel
+}: IFieldInputProps) {
   const [valid, setValid] = useState(true);
   function validate(v: any) {
     if (!definition.constraints) {
@@ -138,7 +144,13 @@ export function FieldInput({ definition, value, setValue }: IFieldInputProps) {
       return (
         <HTMLSelect
           value={value}
-          onChange={(e: any) => setValue(e.currentTarget.value === "true")}
+          onChange={(e: any) =>
+            setValue(
+              e.currentTarget.value === "--"
+                ? undefined
+                : e.currentTarget.value === "true"
+            )
+          }
         >
           <option>--</option>
           <option value={"true"}>true</option>
@@ -160,7 +172,7 @@ export function FieldInput({ definition, value, setValue }: IFieldInputProps) {
   return (
     <FormGroup
       key={definition.name}
-      label={definition.name}
+      label={hideLabel ? undefined : definition.name}
       helperText={text}
       intent={intent}
     >

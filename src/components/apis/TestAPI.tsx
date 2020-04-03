@@ -45,6 +45,7 @@ export function TestAPI() {
         {data.api.operations.list.enabled && (
           <CollapseContainer title={`List ${data.api.name}s`}>
             <ListObject
+              fields={data.api.fields}
               operations={data.api.operations}
               testTokens={testTokensData.testTokens.testTokens}
             />

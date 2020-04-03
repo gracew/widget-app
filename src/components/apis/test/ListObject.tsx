@@ -30,13 +30,14 @@ export function ListObject({
     operations.list.filter.length > 0 ? operations.list.filter[0] : undefined
   );
   const [filterValue, setFilterValue] = useState<any>();
+  const [status, setStatus] = useState("");
   const [output, setOutput] = useState("");
-  const queryParams: string[] = []
+  const queryParams: string[] = [];
   if (pageSize) {
-    queryParams.push("pageSize=" + pageSize)
+    queryParams.push("pageSize=" + pageSize);
   }
   if (filterValue !== undefined) {
-    queryParams.push(filterField + "=" + filterValue)
+    queryParams.push(filterField + "=" + filterValue);
   }
   const onSubmit = (token: string) => {
     const query = queryParams.length > 0 ? "?" + queryParams.join("&") : "";
@@ -44,9 +45,12 @@ export function ListObject({
       headers: {
         "X-Parse-Session-Token": token
       }
-    })
-      .then(res => res.text())
-      .then(t => setOutput(t));
+    }).then(res =>
+      res.text().then(t => {
+        setStatus(res.status + " " + res.statusText)
+        setOutput(t);
+      })
+    );
   };
   const copyText = (token: string) => {
     const query = pageSize ? `?pageSize=${pageSize}` : "";
@@ -55,6 +59,7 @@ export function ListObject({
   return (
     <FormAndResult
       testTokens={testTokens}
+      status={status}
       output={output}
       copyText={copyText}
       onSubmit={onSubmit}

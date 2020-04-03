@@ -11,6 +11,7 @@ interface CreateObjectProps {
 export function CreateObject({ fields, testTokens }: CreateObjectProps) {
   const [output, setOutput] = useState("");
   const initialInput: Record<string, any> = {};
+  const [status, setStatus] = useState("");
   const [input, setInput] = useState(initialInput);
   const onSubmit = (token: string) =>
     // TODO(gracew): don't hardcode this
@@ -21,9 +22,12 @@ export function CreateObject({ fields, testTokens }: CreateObjectProps) {
         "X-Parse-Session-Token": token
       },
       body: JSON.stringify(input)
-    })
-      .then(res => res.text())
-      .then(t => setOutput(t));
+    }).then(res =>
+      res.text().then(t => {
+        setStatus(res.status + " " + res.statusText)
+        setOutput(t);
+      })
+    );
   const copyText = (token: string) =>
     `curl -XPOST -H "Content-type: application/json" -H "X-Parse-Session-Token: ${token}" http://localhost:8081/ -d '${JSON.stringify(
       input
@@ -31,6 +35,7 @@ export function CreateObject({ fields, testTokens }: CreateObjectProps) {
   return (
     <FormAndResult
       testTokens={testTokens}
+      status={status}
       output={output}
       copyText={copyText}
       onSubmit={onSubmit}

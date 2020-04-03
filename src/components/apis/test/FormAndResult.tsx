@@ -8,6 +8,7 @@ import "./FormAndResult.css";
 interface FormAndResultProps {
   testTokens: TestToken[];
   children: any;
+  status: string;
   output: string;
   copyText: (token: string) => string;
   onSubmit: (token: string) => void;
@@ -17,6 +18,7 @@ export function FormAndResult({
   testTokens,
   children,
   copyText,
+  status,
   output,
   onSubmit
 }: FormAndResultProps) {
@@ -59,6 +61,7 @@ export function FormAndResult({
         </Tooltip>
       </div>
       <div className="wi-result">
+        Status: {status}
         <MonacoEditor
           width="330"
           height={boundedHeight}

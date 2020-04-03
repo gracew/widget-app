@@ -9,20 +9,25 @@ interface ReadObjectProps {
 
 export function ReadObject({ testTokens }: ReadObjectProps) {
   const [objectId, setObjectId] = useState("");
+  const [status, setStatus] = useState("");
   const [output, setOutput] = useState("");
   const onSubmit = (token: string) =>
     fetch(`http://localhost:8081/${objectId}`, {
       headers: {
         "X-Parse-Session-Token": token
       }
-    })
-      .then(res => res.text())
-      .then(t => setOutput(t));
+    }).then(res =>
+      res.text().then(t => {
+        setStatus(res.status + " " + res.statusText)
+        setOutput(t);
+      })
+    );
   const copyText = (token: string) =>
     `curl -H "X-Parse-Session-Token: ${token}" http://localhost:8081/${objectId}`;
   return (
     <FormAndResult
       testTokens={testTokens}
+      status={status}
       output={output}
       copyText={copyText}
       onSubmit={onSubmit}

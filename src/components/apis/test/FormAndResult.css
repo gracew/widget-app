@@ -20,3 +20,7 @@
 .wi-result {
   margin: 10px;
 }
+
+.wi-result .react-monaco-editor-container {
+  margin: 5px 0;
+}
